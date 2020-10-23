@@ -1,0 +1,51 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WaterBillingProject"
+        xmlns:Viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer" x:Class="WaterBillingProject.CrystalReport"
+        mc:Ignorable="d" 
+        Title="CrystalReport" Height="400" Width="720" WindowState="Maximized" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" >
+
+    <Window.Resources>
+        <Style x:Key="MyButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.4" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+
+        <Viewer:CrystalReportsViewer x:Name="_CrystalReport" ToggleSidePanel="None"  ShowExportButton="False" ShowCopyButton="False" ShowSearchTextButton="False" Margin="0"/>
+        <Button x:Name="print" Content=" " HorizontalAlignment="Left" Margin="260,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="print_Click"  Style="{StaticResource MyButton}" ToolTip="Print Document" >
+            <Button.Background>
+                <ImageBrush ImageSource="Img/Printer-icon.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="exportToExcel" Content=" " HorizontalAlignment="Left" Margin="290,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="exportExcel"  Style="{StaticResource MyButton}" ToolTip="Export to Excel">
+            <Button.Background>
+                <ImageBrush ImageSource="Img/microsoft_excel_n.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="exportToPDF" Content=" " HorizontalAlignment="Left" Margin="318,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="exportToPDF_Click"  Style="{StaticResource MyButton}" ToolTip="Export to PDF">
+            <Button.Background>
+                <ImageBrush ImageSource="Img/PDF.png"/>
+            </Button.Background>
+        </Button>
+    </Grid>
+</Window>

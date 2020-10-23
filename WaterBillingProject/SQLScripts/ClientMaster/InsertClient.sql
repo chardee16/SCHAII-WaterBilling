@@ -1,0 +1,24 @@
+﻿Insert Into tblClient
+(
+	FirstName
+    ,MiddleName
+    ,LastName
+    ,AccountStatusID
+    ,BlockNo
+    ,LotNo
+    ,Occupants
+    ,IsSenior
+    ,SeniorCount
+)
+Values
+(
+    '@_FirstName',
+    '@_MiddleName',
+    '@_LastName',
+    @_ClientAccountStatusID,
+    @_BlockNo,
+    @_LotNo,
+    @_Occupants,
+    '@_IsSenior',
+    @_SeniorCount
+)

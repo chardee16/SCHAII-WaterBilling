@@ -1,0 +1,69 @@
+﻿<Window x:Class="WaterBillingProject.Windows.BillingListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:WaterBillingProject.Windows"
+        mc:Ignorable="d"
+        Title="BillingListWindow" Height="350" Width="700" WindowStartupLocation="CenterScreen" PreviewKeyDown="HandleKeys" WindowStyle="None">
+
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" Value="Yellow" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="GridLinesVisibility" Value="All" />
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+        </Style>
+        <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="{Binding RowColor,UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Aqua" />
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+            <EventSetter Event="Selected" Handler="SelectedCell_Click"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Aqua" />
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#FF8522BD">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+                    <Button x:Name="ButtonFechar" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Click="ButtonFechar_Click">
+                        <materialDesign:PackIcon Kind="Close"/>
+                    </Button>
+                </StackPanel>
+            </Grid >
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0"  VerticalAlignment="Center" >
+                <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
+                <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="213" BorderThickness="1,1,1,1" PreviewKeyDown="txt_Search_PreviewKeyDown" TextChanged="txt_Search_TextChanged"/>
+            </StackPanel>
+            <DataGrid x:Name="DG_BillList" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="0,10,0,0" Height="270" PreviewMouseDoubleClick="DG_BillList_PreviewMouseDoubleClick" Loaded="DG_BillList_Loaded" PreviewKeyDown="DG_BillList_PreviewKeyDown">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=BillMonth,UpdateSourceTrigger=PropertyChanged}" Header="Bill Month" Width="200*" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=ReferenceNo,UpdateSourceTrigger=PropertyChanged}" Header="Reference No" Width="400*" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=Consumption,UpdateSourceTrigger=PropertyChanged}" Header="Consumption" Width="378*" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=BillStatusDescription,UpdateSourceTrigger=PropertyChanged}" Header="Status" Width="200*" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>
