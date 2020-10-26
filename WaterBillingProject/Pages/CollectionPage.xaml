@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:local="clr-namespace:WaterBillingProject.Pages"
+      xmlns:local="clr-namespace:WaterBillingProject.Pages" xmlns:currency="clr-namespace:CurrencyTextBoxControl;assembly=CurrencyTextbox"
       mc:Ignorable="d" 
       d:DesignHeight="570" d:DesignWidth="820"
       Title="CollectionPage">
@@ -12,34 +12,53 @@
 
     <Page.Resources>
         <SolidColorBrush x:Key="GridLine" Color="#FFCFCFCF" />
+        <RoutedUICommand x:Key="Find" Text="Find" />
     </Page.Resources>
+
+    <Page.CommandBindings>
+        <CommandBinding Command="{StaticResource Find}" Executed="Executed_Find"/>
+    </Page.CommandBindings>
+
+    <Page.InputBindings>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{StaticResource Find}" />
+    </Page.InputBindings>
+
 
     <Grid Background="#FFCFCFCF">
         <Border BorderThickness="1" Margin="5" BorderBrush="Black">
-            <StackPanel Orientation="Vertical" Margin="5,5,5,5" HorizontalAlignment="Left">
-
-
-                <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold">Client ID:</Label>
-                    <TextBlock Text="1" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Vertical" Margin="5,5,5,5">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Left" Width="799" >
+                    <StackPanel Orientation="Vertical" Width="400">
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontWeight="Bold">Client ID:</Label>
+                            <TextBlock Text="{Binding Path=ClientID,UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontWeight="Bold">Client Name:</Label>
+                            <TextBlock Text="{Binding Path=Fullname,UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontWeight="Bold">Client Address:</Label>
+                            <TextBlock Text="{Binding Path=FullAddress,UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold">TOTAL DUE </TextBlock>
+                        <TextBlock HorizontalAlignment="Center" Text="{Binding Path=TotalDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" VerticalAlignment="Center" Margin="20,0,0,0" FontSize="24" FontWeight="Bold"/>
+                    </StackPanel>
+                    
+                    
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold">Client Name:</Label>
-                    <TextBlock Text="Richard Rodriguez" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold">Client Address:</Label>
-                    <TextBlock Text="Blk 1 Lot 1" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                </StackPanel>
+                
                 <StackPanel Orientation ="Horizontal" Margin="0,10,0,0">
                     <Border BorderThickness="1" Margin="5" BorderBrush="Black" Width="300">
                         <StackPanel Orientation="Vertical" Height="250">
                             <Label FontWeight="Bold" FontSize="13">Billing Charges</Label>
-                            <DataGrid x:Name="DG_PreviousBill" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="0,0,0,0" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
+                            <DataGrid x:Name="DG_PreviousBill" ItemsSource="{Binding Path=BillingList,UpdateSourceTrigger=PropertyChanged}" HorizontalScrollBarVisibility="Hidden" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="1" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Path=BillMonth,UpdateSourceTrigger=PropertyChanged}" Header="Bill Month" Width="100" IsReadOnly="True"/>
-                                    <DataGridTextColumn Binding="{Binding Path=ReferenceNo,UpdateSourceTrigger=PropertyChanged}" Header="Ref No" Width="100" IsReadOnly="True"/>
-                                    <DataGridTextColumn Binding="{Binding Path=TotalDue,UpdateSourceTrigger=PropertyChanged}" Header="Amount" Width="100" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path=Consumption,UpdateSourceTrigger=PropertyChanged}" Header="Consump" Width="100" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path=CurrentDue,UpdateSourceTrigger=PropertyChanged}" Header="Amount" Width="100" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
@@ -47,31 +66,64 @@
                     <Border BorderThickness="1" Margin="5" BorderBrush="Black" Width="235">
                         <StackPanel Orientation="Vertical">
                             <Label FontWeight="Bold" FontSize="13">Other Charges</Label>
-                            <DataGrid x:Name="DG_Charges" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="0,0,0,0" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
+                            <DataGrid x:Name="DG_Charges" HorizontalScrollBarVisibility="Hidden" ItemsSource="{Binding Path=chargesList,UpdateSourceTrigger=PropertyChanged}" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="1" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Path=SL_Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"   Width="135" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path=Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"   Width="135" IsReadOnly="True"/>
                                     <DataGridTextColumn Binding="{Binding Path=Amount,UpdateSourceTrigger=PropertyChanged}" Header="Amount"  Width="100" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
-                        
+
                     </Border>
                     <Border BorderThickness="1" Margin="5" BorderBrush="Black" Width="235">
                         <StackPanel Orientation="Vertical">
                             <Label FontWeight="Bold" FontSize="13">Discounts</Label>
-                            <DataGrid x:Name="DG_Discounts" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="0" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
+                            <DataGrid x:Name="DG_Discounts" ItemsSource="{Binding Path=discountList,UpdateSourceTrigger=PropertyChanged}" HorizontalScrollBarVisibility="Hidden" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="1" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Path=SL_Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"  Width="135" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path=Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"  Width="135" IsReadOnly="True"/>
                                     <DataGridTextColumn Binding="{Binding Path=Amount,UpdateSourceTrigger=PropertyChanged}" Header="Amount"  Width="100" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
-                        
+
                     </Border>
                 </StackPanel>
-                
 
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Label FontSize="20" FontWeight="Bold">Interest :</Label>
+                            <TextBlock Text="{Binding Path=Interest,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" VerticalAlignment="Center" Margin="110,0,0,0" FontSize="20" FontWeight="Bold"/>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontSize="20" FontWeight="Bold">Tendered Amount :</Label>
+                            <currency:CurrencyTextBox x:Name="myCurrencyTextBox" Number="{Binding TenderedAmount, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" StringFormat="N2" Width="240" Margin="10,0,0,0" BorderThickness="0,0,0,0" FontFamily="Arial Black" FontWeight="Bold" FontSize="30" PreviewKeyDown="myCurrencyTextBox_PreviewKeyDown">
+                                <currency:CurrencyTextBox.Style>
+                                    <Style TargetType="{x:Type currency:CurrencyTextBox}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Validation.HasError" Value="True">
+                                                <Setter Property="ToolTip" Value="Amount" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </currency:CurrencyTextBox.Style>
+                            </currency:CurrencyTextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                            <Label FontSize="20" FontWeight="Bold">Change :</Label>
+                            <TextBlock Text="{Binding Path=Change,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" VerticalAlignment="Center" Margin="110,0,0,0" FontSize="20" FontWeight="Bold"/>
+                        </StackPanel>
 
+                    </StackPanel>
+                    
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Right">
+                    <Button x:Name="btn_Find" Background="#FF8522BD" Margin="10,0,0,0" Width="100" Content="Find" Click="btn_Generate_Click" />
+                    <Button x:Name="btn_Save" Background="#FF8522BD" Margin="10,0,0,0" Width="100" Content="Post"/>
+                    <Button x:Name="btn_Cancel" Background="#FF8522BD" Margin="10,0,10,0" Width="100" Content="Cancel"/>
+                </StackPanel>
             </StackPanel>
         </Border>
 
