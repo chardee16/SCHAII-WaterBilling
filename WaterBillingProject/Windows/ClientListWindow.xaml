@@ -45,7 +45,7 @@
     <Grid>
         
         <StackPanel Orientation="Vertical">
-            <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#FF8522BD">
+            <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#316DA2">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
                     <Button x:Name="ButtonFechar" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Click="ButtonFechar_Click">
                         <materialDesign:PackIcon Kind="Close"/>

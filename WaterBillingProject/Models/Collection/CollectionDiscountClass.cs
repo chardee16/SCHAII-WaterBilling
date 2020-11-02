@@ -149,8 +149,23 @@ namespace WaterBillingProject.Models.Collection
                 }
             }
         }
-
-
+        
+        private String _BillMonth;
+        public String BillMonth
+        {
+            get
+            {
+                return _BillMonth;
+            }
+            set
+            {
+                if (value != _BillMonth)
+                {
+                    _BillMonth = value;
+                    NotifyPropertyChanged("BillMonth");
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String info)

@@ -9,6 +9,8 @@ using WaterBilling.Models.Billing;
 using WaterBilling.Windows;
 using WaterBillingProject.Models.Collection;
 using WaterBillingProject.Repository;
+using WaterBillingProject.Services;
+using WaterBillingProject.Windows;
 
 namespace WaterBillingProject.Pages
 {
@@ -52,11 +54,110 @@ namespace WaterBillingProject.Pages
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             populateCharges();
+            getDiscount();
             populateDiscount();
+            getInterest();
             Compute();
             myCurrencyTextBox.Focus();
         }
 
+
+
+        private void getInterest()
+        {
+            if (this.dataCon.BillingList.Count >= 2)
+            {
+                int days = 0;
+                decimal TotalAmountDue = 0;
+
+
+                DateTime date = new DateTime();
+
+                foreach (var item in this.dataCon.BillingList)
+                {
+                    try
+                    {
+                        date = DateTime.ParseExact(item.BillMonth, "yyyyMM", System.Globalization.CultureInfo.InvariantCulture);
+                        //MessageBox.Show(date.ToString("MM-dd-yyyy"));
+                        days += DateTime.DaysInMonth(date.Year, date.Month);
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    TotalAmountDue += item.CurrentDue;
+                }
+                days += DateTime.Now.Day;
+                Decimal multiple = Convert.ToDecimal(0.05);
+                decimal divideDays = Math.Round(Convert.ToDecimal(days) / Convert.ToDecimal(360), 2, MidpointRounding.AwayFromZero);
+                this.dataCon.Interest = Math.Round((TotalAmountDue * multiple) * divideDays, 2, MidpointRounding.AwayFromZero);
+
+            }
+            
+        }
+
+
+
+        private void getDiscount()
+        {
+            if (this.dataCon.BillingList.Count == 1)
+            {
+
+                if (LoginSession.TransDate.Day == 31)
+                {
+                    decimal totalBillDue = 0;
+                    decimal discount = 0;
+                    foreach (var item in this.dataCon.BillingList)
+                    {
+                        totalBillDue += item.CurrentDue;
+                    }
+
+                    discount = Math.Round(totalBillDue * Convert.ToDecimal(0.05), 2, MidpointRounding.AwayFromZero);
+
+                    if (discount > 0)
+                    {
+                        List<CollectionDiscountClass> temporary = new List<CollectionDiscountClass>();
+                        foreach (var item in this.dataCon.TempdiscountList)
+                        {
+                            temporary.Add(new CollectionDiscountClass
+                            {
+                                SLC_CODE = item.SLC_CODE,
+                                SLT_CODE = item.SLT_CODE,
+                                SLE_CODE = item.SLE_CODE,
+                                StatusID = item.StatusID,
+                                Description = item.Description,
+                                COAID = item.COAID,
+                                ReferenceNo = item.ReferenceNo,
+                                Amount = item.Amount,
+                                BillMonth = item.BillMonth,
+                            });
+                        }
+
+                        temporary.Add(new CollectionDiscountClass
+                        {
+                            SLC_CODE = 0,
+                            SLT_CODE = 0,
+                            SLE_CODE = 0,
+                            StatusID = 0,
+                            Description = "Up to date Discount",
+                            COAID = 401102,
+                            ReferenceNo = "",
+                            Amount = discount,
+                            BillMonth = "",
+                        });
+
+
+                        this.dataCon.TempdiscountList = temporary;
+
+                    }
+
+                }
+
+
+
+            }
+        }
 
         private void populateCharges()
         {
@@ -172,15 +273,19 @@ namespace WaterBillingProject.Pages
             }
         }
 
+        private void ComputeChange()
+        {
+            this.dataCon.Change = this.dataCon.TenderedAmount - this.dataCon.TotalDue;
+            if (this.dataCon.Change < 0)
+            {
+                this.dataCon.Change = 0;
+            }
+        }
         private void myCurrencyTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                this.dataCon.Change = this.dataCon.TenderedAmount - this.dataCon.TotalDue;
-                if (this.dataCon.Change < 0)
-                {
-                    this.dataCon.Change = 0;
-                }
+                ComputeChange();
             }
             else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
@@ -189,14 +294,316 @@ namespace WaterBillingProject.Pages
                     findClientFunction();
                 }
             }
-            else
+            else if (e.Key == Key.F11)
             {
-                this.dataCon.Change = 0;
+                SaveTransation();
+            }
+            else if(e.Key == Key.Escape)
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to cancel your work?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    Refresh();
+                }
+            }
+        }
+
+        private void btn_Save_Click(object sender, RoutedEventArgs e)
+        {
+            SaveTransation();
+        }
+
+
+        private void SaveTransation()
+        {
+            ComputeChange();
+            TransactionSummaryClass tranSummary = SetTransactionSummary();
+            List<TransactionDetailClass> transactionDetail = SetTransactionDetails();
+            List<TransactionCheckClass> transactionCheck = SetTransactionCheck();
+            BillUpdateClass billUpdate = SetBillingUpdate();
+
+            PostingEntryWindow postingEntries = new PostingEntryWindow(tranSummary, transactionDetail, transactionCheck, billUpdate);
+            postingEntries.ShowDialog();
+            Refresh();
+
+        }
+
+        private TransactionSummaryClass SetTransactionSummary()
+        {
+            TransactionSummaryClass tranSummary = new TransactionSummaryClass();
+
+            try
+            {
+                tranSummary.TransactionCode = 1;
+                tranSummary.TransYear = LoginSession.TransYear;
+                tranSummary.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                tranSummary.ClientID = this.dataCon.ClientID;
+                tranSummary.Explanation = "Payment of : " + this.dataCon.Fullname;
+                tranSummary.PostedBy = LoginSession.UserID;
+                return tranSummary;
 
             }
-            
+            catch (Exception ex)
+            {
+                return tranSummary;
+            }
+        }
+
+        private List<TransactionDetailClass> SetTransactionDetails()
+        {
+            List<TransactionDetailClass> transDT = new List<TransactionDetailClass>();
+            try
+            {
+                TransactionDetailClass TellerEntry;
+                TellerEntry = new TransactionDetailClass();
+                TellerEntry.TransactionCode = 1;
+                TellerEntry.TransYear = LoginSession.TransYear;
+                TellerEntry.AccountCode = 100101;
+                TellerEntry.ClientID = this.dataCon.ClientID;
+                TellerEntry.BillMonth = "";
+                TellerEntry.SLC_CODE = 11;
+                TellerEntry.SLT_CODE = 1;
+                TellerEntry.ReferenceNo = "";
+                TellerEntry.SLE_CODE = 11;
+                TellerEntry.StatusID = 15;
+                TellerEntry.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                TellerEntry.Amt = this.dataCon.TotalDue;
+                TellerEntry.PostedBy = LoginSession.UserID;
+                TellerEntry.UPDTag = 1;
+                TellerEntry.ClientName = this.dataCon.Fullname;
+                TellerEntry.SL_Description = "Cash - on - hand";
+
+                transDT.Add(TellerEntry);
+
+
+                TransactionDetailClass billsDiscount;
+                foreach (var item in this.dataCon.TempdiscountList)
+                {
+                    billsDiscount = new TransactionDetailClass();
+                    billsDiscount.TransactionCode = 1;
+                    billsDiscount.TransYear = LoginSession.TransYear;
+                    billsDiscount.AccountCode = item.COAID;
+                    billsDiscount.ClientID = this.dataCon.ClientID;
+                    billsDiscount.BillMonth = item.BillMonth;
+                    billsDiscount.SLC_CODE = item.SLC_CODE;
+                    billsDiscount.SLT_CODE = item.SLT_CODE;
+                    billsDiscount.ReferenceNo = item.ReferenceNo;
+                    billsDiscount.SLE_CODE = 11;
+                    billsDiscount.StatusID = 15;
+                    billsDiscount.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                    billsDiscount.Amt = item.Amount;
+                    billsDiscount.PostedBy = LoginSession.UserID;
+                    billsDiscount.UPDTag = 1;
+                    billsDiscount.ClientName = this.dataCon.Fullname;
+                    billsDiscount.SL_Description = item.Description;
+
+                    transDT.Add(billsDiscount);
+                }
+
+
+
+                TransactionDetailClass billsTrans;
+                foreach (var item in this.dataCon.BillingList)
+                {
+                    billsTrans = new TransactionDetailClass();
+                    billsTrans.TransactionCode = 1;
+                    billsTrans.TransYear = LoginSession.TransYear;
+                    billsTrans.AccountCode = 402101;
+                    billsTrans.ClientID = this.dataCon.ClientID;
+                    billsTrans.BillMonth = item.BillMonth;
+                    billsTrans.SLC_CODE = item.SLC_CODE;
+                    billsTrans.SLT_CODE = item.SLT_CODE;
+                    billsTrans.ReferenceNo = item.ReferenceNo;
+                    billsTrans.SLE_CODE = 11;
+                    billsTrans.StatusID = 15;
+                    billsTrans.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                    billsTrans.Amt = item.CurrentDue * -1;
+                    billsTrans.PostedBy = LoginSession.UserID;
+                    billsTrans.UPDTag = 1;
+                    billsTrans.ClientName = this.dataCon.Fullname;
+                    billsTrans.SL_Description = item.SL_Description;
+
+                    transDT.Add(billsTrans);
+                }
+
+
+                if (this.dataCon.Interest > 0)
+                {
+                    TransactionDetailClass interestEntry;
+                    interestEntry = new TransactionDetailClass();
+                    interestEntry.TransactionCode = 1;
+                    interestEntry.TransYear = LoginSession.TransYear;
+                    interestEntry.AccountCode = 402104;
+                    interestEntry.ClientID = this.dataCon.ClientID;
+                    interestEntry.BillMonth = "";
+                    interestEntry.SLC_CODE = 14;
+                    interestEntry.SLT_CODE = 2;
+                    interestEntry.ReferenceNo = "";
+                    interestEntry.SLE_CODE = 11;
+                    interestEntry.StatusID = 15;
+                    interestEntry.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                    interestEntry.Amt = this.dataCon.Interest;
+                    interestEntry.PostedBy = LoginSession.UserID;
+                    interestEntry.UPDTag = 1;
+                    interestEntry.ClientName = this.dataCon.Fullname;
+                    interestEntry.SL_Description = "Water Bill Interest";
+
+                    transDT.Add(interestEntry);
+                }
+
+
+
+                TransactionDetailClass billsCharges;
+                foreach (var item in this.dataCon.tempChargesList)
+                {
+                    billsCharges = new TransactionDetailClass();
+                    billsCharges.TransactionCode = 1;
+                    billsCharges.TransYear = LoginSession.TransYear;
+                    billsCharges.AccountCode = item.COAID;
+                    billsCharges.ClientID = this.dataCon.ClientID;
+                    billsCharges.BillMonth = item.BillMonth;
+                    billsCharges.SLC_CODE = item.SLC_CODE;
+                    billsCharges.SLT_CODE = item.SLT_CODE;
+                    billsCharges.ReferenceNo = item.ReferenceNo;
+                    billsCharges.SLE_CODE = 11;
+                    billsCharges.StatusID = 15;
+                    billsCharges.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                    billsCharges.Amt = item.Amount * -1;
+                    billsCharges.PostedBy = LoginSession.UserID;
+                    billsCharges.UPDTag = 1;
+                    billsCharges.ClientName = this.dataCon.Fullname;
+                    billsCharges.SL_Description = item.Description;
+
+                    transDT.Add(billsCharges);
+                }
+
+
+                return transDT;
+            }
+            catch (Exception ex)
+            {
+                return transDT;
+            }
+        }
+
+        private List<TransactionCheckClass> SetTransactionCheck()
+        {
+            List<TransactionCheckClass> tranCheck = new List<TransactionCheckClass>();
+
+            try
+            {
+                tranCheck.Add(new TransactionCheckClass
+                {
+                    TransactionCode = 1,
+                    TransYear = LoginSession.TransYear,
+                    COCIType = 1,
+                    Amt = this.dataCon.TenderedAmount,
+                });
+
+                if (this.dataCon.Change > 0)
+                {
+                    tranCheck.Add(new TransactionCheckClass
+                    {
+                        TransactionCode = 1,
+                        TransYear = LoginSession.TransYear,
+                        COCIType = 1,
+                        Amt = this.dataCon.Change * -1,
+                    });
+                }
+
+                return tranCheck;
+
+            }
+            catch (Exception ex)
+            {
+                return tranCheck;
+            }
+        }
+
+        private BillUpdateClass SetBillingUpdate()
+        {
+            BillUpdateClass updClass = new BillUpdateClass();
+
+            try
+            {
+                updClass.ClientID = this.dataCon.ClientID;
+                int counter = 0;
+                string Last = "";
+
+                foreach (var item in this.dataCon.BillingList)
+                {
+                    counter++;
+                    if (counter == this.dataCon.BillingList.Count)
+                    {
+                        Last = "";
+                    }
+                    else
+                    {
+                        Last = ",";
+                    }
+
+
+                    updClass.ReferenceNo += "'" + item.ReferenceNo + "'" + Last;
+                }
+
+                return updClass;
+
+            }
+            catch (Exception ex)
+            {
+                return updClass;
+            }
+        }
+
+        private void Executed_Post(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveTransation();
+        }
+
+
+
+
+        private void Refresh()
+        {
+            List<CollectionChargesClass> _chargesList = new List<CollectionChargesClass>();
+            this.dataCon.chargesList = _chargesList;
+            List<CollectionChargesClass> _tempChargesList = new List<CollectionChargesClass>();
+            this.dataCon.tempChargesList = _tempChargesList;
+
+
+            List <CollectionDiscountClass> _TempdiscountList = new List<CollectionDiscountClass>();
+            this.dataCon.TempdiscountList = _TempdiscountList;
+            List<CollectionDiscountClass> _discountList = new List<CollectionDiscountClass>();
+            this.dataCon.discountList = _discountList;
+
+
+            List<CollectionBillsClass> _BillingList = new List<CollectionBillsClass>();
+            this.dataCon.BillingList = _BillingList;
+
+            this.dataCon.ClientID = 0;
+            this.dataCon.Fullname = "";
+            this.dataCon.FullAddress = "";
+            this.dataCon.TenderedAmount = 0;
+            this.dataCon.TotalDue = 0;
+            this.dataCon.Interest = 0;
+            this.dataCon.Change = 0;
+
+
+        }
+
+        private void btn_Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to cancel your work?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                Refresh();
+            }
+                
         }
     }//end of Collection Page
+
+
+
 
 
     public class CollectionDataContext : INotifyPropertyChanged

@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:WaterBillingProject"
         mc:Ignorable="d"
-       Height="600" Width="1024" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize">
+       Height="600" Width="1024" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" PreviewKeyDown="Window_PreviewKeyDown">
 
 
     <Window.Resources>
@@ -99,7 +99,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#FF8522BD" MouseDown="GridBarraTitulo_MouseDown">
+        <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#316DA2" MouseDown="GridBarraTitulo_MouseDown">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White">
                     <materialDesign:PackIcon Kind="Bell"/>
@@ -128,47 +128,47 @@
                 <DropShadowEffect BlurRadius="20" Color="#FFDEDEDE" RenderingBias="Quality" ShadowDepth="1"/>
             </Grid.Effect>
 
-            <Grid Background="#FFA46FE4">
-                <TextBlock x:Name="txt_Title" Text="DASHBOARD" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="WS Simple Gallifreyan" Foreground="#FFBC96EA" FontSize="16"/>
+            <Grid Background="#72A2CC">
+                <TextBlock x:Name="txt_Title" Text="DASHBOARD" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="WS Simple Gallifreyan" Foreground="#0C1620" FontSize="16"/>
             </Grid>
 
             <StackPanel Grid.Row="1">
-                <Button x:Name="btn_Dashboard" Margin="10" Background="#FF8522BD" BorderBrush="#FF8522BD" Click="btn_Dashboard_Click" >
+                <Button x:Name="btn_Dashboard" Margin="10" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Dashboard_Click" >
                     <Grid Width="150">
                         <materialDesign:PackIcon Kind="ViewDashboard" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Center" Text="DASHBOARD" FontFamily="Champagne &amp; Limousines"/>
                     </Grid>
                 </Button>
 
-                <Button x:Name="btn_Clientmaster" Margin="10" Background="#FF8522BD" BorderBrush="#FF8522BD" Click="btn_Clientmaster_Click">
+                <Button x:Name="btn_Clientmaster" Margin="10" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Clientmaster_Click">
                     <Grid Width="150">
                         <materialDesign:PackIcon Kind="Account" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Center" Text="CLIENT MASTER" FontFamily="Champagne &amp; Limousines"/>
                     </Grid>
                 </Button>
 
-                <Button x:Name="btn_Billing" Margin="10" Background="#FF8522BD" BorderBrush="#FF8522BD" Click="btn_Billing_Click">
+                <Button x:Name="btn_Billing" Margin="10" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Billing_Click">
                     <Grid Width="150">
                         <materialDesign:PackIcon Kind="ContentPaste" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Center" Text="BILLING" FontFamily="Champagne &amp; Limousines"/>
                     </Grid>
                 </Button>
 
-                <Button x:Name="btn_Collection" Margin="10" Background="#FF8522BD" BorderBrush="#FF8522BD" Click="btn_Collection_Click">
+                <Button x:Name="btn_Collection" Margin="10" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Collection_Click">
                     <Grid Width="150">
                         <materialDesign:PackIcon Kind="Cash" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Center" Text="COLLECTION" FontFamily="Champagne &amp; Limousines"/>
                     </Grid>
                 </Button>
 
-                <Button x:Name="btn_Report" Margin="10" Background="#FF8522BD" BorderBrush="#FF8522BD" Click="btn_Report_Click">
+                <Button x:Name="btn_Report" Margin="10" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Report_Click">
                     <Grid Width="150">
                         <materialDesign:PackIcon Kind="FileDocument" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Center" Text="REPORT" FontFamily="Champagne &amp; Limousines"/>
                     </Grid>
                 </Button>
 
-                <Button x:Name="btn_Settings" Margin="10" Background="#FF8522BD" BorderBrush="#FF8522BD" Click="btn_Settings_Click">
+                <Button x:Name="btn_Settings" Margin="10" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Settings_Click">
                     <Grid Width="150">
                         <materialDesign:PackIcon Kind="Settings" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Center" Text="SETTING" FontFamily="Champagne &amp; Limousines"/>

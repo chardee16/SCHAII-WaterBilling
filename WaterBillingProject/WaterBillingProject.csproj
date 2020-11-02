@@ -88,9 +88,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CrystalReport.xaml.cs" />
+    <Compile Include="Models\Collection\BillUpdateClass.cs" />
     <Compile Include="Models\Collection\CollectionBillsClass.cs" />
     <Compile Include="Models\Collection\CollectionChargesClass.cs" />
     <Compile Include="Models\Collection\CollectionDiscountClass.cs" />
+    <Compile Include="Models\Collection\CollectionEntryClass.cs" />
+    <Compile Include="Models\Collection\TransactionCheckClass.cs" />
+    <Compile Include="Models\Collection\TransactionDetailClass.cs" />
+    <Compile Include="Models\Collection\TransactionSummaryClass.cs" />
     <Compile Include="Pages\CollectionPage.xaml.cs">
       <DependentUpon>CollectionPage.xaml</DependentUpon>
     </Compile>
@@ -106,13 +111,18 @@
     <Compile Include="Repository\CollectionRepository.cs" />
     <Compile Include="Repository\Interface\IRepository.cs" />
     <Compile Include="Services\Config.cs" />
+    <Compile Include="Services\LoginSession.cs" />
     <Compile Include="Services\SQLDatabase.cs" />
     <Compile Include="Services\SQLFile.cs" />
+    <Compile Include="Services\User.cs" />
     <Compile Include="Windows\BillingListWindow.xaml.cs">
       <DependentUpon>BillingListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ClientListWindow.xaml.cs" />
     <Compile Include="Windows\CrystalSearch.xaml.cs" />
+    <Compile Include="Windows\PostingEntryWindow.xaml.cs">
+      <DependentUpon>PostingEntryWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="CrystalReport.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -156,6 +166,10 @@
     <Page Include="Windows\CrystalSearch.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\PostingEntryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +221,8 @@
     <Content Include="SQLScripts\Collection\GetCollectionBillingList.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionCharges.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionDiscount.sql" />
+    <Content Include="SQLScripts\Collection\InsertCollection.sql" />
+    <Content Include="SQLScripts\Collection\UpdateBillStatus.sql" />
     <Resource Include="Img\microsoft_excel_n.png" />
     <Resource Include="Img\PDF.png" />
     <Resource Include="Img\Printer-icon.png" />

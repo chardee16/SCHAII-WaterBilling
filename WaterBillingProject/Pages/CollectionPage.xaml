@@ -13,14 +13,17 @@
     <Page.Resources>
         <SolidColorBrush x:Key="GridLine" Color="#FFCFCFCF" />
         <RoutedUICommand x:Key="Find" Text="Find" />
+        <RoutedUICommand x:Key="Post" Text="Post" />
     </Page.Resources>
 
     <Page.CommandBindings>
         <CommandBinding Command="{StaticResource Find}" Executed="Executed_Find"/>
+        <CommandBinding Command="{StaticResource Post}" Executed="Executed_Post"/>
     </Page.CommandBindings>
 
     <Page.InputBindings>
         <KeyBinding Key="F" Modifiers="Ctrl" Command="{StaticResource Find}" />
+        <KeyBinding Key="F11" Command="{StaticResource Post}" />
     </Page.InputBindings>
 
 
@@ -68,7 +71,13 @@
                             <Label FontWeight="Bold" FontSize="13">Other Charges</Label>
                             <DataGrid x:Name="DG_Charges" HorizontalScrollBarVisibility="Hidden" ItemsSource="{Binding Path=chargesList,UpdateSourceTrigger=PropertyChanged}" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="1" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Path=Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"   Width="135" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path=Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"   Width="135" IsReadOnly="True">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding Path=Amount,UpdateSourceTrigger=PropertyChanged}" Header="Amount"  Width="100" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -80,7 +89,13 @@
                             <Label FontWeight="Bold" FontSize="13">Discounts</Label>
                             <DataGrid x:Name="DG_Discounts" ItemsSource="{Binding Path=discountList,UpdateSourceTrigger=PropertyChanged}" HorizontalScrollBarVisibility="Hidden" Background="#FFCFCFCF" VerticalGridLinesBrush="{StaticResource GridLine}" HorizontalGridLinesBrush="{StaticResource GridLine}" Margin="1" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Path=Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"  Width="135" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path=Description,UpdateSourceTrigger=PropertyChanged}" Header="Description"  Width="135" IsReadOnly="True">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding Path=Amount,UpdateSourceTrigger=PropertyChanged}" Header="Amount"  Width="100" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -120,9 +135,9 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Right">
-                    <Button x:Name="btn_Find" Background="#FF8522BD" Margin="10,0,0,0" Width="100" Content="Find" Click="btn_Generate_Click" />
-                    <Button x:Name="btn_Save" Background="#FF8522BD" Margin="10,0,0,0" Width="100" Content="Post"/>
-                    <Button x:Name="btn_Cancel" Background="#FF8522BD" Margin="10,0,10,0" Width="100" Content="Cancel"/>
+                    <Button x:Name="btn_Find" Background="#316DA2" Margin="10,0,0,0" Width="100" Content="Find" Click="btn_Generate_Click" />
+                    <Button x:Name="btn_Save" Background="#316DA2" Margin="10,0,0,0" Width="100" Content="Post" Click="btn_Save_Click"/>
+                    <Button x:Name="btn_Cancel" Background="#316DA2" Margin="10,0,10,0" Width="100" Content="Cancel" Click="btn_Cancel_Click"/>
                 </StackPanel>
             </StackPanel>
         </Border>

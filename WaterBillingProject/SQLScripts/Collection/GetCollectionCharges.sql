@@ -6,6 +6,7 @@
 	  ,bc.COAID
 	  ,bc.ReferenceNo
 	  ,bc.Amount
+	  ,bill.BillMonth
 from tblBilling bill
 INNER JOIN tblBillCharges bc
 	ON bc.ClientID = bill.ClientID

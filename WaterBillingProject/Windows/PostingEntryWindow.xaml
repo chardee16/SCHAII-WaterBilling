@@ -1,0 +1,33 @@
+﻿<Window x:Class="WaterBillingProject.Windows.PostingEntryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:WaterBillingProject.Windows"
+        mc:Ignorable="d"
+        Title="PostingEntryWindow" Height="350" Width="700" WindowStartupLocation="CenterScreen" WindowStyle="None" PreviewKeyDown="Window_PreviewKeyDown" >
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#316DA2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+                    <Button x:Name="ButtonFechar" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Click="ButtonFechar_Click">
+                        <materialDesign:PackIcon Kind="Close"/>
+                    </Button>
+                </StackPanel>
+            </Grid >
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0"  VerticalAlignment="Center" >
+                <Label FontSize="16" FontWeight="Bold" Width="700" Margin="0,0,0,10" HorizontalContentAlignment="Center">Posting Entries</Label>
+            </StackPanel>
+            <DataGrid x:Name="DG_BillList" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="0,10,0,0" Height="270" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=SL_Description,UpdateSourceTrigger=PropertyChanged}" Header="Description" Width="170" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=AccountCode,UpdateSourceTrigger=PropertyChanged}" Header="Account" Width="130" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=BillMonth,UpdateSourceTrigger=PropertyChanged}" Header="BillMonth" Width="140" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=Debit,UpdateSourceTrigger=PropertyChanged}" Header="Debit" Width="130" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=Credit,UpdateSourceTrigger=PropertyChanged}" Header="Credit" Width="130" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>
