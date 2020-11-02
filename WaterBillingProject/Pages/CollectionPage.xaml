@@ -14,16 +14,19 @@
         <SolidColorBrush x:Key="GridLine" Color="#FFCFCFCF" />
         <RoutedUICommand x:Key="Find" Text="Find" />
         <RoutedUICommand x:Key="Post" Text="Post" />
+        <RoutedUICommand x:Key="FindTransaction" Text="FindTransaction" />
     </Page.Resources>
 
     <Page.CommandBindings>
         <CommandBinding Command="{StaticResource Find}" Executed="Executed_Find"/>
         <CommandBinding Command="{StaticResource Post}" Executed="Executed_Post"/>
+        <CommandBinding Command="{StaticResource FindTransaction}" Executed="Executed_FindTransaction"/>
     </Page.CommandBindings>
 
     <Page.InputBindings>
         <KeyBinding Key="F" Modifiers="Ctrl" Command="{StaticResource Find}" />
         <KeyBinding Key="F11" Command="{StaticResource Post}" />
+        <KeyBinding Key="F" Modifiers="Alt" Command="{StaticResource FindTransaction}" />
     </Page.InputBindings>
 
 

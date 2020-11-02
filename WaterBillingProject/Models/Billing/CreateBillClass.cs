@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WaterBillingProject.Models.Collection;
 
 namespace WaterBilling.Models.Billing
 {
@@ -29,6 +30,8 @@ namespace WaterBilling.Models.Billing
         public Decimal dueWithDiscount { get; set; }
         public List<ChargesClass> ChargesList { get; set; }
         public List<DiscountClass> DiscountList { get; set; }
+        public TransactionSummaryClass transummary { get; set; }
+        public List<TransactionDetailClass> transdetail { get; set; }
 
     }
 

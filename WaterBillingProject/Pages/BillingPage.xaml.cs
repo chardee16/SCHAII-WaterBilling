@@ -10,7 +10,9 @@ using WaterBilling.Models.Billing;
 using WaterBilling.Repository;
 using WaterBilling.Windows;
 using WaterBillingProject;
+using WaterBillingProject.Models.Collection;
 using WaterBillingProject.Reports;
+using WaterBillingProject.Services;
 using WaterBillingProject.Windows;
 
 namespace WaterBilling.Pages
@@ -449,7 +451,7 @@ namespace WaterBilling.Pages
                     billing.BillMonth = string.Format("{0}{1}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID));
                     billing.TR_Date = string.Format("{0}-{1}-{2}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}",DateTime.Now.Day));
                     billing.BillStatus = 1;
-                    billing.TR_CODE = 1;
+                    billing.TR_CODE = 3;
                     billing.Consumption = this.dataCon.TotalConsumption;
                     billing.ExcessConsumption = this.dataCon.TotalConsumption > 10 ? this.dataCon.TotalConsumption - 10 : 0;
                     billing.dueWithDiscount = this.dataCon.DueWithoutCharges;
@@ -457,6 +459,8 @@ namespace WaterBilling.Pages
                     billing.PreviousReading = this.dataCon.PreviousReading;
                     billing.ChargesList = getCharges();
                     billing.DiscountList = getDiscount();
+                    billing.transummary = SetTransactionSummary();
+                    billing.transdetail = SetTransactionDetails();
 
                     if (this.repo.GetExistingMonth(billing.ClientID, billing.BillMonth))
                     {
@@ -551,6 +555,176 @@ namespace WaterBilling.Pages
 
 
         }
+
+
+
+        private TransactionSummaryClass SetTransactionSummary()
+        {
+            TransactionSummaryClass tranSummary = new TransactionSummaryClass();
+
+            try
+            {
+                tranSummary.TransactionCode = 1;
+                tranSummary.TransYear = LoginSession.TransYear;
+                tranSummary.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                tranSummary.ClientID = this.dataCon.ClientID;
+                tranSummary.Explanation = "Billing Setup of : " + this.dataCon.Fullname;
+                tranSummary.PostedBy = LoginSession.UserID;
+                return tranSummary;
+
+            }
+            catch (Exception ex)
+            {
+                return tranSummary;
+            }
+        }
+
+
+
+        private List<TransactionDetailClass> SetTransactionDetails()
+        {
+            List<TransactionDetailClass> transDT = new List<TransactionDetailClass>();
+            try
+            {
+                Decimal balancingEntry = 0;
+                Decimal totalDiscount = 0;
+
+                TransactionDetailClass billsTrans;
+
+                billsTrans = new TransactionDetailClass();
+                billsTrans.TransactionCode = 3;
+                billsTrans.TransYear = LoginSession.TransYear;
+                billsTrans.AccountCode = 402101;
+                billsTrans.ClientID = this.dataCon.ClientID;
+                billsTrans.BillMonth = "";
+                billsTrans.SLC_CODE = 14;
+                billsTrans.SLT_CODE = 1;
+                billsTrans.ReferenceNo = "";
+                billsTrans.SLE_CODE = 11;
+                billsTrans.StatusID = 15;
+                billsTrans.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                billsTrans.Amt = this.dataCon.CurrentDue;
+                billsTrans.PostedBy = LoginSession.UserID;
+                billsTrans.UPDTag = 1;
+                billsTrans.ClientName = this.dataCon.Fullname;
+                billsTrans.SL_Description = "";
+
+                transDT.Add(billsTrans);
+
+                balancingEntry += this.dataCon.CurrentDue;
+
+
+
+
+
+                TransactionDetailClass billsCharges;
+                foreach (var item in this.dataCon.tempChargesList)
+                {
+                    billsCharges = new TransactionDetailClass();
+                    billsCharges.TransactionCode = 3;
+                    billsCharges.TransYear = LoginSession.TransYear;
+                    billsCharges.AccountCode = item.AccountCode;
+                    billsCharges.ClientID = this.dataCon.ClientID;
+                    billsCharges.BillMonth = "";
+                    billsCharges.SLC_CODE = item.SLC_CODE;
+                    billsCharges.SLT_CODE = item.SLT_CODE;
+                    billsCharges.ReferenceNo = "";
+                    billsCharges.SLE_CODE = item.SLE_CODE;
+                    billsCharges.StatusID = item.StatusID;
+                    billsCharges.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                    billsCharges.Amt = Convert.ToDecimal(item.Formula);
+                    billsCharges.PostedBy = LoginSession.UserID;
+                    billsCharges.UPDTag = 1;
+                    billsCharges.ClientName = this.dataCon.Fullname;
+                    billsCharges.SL_Description = item.SL_Description;
+
+                    transDT.Add(billsCharges);
+                    balancingEntry += Convert.ToDecimal(item.Formula);
+
+                }
+
+
+
+                TransactionDetailClass billsDiscount;
+                foreach (var item in this.dataCon.discountList)
+                {
+                    billsDiscount = new TransactionDetailClass();
+                    billsDiscount.TransactionCode = 3;
+                    billsDiscount.TransYear = LoginSession.TransYear;
+                    billsDiscount.AccountCode = item.AccountCode;
+                    billsDiscount.ClientID = this.dataCon.ClientID;
+                    billsDiscount.BillMonth = "";
+                    billsDiscount.SLC_CODE = item.SLC_CODE;
+                    billsDiscount.SLT_CODE = item.SLT_CODE;
+                    billsDiscount.ReferenceNo = "";
+                    billsDiscount.SLE_CODE = item.SLE_CODE;
+                    billsDiscount.StatusID = item.StatusID;
+                    billsDiscount.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                    billsDiscount.Amt = item.Amount * -1;
+                    billsDiscount.PostedBy = LoginSession.UserID;
+                    billsDiscount.UPDTag = 1;
+                    billsDiscount.ClientName = this.dataCon.Fullname;
+                    billsDiscount.SL_Description = item.SL_Description;
+
+                    transDT.Add(billsDiscount);
+                    totalDiscount += item.Amount;
+                }
+
+
+                TransactionDetailClass totalDiscountClass;
+                totalDiscountClass = new TransactionDetailClass();
+                totalDiscountClass.TransactionCode = 3;
+                totalDiscountClass.TransYear = LoginSession.TransYear;
+                totalDiscountClass.AccountCode = 401;
+                totalDiscountClass.ClientID = 0;
+                totalDiscountClass.BillMonth = "";
+                totalDiscountClass.SLC_CODE = 0;
+                totalDiscountClass.SLT_CODE = 0;
+                totalDiscountClass.ReferenceNo = "";
+                totalDiscountClass.SLE_CODE = 0;
+                totalDiscountClass.StatusID = 0;
+                totalDiscountClass.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                totalDiscountClass.Amt = totalDiscount;
+                totalDiscountClass.PostedBy = LoginSession.UserID;
+                totalDiscountClass.UPDTag = 1;
+                totalDiscountClass.ClientName = this.dataCon.Fullname;
+                totalDiscountClass.SL_Description = "Balancing Entry";
+                transDT.Add(totalDiscountClass);
+
+
+
+                TransactionDetailClass TellerEntry;
+                TellerEntry = new TransactionDetailClass();
+                TellerEntry.TransactionCode = 3;
+                TellerEntry.TransYear = LoginSession.TransYear;
+                TellerEntry.AccountCode = 402101;
+                TellerEntry.ClientID = this.dataCon.ClientID;
+                TellerEntry.BillMonth = "";
+                TellerEntry.SLC_CODE = 12;
+                TellerEntry.SLT_CODE = 1;
+                TellerEntry.ReferenceNo = "";
+                TellerEntry.SLE_CODE = 1;
+                TellerEntry.StatusID = 15;
+                TellerEntry.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                TellerEntry.Amt = balancingEntry *-1;
+                TellerEntry.PostedBy = LoginSession.UserID;
+                TellerEntry.UPDTag = 1;
+                TellerEntry.ClientName = this.dataCon.Fullname;
+                TellerEntry.SL_Description = "Balancing Entry";
+
+                transDT.Add(TellerEntry);
+
+
+                return transDT;
+            }
+            catch (Exception ex)
+            {
+                return transDT;
+            }
+        }
+
+
+
 
 
         private void Refresh()

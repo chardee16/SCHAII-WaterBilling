@@ -45,7 +45,7 @@ namespace WaterBillingProject.Pages
             {
                 this.dataCon.tempChargesList = this.repo.GetCharges(this.dataCon.ClientID);
                 this.dataCon.BillingList = this.repo.GetBillingList(this.dataCon.ClientID);
-                this.dataCon.TempdiscountList = this.repo.GetDiscount(this.dataCon.ClientID);
+                this.dataCon.TempdiscountList = this.repo.GetDiscount();
 
                 break;
             }
@@ -55,6 +55,7 @@ namespace WaterBillingProject.Pages
         {
             populateCharges();
             getDiscount();
+            //DeductDiscount();
             populateDiscount();
             getInterest();
             Compute();
@@ -97,14 +98,13 @@ namespace WaterBillingProject.Pages
             
         }
 
-
-
         private void getDiscount()
         {
+            List<CollectionDiscountClass> temporary = new List<CollectionDiscountClass>();
+
             if (this.dataCon.BillingList.Count == 1)
             {
-
-                if (LoginSession.TransDate.Day == 31)
+                if (LoginSession.TransDate.Day < 16)
                 {
                     decimal totalBillDue = 0;
                     decimal discount = 0;
@@ -113,12 +113,10 @@ namespace WaterBillingProject.Pages
                         totalBillDue += item.CurrentDue;
                     }
 
-                    discount = Math.Round(totalBillDue * Convert.ToDecimal(0.05), 2, MidpointRounding.AwayFromZero);
-
-                    if (discount > 0)
+                    foreach (var item in this.dataCon.TempdiscountList)
                     {
-                        List<CollectionDiscountClass> temporary = new List<CollectionDiscountClass>();
-                        foreach (var item in this.dataCon.TempdiscountList)
+                        discount = Math.Round(totalBillDue * Convert.ToDecimal(item.Formula), 2, MidpointRounding.AwayFromZero);
+                        if (discount > 0)
                         {
                             temporary.Add(new CollectionDiscountClass
                             {
@@ -128,32 +126,17 @@ namespace WaterBillingProject.Pages
                                 StatusID = item.StatusID,
                                 Description = item.Description,
                                 COAID = item.COAID,
-                                ReferenceNo = item.ReferenceNo,
-                                Amount = item.Amount,
-                                BillMonth = item.BillMonth,
+                                ReferenceNo = this.dataCon.BillingList.Select(o => o.ReferenceNo).FirstOrDefault(),
+                                Amount = discount,
+                                BillMonth = this.dataCon.BillingList.Select(o => o.BillMonth).FirstOrDefault(),
                             });
                         }
-
-                        temporary.Add(new CollectionDiscountClass
-                        {
-                            SLC_CODE = 0,
-                            SLT_CODE = 0,
-                            SLE_CODE = 0,
-                            StatusID = 0,
-                            Description = "Up to date Discount",
-                            COAID = 401102,
-                            ReferenceNo = "",
-                            Amount = discount,
-                            BillMonth = "",
-                        });
-
-
-                        this.dataCon.TempdiscountList = temporary;
-
+                        
                     }
 
                 }
 
+                this.dataCon.TempdiscountList = temporary;
 
 
             }
@@ -211,7 +194,34 @@ namespace WaterBillingProject.Pages
             this.dataCon.discountList = tempBillingDiscount;
         }
 
+        private void DeductDiscount()
+        {
+            if (this.dataCon.TempdiscountList.Count > 0)
+            {
+                Decimal discount = 0;
+                foreach (var item in this.dataCon.TempdiscountList)
+                {
+                    discount += item.Amount;
+                }
+                List<CollectionBillsClass> bill = new List<CollectionBillsClass>();
+                foreach (var item in this.dataCon.BillingList)
+                {
+                    bill.Add(new CollectionBillsClass 
+                    {
+                        SLC_CODE = item.SLC_CODE,
+                        SLT_CODE = item.SLT_CODE,
+                        BillMonth = item.BillMonth,
+                        ReferenceNo = item.ReferenceNo,
+                        Consumption = item.Consumption,
+                        CurrentDue = item.CurrentDue - discount,
+                        SL_Description = item.SL_Description,
+                    });
+                }
 
+                this.dataCon.BillingList = bill;
+            }
+          
+        }
 
         private void Compute()
         {
@@ -354,6 +364,9 @@ namespace WaterBillingProject.Pages
             List<TransactionDetailClass> transDT = new List<TransactionDetailClass>();
             try
             {
+                Decimal TotalTendered = this.dataCon.TenderedAmount;
+                Decimal TotalDiscount = 0;
+
                 TransactionDetailClass TellerEntry;
                 TellerEntry = new TransactionDetailClass();
                 TellerEntry.TransactionCode = 1;
@@ -367,7 +380,7 @@ namespace WaterBillingProject.Pages
                 TellerEntry.SLE_CODE = 11;
                 TellerEntry.StatusID = 15;
                 TellerEntry.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                TellerEntry.Amt = this.dataCon.TotalDue;
+                TellerEntry.Amt = this.dataCon.TenderedAmount <= this.dataCon.TotalDue ? this.dataCon.TenderedAmount : this.dataCon.TotalDue;
                 TellerEntry.PostedBy = LoginSession.UserID;
                 TellerEntry.UPDTag = 1;
                 TellerEntry.ClientName = this.dataCon.Fullname;
@@ -375,56 +388,6 @@ namespace WaterBillingProject.Pages
 
                 transDT.Add(TellerEntry);
 
-
-                TransactionDetailClass billsDiscount;
-                foreach (var item in this.dataCon.TempdiscountList)
-                {
-                    billsDiscount = new TransactionDetailClass();
-                    billsDiscount.TransactionCode = 1;
-                    billsDiscount.TransYear = LoginSession.TransYear;
-                    billsDiscount.AccountCode = item.COAID;
-                    billsDiscount.ClientID = this.dataCon.ClientID;
-                    billsDiscount.BillMonth = item.BillMonth;
-                    billsDiscount.SLC_CODE = item.SLC_CODE;
-                    billsDiscount.SLT_CODE = item.SLT_CODE;
-                    billsDiscount.ReferenceNo = item.ReferenceNo;
-                    billsDiscount.SLE_CODE = 11;
-                    billsDiscount.StatusID = 15;
-                    billsDiscount.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                    billsDiscount.Amt = item.Amount;
-                    billsDiscount.PostedBy = LoginSession.UserID;
-                    billsDiscount.UPDTag = 1;
-                    billsDiscount.ClientName = this.dataCon.Fullname;
-                    billsDiscount.SL_Description = item.Description;
-
-                    transDT.Add(billsDiscount);
-                }
-
-
-
-                TransactionDetailClass billsTrans;
-                foreach (var item in this.dataCon.BillingList)
-                {
-                    billsTrans = new TransactionDetailClass();
-                    billsTrans.TransactionCode = 1;
-                    billsTrans.TransYear = LoginSession.TransYear;
-                    billsTrans.AccountCode = 402101;
-                    billsTrans.ClientID = this.dataCon.ClientID;
-                    billsTrans.BillMonth = item.BillMonth;
-                    billsTrans.SLC_CODE = item.SLC_CODE;
-                    billsTrans.SLT_CODE = item.SLT_CODE;
-                    billsTrans.ReferenceNo = item.ReferenceNo;
-                    billsTrans.SLE_CODE = 11;
-                    billsTrans.StatusID = 15;
-                    billsTrans.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                    billsTrans.Amt = item.CurrentDue * -1;
-                    billsTrans.PostedBy = LoginSession.UserID;
-                    billsTrans.UPDTag = 1;
-                    billsTrans.ClientName = this.dataCon.Fullname;
-                    billsTrans.SL_Description = item.SL_Description;
-
-                    transDT.Add(billsTrans);
-                }
 
 
                 if (this.dataCon.Interest > 0)
@@ -442,40 +405,150 @@ namespace WaterBillingProject.Pages
                     interestEntry.SLE_CODE = 11;
                     interestEntry.StatusID = 15;
                     interestEntry.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                    interestEntry.Amt = this.dataCon.Interest;
+                    interestEntry.Amt = TotalTendered >= this.dataCon.Interest ?  this.dataCon.Interest *-1 : TotalTendered * -1;
                     interestEntry.PostedBy = LoginSession.UserID;
                     interestEntry.UPDTag = 1;
                     interestEntry.ClientName = this.dataCon.Fullname;
                     interestEntry.SL_Description = "Water Bill Interest";
 
                     transDT.Add(interestEntry);
+
+                    TotalTendered -= this.dataCon.Interest;
                 }
 
 
-
-                TransactionDetailClass billsCharges;
-                foreach (var item in this.dataCon.tempChargesList)
+                if (TotalTendered > 0)
                 {
-                    billsCharges = new TransactionDetailClass();
-                    billsCharges.TransactionCode = 1;
-                    billsCharges.TransYear = LoginSession.TransYear;
-                    billsCharges.AccountCode = item.COAID;
-                    billsCharges.ClientID = this.dataCon.ClientID;
-                    billsCharges.BillMonth = item.BillMonth;
-                    billsCharges.SLC_CODE = item.SLC_CODE;
-                    billsCharges.SLT_CODE = item.SLT_CODE;
-                    billsCharges.ReferenceNo = item.ReferenceNo;
-                    billsCharges.SLE_CODE = 11;
-                    billsCharges.StatusID = 15;
-                    billsCharges.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                    billsCharges.Amt = item.Amount * -1;
-                    billsCharges.PostedBy = LoginSession.UserID;
-                    billsCharges.UPDTag = 1;
-                    billsCharges.ClientName = this.dataCon.Fullname;
-                    billsCharges.SL_Description = item.Description;
+                    TransactionDetailClass billsCharges;
+                    foreach (var item in this.dataCon.tempChargesList)
+                    {
+                        if (TotalTendered > 0 && item.Amount > 0)
+                        {
+                            billsCharges = new TransactionDetailClass();
+                            billsCharges.TransactionCode = 1;
+                            billsCharges.TransYear = LoginSession.TransYear;
+                            billsCharges.AccountCode = item.COAID;
+                            billsCharges.ClientID = this.dataCon.ClientID;
+                            billsCharges.BillMonth = item.BillMonth;
+                            billsCharges.SLC_CODE = item.SLC_CODE;
+                            billsCharges.SLT_CODE = item.SLT_CODE;
+                            billsCharges.ReferenceNo = item.ReferenceNo;
+                            billsCharges.SLE_CODE = 11;
+                            billsCharges.StatusID = 15;
+                            billsCharges.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                            billsCharges.Amt = TotalTendered >= item.Amount ? item.Amount * -1 : TotalTendered * -1;
+                            billsCharges.PostedBy = LoginSession.UserID;
+                            billsCharges.UPDTag = 1;
+                            billsCharges.ClientName = this.dataCon.Fullname;
+                            billsCharges.SL_Description = item.Description;
 
-                    transDT.Add(billsCharges);
+                            transDT.Add(billsCharges);
+                        }
+
+                        TotalTendered -= item.Amount;
+                    }
                 }
+
+
+                if (TotalTendered > 0)
+                {
+                    TransactionDetailClass billsDiscount;
+                    foreach (var item in this.dataCon.TempdiscountList)
+                    {
+                        if (item.Amount > 0)
+                        {
+                            billsDiscount = new TransactionDetailClass();
+                            billsDiscount.TransactionCode = 1;
+                            billsDiscount.TransYear = LoginSession.TransYear;
+                            billsDiscount.AccountCode = item.COAID;
+                            billsDiscount.ClientID = this.dataCon.ClientID;
+                            billsDiscount.BillMonth = item.BillMonth;
+                            billsDiscount.SLC_CODE = item.SLC_CODE;
+                            billsDiscount.SLT_CODE = item.SLT_CODE;
+                            billsDiscount.ReferenceNo = item.ReferenceNo;
+                            billsDiscount.SLE_CODE = 11;
+                            billsDiscount.StatusID = 15;
+                            billsDiscount.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                            billsDiscount.Amt = item.Amount * -1;
+                            billsDiscount.PostedBy = LoginSession.UserID;
+                            billsDiscount.UPDTag = 1;
+                            billsDiscount.ClientName = this.dataCon.Fullname;
+                            billsDiscount.SL_Description = item.Description;
+
+                            transDT.Add(billsDiscount);
+                            TotalDiscount += item.Amount;
+                        }
+                        
+                    }
+
+                    if (TotalDiscount > 0)
+                    {
+                        TransactionDetailClass totalDiscountClass;
+                        totalDiscountClass = new TransactionDetailClass();
+                        totalDiscountClass.TransactionCode = 3;
+                        totalDiscountClass.TransYear = LoginSession.TransYear;
+                        totalDiscountClass.AccountCode = 401;
+                        totalDiscountClass.ClientID = 0;
+                        totalDiscountClass.BillMonth = "";
+                        totalDiscountClass.SLC_CODE = 0;
+                        totalDiscountClass.SLT_CODE = 0;
+                        totalDiscountClass.ReferenceNo = "";
+                        totalDiscountClass.SLE_CODE = 0;
+                        totalDiscountClass.StatusID = 0;
+                        totalDiscountClass.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                        totalDiscountClass.Amt = TotalDiscount;
+                        totalDiscountClass.PostedBy = LoginSession.UserID;
+                        totalDiscountClass.UPDTag = 1;
+                        totalDiscountClass.ClientName = this.dataCon.Fullname;
+                        totalDiscountClass.SL_Description = "Discount";
+                        transDT.Add(totalDiscountClass);
+                    }
+                   
+
+
+
+                    TransactionDetailClass billsTrans;
+                    foreach (var item in this.dataCon.BillingList)
+                    {
+
+                        if (TotalTendered > 0)
+                        {
+                            decimal amount = item.CurrentDue - TotalDiscount;
+
+                            billsTrans = new TransactionDetailClass();
+
+                            billsTrans.TransactionCode = 1;
+                            billsTrans.TransYear = LoginSession.TransYear;
+                            billsTrans.AccountCode = 402101;
+                            billsTrans.ClientID = this.dataCon.ClientID;
+                            billsTrans.BillMonth = item.BillMonth;
+                            billsTrans.SLC_CODE = item.SLC_CODE;
+                            billsTrans.SLT_CODE = item.SLT_CODE;
+                            billsTrans.ReferenceNo = item.ReferenceNo;
+                            billsTrans.SLE_CODE = 11;
+                            billsTrans.StatusID = 15;
+                            billsTrans.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                            billsTrans.Amt = TotalTendered >= amount  ? amount * -1 : TotalTendered * -1;
+                            billsTrans.PostedBy = LoginSession.UserID;
+                            billsTrans.UPDTag = 1;
+                            billsTrans.ClientName = this.dataCon.Fullname;
+                            billsTrans.SL_Description = item.SL_Description;
+
+                            transDT.Add(billsTrans);
+                        }
+
+
+                    }
+                }
+
+                
+
+
+                
+
+
+
+                
 
 
                 return transDT;
@@ -599,6 +672,13 @@ namespace WaterBillingProject.Pages
                 Refresh();
             }
                 
+        }
+
+        private void Executed_FindTransaction(object sender, ExecutedRoutedEventArgs e)
+        {
+            TransactionList billingList = new TransactionList();
+            billingList.ShowDialog();
+
         }
     }//end of Collection Page
 

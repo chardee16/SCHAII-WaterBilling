@@ -1,12 +1,20 @@
-﻿SELECT Cast(COALESCE(Max(REF_Count), 0) + 1 AS BIGINT) AS REF_Count
+﻿SELECT COALESCE(Max(CTLNo),0) + 1 as CTLNo 
+INTO #TEMPCtlNo
+FROM tblTransactionSummary 
+Where TransactionCode = @_TR_CODE AND TransYear = @_TransYear;
+
+
+SELECT Cast(COALESCE(Max(REF_Count), 0) + 1 AS BIGINT) AS REF_Count
 INTO   #maxcountref 
 FROM   tblBilling 
 ;
 
 DECLARE @ref_count bigint
 DECLARE @ReferenceNo varchar(50)
+DECLARE @ControlNo bigint
 SET @ref_count = (SELECT REF_Count FROM #maxcountref);
 SET @ReferenceNo = Concat('@_BillMonth',RIGHT('0000000'+CAST(@ref_count as VARCHAR(20)),7))
+SET @ControlNo = (SELECT CTLNo FROM #TEMPCtlNo)
 ;
 
 
@@ -43,7 +51,7 @@ Values
 	,@_CurrentDue
 	,@_BillStatus
 	,@_TR_CODE
-	,0
+	,@ControlNo
 	,'@_TR_Date'
 	,GETDATE()
 	,'Bill Added'
@@ -84,3 +92,61 @@ INSERT Into tblBillCharges
 Values
 @_ChargesValue
 ;
+
+
+
+INSERT INTO tblTransactionSummary
+(
+    TransactionCode
+    ,TransYear
+    ,CTLNo
+    ,TransactionDate
+    ,ClientID
+    ,Explanation
+    ,DateTimeAdded
+    ,PostedBy
+)
+VALUES
+(
+    @_TR_CODE
+    ,@_TransYear
+    ,@ControlNo
+    ,'@_TransactionDate'
+    ,@_ClientID
+    ,'@_Explanation'
+    ,GETDATE()
+    ,@_PostedBy
+)
+;
+
+
+
+INSERT INTO tblTransactionDetails      
+(
+    TransactionCode
+    ,TransYear
+    ,CTLNo
+    ,AccountCode
+    ,ClientID
+    ,BillMonth
+    ,SLC_CODE
+    ,SLT_CODE
+    ,ReferenceNo
+    ,SLE_CODE
+    ,StatusID
+    ,TransactionDate
+    ,Amt
+    ,PostedBy
+    ,UPDTag
+    ,SequenceNo
+    ,ClientName
+)
+VALUES
+@_TransactionDetailValue
+;
+
+
+
+
+DROP TABLE #TEMPCtlNo;
+DROP TABLE #maxcountref;

@@ -50,13 +50,12 @@ namespace WaterBillingProject.Repository
         }
 
 
-        public List<CollectionDiscountClass> GetDiscount(Int64 ClientID)
+        public List<CollectionDiscountClass> GetDiscount()
         {
             List<CollectionDiscountClass> toReturn = new List<CollectionDiscountClass>();
             try
             {
                 this.sqlFile.sqlQuery = _config.SQLDirectory + "Collection\\GetCollectionDiscount.sql";
-                sqlFile.setParameter("_ClientID", ClientID.ToString());
                 return Connection.Query<CollectionDiscountClass>(this.sqlFile.sqlQuery).ToList();
             }
             catch (Exception ex)
@@ -158,17 +157,7 @@ namespace WaterBillingProject.Repository
 
                 var affectedRow = Connection.Execute(sqlFile.sqlQuery);
 
-
-                if (affectedRow > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-
+                return true;
             }
             catch (Exception ex)
             {

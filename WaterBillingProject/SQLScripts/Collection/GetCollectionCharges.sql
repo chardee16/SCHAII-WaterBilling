@@ -5,7 +5,12 @@
 	  ,bc.Description
 	  ,bc.COAID
 	  ,bc.ReferenceNo
-	  ,bc.Amount
+	  ,
+	  (
+		SELECT SUM(Amt) FROM tblTransactionDetails td
+		WHERE td.SLC_CODE = bc.SLC_CODE and td.SLT_CODE = bc.SLT_CODE
+			and td.AccountCode = bc.COAID and td.ReferenceNo = bc.ReferenceNo 
+	  ) as Amount
 	  ,bill.BillMonth
 from tblBilling bill
 INNER JOIN tblBillCharges bc

@@ -123,6 +123,9 @@
     <Compile Include="Windows\PostingEntryWindow.xaml.cs">
       <DependentUpon>PostingEntryWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\TransactionList.xaml.cs">
+      <DependentUpon>TransactionList.xaml</DependentUpon>
+    </Compile>
     <Page Include="CrystalReport.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,6 +171,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\PostingEntryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\TransactionList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,17 +1,16 @@
-﻿select bd.SLC_CODE
-	  ,bd.SLT_CODE
-	  ,gl.SLE_CODE
-	  ,gl.StatusID 
-	  ,bd.Description
-	  ,bd.COAID
-	  ,bill.ReferenceNo
-	  ,bd.Amount
-	  ,bill.BillMonth
-from tblBilling bill
-INNER JOIN tblBillDiscount bd
-	ON bd.ClientID = bill.ClientID AND bd.ReferenceNo = bill.ReferenceNo
+﻿select sl.SLC_CODE
+	  ,sl.SLT_CODE
+	  ,sl.SLE_CODE
+	  ,sl.StatusID 
+	  ,sl.SL_Description as Description
+	  ,gl.AccountCode as COAID
+	  ,sl.Formula
+from tblSLType sl
 INNER JOIN tblGLControl gl
-	ON gl.AccountCode = bd.COAID
-WHERE bill.ClientID = @_ClientID
-and BillStatus = 1
-order by ReferenceNo desc
+	ON gl.SLC_CODE = sl.SLC_CODE
+		and gl.SLT_CODE = sl.SLT_CODE
+		and gl.SLE_CODE = sl.SLE_CODE
+		and gl.StatusID = sl.StatusID
+WHERE sl.SLC_CODE = 14
+and sl.SLE_CODE != 1
+and IsAutoLoad != 1

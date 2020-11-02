@@ -172,7 +172,39 @@ namespace WaterBilling.Repository
                     ChargesValue += "(" + item.SLC_CODE + "," + item.SLT_CODE + "," + item.AccountCode + ",'" + item.SL_Description + "'," + billData.ClientID + ", @ReferenceNo," + item.Amount + ")" + Last;
                 }
 
+
+                String TransactionDetailValue = "";
+                Int32 SequenceNo = 0;
+                counter = 0;
+                foreach (var item in billData.transdetail)
+                {
+                    counter++;
+                    if (counter == billData.transdetail.Count)
+                    {
+                        Last = ";";
+                    }
+                    else
+                    {
+                        Last = ",\n";
+                    }
+                    TransactionDetailValue += "(" + item.TransactionCode + "," + item.TransYear + ",@ControlNo," + item.AccountCode
+                                    + "," + item.ClientID + ",'" + billData.BillMonth + "'," + item.SLC_CODE + "," + item.SLT_CODE
+                                    + ",@ReferenceNo," + item.SLE_CODE + "," + item.StatusID + ",'" + item.TransactionDate
+                                    + "'," + item.Amt + "," + item.PostedBy + ",1," + SequenceNo + ",'" + item.ClientName + "')" + Last;
+
+                    SequenceNo++;
+                }
+
+
+
+
+
                 this.sqlFile.sqlQuery = _config.SQLDirectory + "Billing\\InsertBill.sql";
+                sqlFile.setParameter("_TransYear", billData.transummary.TransYear.ToString());
+                sqlFile.setParameter("_Explanation", billData.transummary.Explanation);
+                sqlFile.setParameter("_PostedBy", billData.transummary.PostedBy.ToString());
+                sqlFile.setParameter("_TransactionDate", billData.transummary.TransactionDate);
+
                 sqlFile.setParameter("_SLC_CODE", billData.SLC_CODE.ToString());
                 sqlFile.setParameter("_SLT_CODE", billData.SLT_CODE.ToString());
                 sqlFile.setParameter("_BillMonth", billData.BillMonth);
@@ -188,6 +220,7 @@ namespace WaterBilling.Repository
                 sqlFile.setParameter("_PreviousReading", billData.PreviousReading.ToString());
                 sqlFile.setParameter("_discountValue", discountValue);
                 sqlFile.setParameter("_ChargesValue", ChargesValue);
+                sqlFile.setParameter("_TransactionDetailValue", TransactionDetailValue);
 
 
                 var affectedRow = Connection.Execute(sqlFile.sqlQuery);

@@ -6,8 +6,13 @@
 	  ,sl.Formula
 	  ,gl.AccountCode
 	  ,	
-		sl.Formula + COALESCE((	
-			SELECT SUM(Amount) from tblBillCharges c 
+		 sl.Formula + COALESCE((	
+		SELECT (
+					SELECT SUM(Amt) FROM tblTransactionDetails td
+					WHERE td.SLC_CODE = c.SLC_CODE and td.SLT_CODE = c.SLT_CODE
+						and td.AccountCode = c.COAID and td.ReferenceNo = c.ReferenceNo
+				) as Amount
+			from tblBillCharges c 
 			INNER JOIN tblBilling bill
 			ON bill.ClientID = @_ClientID @_Condition
 			WHERE c.SLC_CODE = sl.SLC_CODE 

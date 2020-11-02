@@ -114,6 +114,23 @@ namespace WaterBillingProject.Models.Collection
         }
 
 
+        private String _Formula;
+        public String Formula
+        {
+            get
+            {
+                return _Formula;
+            }
+            set
+            {
+                if (value != _Formula)
+                {
+                    _Formula = value;
+                    NotifyPropertyChanged("Formula");
+                }
+            }
+        }
+
 
         private String _ReferenceNo;
         public String ReferenceNo
@@ -149,7 +166,7 @@ namespace WaterBillingProject.Models.Collection
                 }
             }
         }
-        
+
         private String _BillMonth;
         public String BillMonth
         {
