@@ -304,6 +304,14 @@ namespace WaterBillingProject.Pages
                     findClientFunction();
                 }
             }
+            else if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
+            {
+                if (Keyboard.IsKeyDown(Key.F))
+                {
+                    TransactionList billingList = new TransactionList();
+                    billingList.ShowDialog();
+                }
+            }
             else if (e.Key == Key.F11)
             {
                 SaveTransation();
@@ -535,6 +543,8 @@ namespace WaterBillingProject.Pages
                             billsTrans.SL_Description = item.SL_Description;
 
                             transDT.Add(billsTrans);
+
+                            TotalTendered -= amount;
                         }
 
 

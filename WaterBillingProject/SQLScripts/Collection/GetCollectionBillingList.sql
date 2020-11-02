@@ -15,4 +15,4 @@ INNER JOIN tblSLType slt
 	ON slt.SLC_CODE = bill.SLC_CODE AND slt.SLT_CODE = bill.SLT_CODE and slt.SLE_CODE = 1
 WHERE ClientID = @_ClientID
 and BillStatus = 1
-Order by BillMonth desc
+Order by BillMonth

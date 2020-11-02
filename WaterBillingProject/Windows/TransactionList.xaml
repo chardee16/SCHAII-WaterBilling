@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:WaterBillingProject.Windows"
         mc:Ignorable="d"
-        Title="TransactionList" Height="450" Width="1000" WindowStartupLocation="CenterScreen" PreviewKeyDown="HandleKeys" WindowStyle="None" Loaded="Window_Loaded" >
+        Title="TransactionList" Height="450" Width="800" WindowStartupLocation="CenterScreen" PreviewKeyDown="HandleKeys" WindowStyle="None" Loaded="Window_Loaded" >
     <Window.Resources>
         <Style TargetType="TextBox">
             <Style.Triggers>
@@ -56,14 +56,14 @@
                 <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
                 <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="300" BorderThickness="1,1,1,1" PreviewKeyDown="txt_Search_PreviewKeyDown" TextChanged="txt_Search_TextChanged"/>
             </StackPanel>
-            <DataGrid x:Name="DG_ClientList" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="0,10,0,0" Height="367" PreviewMouseDoubleClick="DG_ClientList_PreviewMouseDoubleClick" Loaded="DG_ClientList_Loaded" PreviewKeyDown="DG_ClientList_PreviewKeyDown">
+            <DataGrid x:Name="DG_TransactionList" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="0,10,0,0" Height="367" PreviewMouseDoubleClick="DG_ClientList_PreviewMouseDoubleClick" Loaded="DG_ClientList_Loaded" PreviewKeyDown="DG_ClientList_PreviewKeyDown">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=ClientID,UpdateSourceTrigger=PropertyChanged}" Header="Trans Code" Width="100" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding Path=FullAddress,UpdateSourceTrigger=PropertyChanged}" Header="Control No" Width="166" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding Path=ClientStatusDesc,UpdateSourceTrigger=PropertyChanged}" Header="Amount" Width="166" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding Path=ClientStatusDesc,UpdateSourceTrigger=PropertyChanged}" Header="Date" Width="166" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding Path=ClientStatusDesc,UpdateSourceTrigger=PropertyChanged}" Header="UPDTag" Width="166" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding Path=ClientStatusDesc,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="232" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=TransactionCode,UpdateSourceTrigger=PropertyChanged}" Header="Trans Code" Width="100" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=CTLNo,UpdateSourceTrigger=PropertyChanged}" Header="Control No" Width="100" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=Amt,UpdateSourceTrigger=PropertyChanged}" Header="Amount" Width="130" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=TransactionDate,UpdateSourceTrigger=PropertyChanged}" Header="Date" Width="130" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=UPDTag,UpdateSourceTrigger=PropertyChanged}" Header="UPDTag" Width="130" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=ClientName,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="200" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

@@ -167,5 +167,28 @@ namespace WaterBillingProject.Repository
 
         }
 
+
+
+        public List<TransactionListClass> GetTransactionList(String trDate)
+        {
+            List<TransactionListClass> toReturn = new List<TransactionListClass>();
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Collection\\GetTransactions.sql";
+                sqlFile.setParameter("_trDate", trDate);
+                return Connection.Query<TransactionListClass>(this.sqlFile.sqlQuery).ToList();
+            }
+            catch (Exception ex)
+            {
+                return toReturn;
+            }
+        }
+
+
+
+
+
+
+
     }
 }

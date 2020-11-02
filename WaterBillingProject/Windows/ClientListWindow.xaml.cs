@@ -146,6 +146,7 @@ namespace WaterBilling.Windows
             switch (e.Key)
             {
                 case Key.Escape:
+                    e.Handled = true;
                     this.Close();
                     break;
                 case Key.Enter:
@@ -211,6 +212,7 @@ namespace WaterBilling.Windows
             switch (e.Key)
             {
                 case Key.Escape:
+                    e.Handled = true;
                     this.Close();
                     break;
                 case Key.Enter:
