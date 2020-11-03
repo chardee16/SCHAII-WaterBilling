@@ -100,6 +100,7 @@
     <Compile Include="Models\Collection\TransactionDetailClass.cs" />
     <Compile Include="Models\Collection\TransactionListClass.cs" />
     <Compile Include="Models\Collection\TransactionSummaryClass.cs" />
+    <Compile Include="Models\Reports\ReportClientListClass.cs" />
     <Compile Include="Pages\CollectionPage.xaml.cs">
       <DependentUpon>CollectionPage.xaml</DependentUpon>
     </Compile>
@@ -117,6 +118,7 @@
     <Compile Include="Repository\ClientMasterRepository.cs" />
     <Compile Include="Repository\CollectionRepository.cs" />
     <Compile Include="Repository\Interface\IRepository.cs" />
+    <Compile Include="Repository\ReportRepository.cs" />
     <Compile Include="Services\Config.cs" />
     <Compile Include="Services\LoginSession.cs" />
     <Compile Include="Services\SQLDatabase.cs" />
@@ -242,6 +244,7 @@
     <Content Include="SQLScripts\Collection\GetTransactions.sql" />
     <Content Include="SQLScripts\Collection\InsertCollection.sql" />
     <Content Include="SQLScripts\Collection\UpdateBillStatus.sql" />
+    <Content Include="SQLScripts\Reports\GetReportClientList.sql" />
     <Resource Include="Img\microsoft_excel_n.png" />
     <Resource Include="Img\PDF.png" />
     <Resource Include="Img\Printer-icon.png" />

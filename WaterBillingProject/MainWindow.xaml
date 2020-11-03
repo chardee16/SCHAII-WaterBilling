@@ -129,7 +129,7 @@
             </Grid.Effect>
 
             <Grid Background="#72A2CC">
-                <TextBlock x:Name="txt_Title" Text="DASHBOARD" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="WS Simple Gallifreyan" Foreground="#0C1620" FontSize="16"/>
+                <TextBlock x:Name="txt_Title" Text="DASHBOARD" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Book Antiqua" Foreground="#0C1620" FontSize="22" FontWeight="Bold"/>
             </Grid>
 
             <StackPanel Grid.Row="1">

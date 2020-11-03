@@ -27,18 +27,43 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
-                        <TextBox TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="300" BorderThickness="2"/>
+                        <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="300" BorderThickness="2"  PreviewKeyDown="txt_Search_PreviewKeyDown" TextChanged="txt_Search_TextChanged"/>
                     </StackPanel>
 
-                    <DataGrid x:Name="DG_ClientList" ItemsSource="{Binding Path=clientList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="350">
+                    <DataGrid x:Name="DG_ClientList" ItemsSource="{Binding Path=clientList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="330">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=ClientID,UpdateSourceTrigger=PropertyChanged}" Header="Client ID" Width="378*" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=FullName,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="378*" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=FullAddress,UpdateSourceTrigger=PropertyChanged}" Header="Blk and Lot" Width="378*" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=ClientStatusDesc,UpdateSourceTrigger=PropertyChanged}" Header="Status" Width="378*" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=FullName,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="174" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=FullAddress,UpdateSourceTrigger=PropertyChanged}" Header="House" Width="154" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=Consumption,UpdateSourceTrigger=PropertyChanged}" Header="Consumption" Width="154" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=TotalDue,UpdateSourceTrigger=PropertyChanged}" Header="Total Due" Width="154" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=TotalUnpaidBill,UpdateSourceTrigger=PropertyChanged}" Header="Unpaid Bill" Width="134" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
+
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"> TOTAL ACTIVE CLIENT</TextBlock>
+                                <TextBlock Text="{Binding Path = TotalClient,UpdateSourceTrigger=PropertyChanged}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">TOTAL CONSUMPTION</TextBlock>
+                                <TextBlock Text="{Binding Path = TotalConsumption,UpdateSourceTrigger=PropertyChanged}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">TOTAL DUES</TextBlock>
+                                <TextBlock Text="{Binding Path = TotalDues,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        
+
+                    </StackPanel>
                 </StackPanel>
             </Grid>
 
