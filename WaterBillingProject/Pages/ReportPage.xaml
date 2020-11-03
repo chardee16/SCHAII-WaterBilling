@@ -1,0 +1,52 @@
+﻿<Page x:Class="WaterBillingProject.Pages.ReportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:WaterBillingProject.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="570" d:DesignWidth="820"
+      Title="ReportPage">
+
+    <Grid Background="White">
+        <StackPanel>
+            <Grid Height="50" Margin="10,10,10,0" >
+                <Grid.Background>
+                    <SolidColorBrush Color="#FF9EC6FF" Opacity="0.8"/>
+                </Grid.Background>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0">
+                    <Button Uid="0" FontSize="12" Width="150" Content="CLIENT REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}"  Foreground="#FF10436B" Click="Button_Click" />
+                    <Button Uid="1" FontSize="12" Width="150" Content="BILLING REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
+                    <Button Uid="2" FontSize="12" Width="150" Content="OTHER REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
+                </StackPanel>
+                <Grid x:Name="GridCursor" Width="150" Height="3" Background="#FF07385F" HorizontalAlignment="Left" Margin="10,30,0,0"/>
+            </Grid>
+
+            <Grid x:Name="ClientGrid" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
+                        <TextBox TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="300" BorderThickness="2"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="DG_ClientList" ItemsSource="{Binding Path=clientList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="350">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=ClientID,UpdateSourceTrigger=PropertyChanged}" Header="Client ID" Width="378*" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=FullName,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="378*" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=FullAddress,UpdateSourceTrigger=PropertyChanged}" Header="Blk and Lot" Width="378*" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=ClientStatusDesc,UpdateSourceTrigger=PropertyChanged}" Header="Status" Width="378*" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </StackPanel>
+            </Grid>
+
+            <Grid x:Name="BillingGrid" Visibility="Collapsed" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+                <TextBlock>Billing</TextBlock>
+            </Grid>
+        </StackPanel>
+
+
+    </Grid>
+</Page>

@@ -587,7 +587,6 @@ namespace WaterBilling.Pages
             try
             {
                 Decimal balancingEntry = 0;
-                Decimal totalDiscount = 0;
 
                 TransactionDetailClass billsTrans;
 
@@ -645,51 +644,51 @@ namespace WaterBilling.Pages
 
 
 
-                TransactionDetailClass billsDiscount;
-                foreach (var item in this.dataCon.discountList)
-                {
-                    billsDiscount = new TransactionDetailClass();
-                    billsDiscount.TransactionCode = 3;
-                    billsDiscount.TransYear = LoginSession.TransYear;
-                    billsDiscount.AccountCode = item.AccountCode;
-                    billsDiscount.ClientID = this.dataCon.ClientID;
-                    billsDiscount.BillMonth = "";
-                    billsDiscount.SLC_CODE = item.SLC_CODE;
-                    billsDiscount.SLT_CODE = item.SLT_CODE;
-                    billsDiscount.ReferenceNo = "";
-                    billsDiscount.SLE_CODE = item.SLE_CODE;
-                    billsDiscount.StatusID = item.StatusID;
-                    billsDiscount.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                    billsDiscount.Amt = item.Amount * -1;
-                    billsDiscount.PostedBy = LoginSession.UserID;
-                    billsDiscount.UPDTag = 1;
-                    billsDiscount.ClientName = this.dataCon.Fullname;
-                    billsDiscount.SL_Description = item.SL_Description;
+                //TransactionDetailClass billsDiscount;
+                //foreach (var item in this.dataCon.discountList)
+                //{
+                //    billsDiscount = new TransactionDetailClass();
+                //    billsDiscount.TransactionCode = 3;
+                //    billsDiscount.TransYear = LoginSession.TransYear;
+                //    billsDiscount.AccountCode = item.AccountCode;
+                //    billsDiscount.ClientID = this.dataCon.ClientID;
+                //    billsDiscount.BillMonth = "";
+                //    billsDiscount.SLC_CODE = item.SLC_CODE;
+                //    billsDiscount.SLT_CODE = item.SLT_CODE;
+                //    billsDiscount.ReferenceNo = "";
+                //    billsDiscount.SLE_CODE = item.SLE_CODE;
+                //    billsDiscount.StatusID = item.StatusID;
+                //    billsDiscount.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                //    billsDiscount.Amt = item.Amount * -1;
+                //    billsDiscount.PostedBy = LoginSession.UserID;
+                //    billsDiscount.UPDTag = 1;
+                //    billsDiscount.ClientName = this.dataCon.Fullname;
+                //    billsDiscount.SL_Description = item.SL_Description;
 
-                    transDT.Add(billsDiscount);
-                    totalDiscount += item.Amount;
-                }
+                //    transDT.Add(billsDiscount);
+                //    totalDiscount += item.Amount;
+                //}
 
 
-                TransactionDetailClass totalDiscountClass;
-                totalDiscountClass = new TransactionDetailClass();
-                totalDiscountClass.TransactionCode = 3;
-                totalDiscountClass.TransYear = LoginSession.TransYear;
-                totalDiscountClass.AccountCode = 401;
-                totalDiscountClass.ClientID = 0;
-                totalDiscountClass.BillMonth = "";
-                totalDiscountClass.SLC_CODE = 0;
-                totalDiscountClass.SLT_CODE = 0;
-                totalDiscountClass.ReferenceNo = "";
-                totalDiscountClass.SLE_CODE = 0;
-                totalDiscountClass.StatusID = 0;
-                totalDiscountClass.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                totalDiscountClass.Amt = totalDiscount;
-                totalDiscountClass.PostedBy = LoginSession.UserID;
-                totalDiscountClass.UPDTag = 1;
-                totalDiscountClass.ClientName = this.dataCon.Fullname;
-                totalDiscountClass.SL_Description = "Balancing Entry";
-                transDT.Add(totalDiscountClass);
+                //TransactionDetailClass totalDiscountClass;
+                //totalDiscountClass = new TransactionDetailClass();
+                //totalDiscountClass.TransactionCode = 3;
+                //totalDiscountClass.TransYear = LoginSession.TransYear;
+                //totalDiscountClass.AccountCode = 401;
+                //totalDiscountClass.ClientID = 0;
+                //totalDiscountClass.BillMonth = "";
+                //totalDiscountClass.SLC_CODE = 0;
+                //totalDiscountClass.SLT_CODE = 0;
+                //totalDiscountClass.ReferenceNo = "";
+                //totalDiscountClass.SLE_CODE = 0;
+                //totalDiscountClass.StatusID = 0;
+                //totalDiscountClass.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                //totalDiscountClass.Amt = totalDiscount;
+                //totalDiscountClass.PostedBy = LoginSession.UserID;
+                //totalDiscountClass.UPDTag = 1;
+                //totalDiscountClass.ClientName = this.dataCon.Fullname;
+                //totalDiscountClass.SL_Description = "Balancing Entry";
+                //transDT.Add(totalDiscountClass);
 
 
 

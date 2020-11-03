@@ -50,12 +50,13 @@ namespace WaterBillingProject.Repository
         }
 
 
-        public List<CollectionDiscountClass> GetDiscount()
+        public List<CollectionDiscountClass> GetDiscount(Int64 ClientID)
         {
             List<CollectionDiscountClass> toReturn = new List<CollectionDiscountClass>();
             try
             {
                 this.sqlFile.sqlQuery = _config.SQLDirectory + "Collection\\GetCollectionDiscount.sql";
+                sqlFile.setParameter("_ClientID", ClientID.ToString());
                 return Connection.Query<CollectionDiscountClass>(this.sqlFile.sqlQuery).ToList();
             }
             catch (Exception ex)

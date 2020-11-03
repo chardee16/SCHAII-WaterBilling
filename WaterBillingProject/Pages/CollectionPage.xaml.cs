@@ -45,7 +45,7 @@ namespace WaterBillingProject.Pages
             {
                 this.dataCon.tempChargesList = this.repo.GetCharges(this.dataCon.ClientID);
                 this.dataCon.BillingList = this.repo.GetBillingList(this.dataCon.ClientID);
-                this.dataCon.TempdiscountList = this.repo.GetDiscount();
+                this.dataCon.TempdiscountList = this.repo.GetDiscount(this.dataCon.ClientID);
 
                 break;
             }
@@ -98,12 +98,55 @@ namespace WaterBillingProject.Pages
             
         }
 
+        //private void getDiscount()
+        //{
+        //    List<CollectionDiscountClass> temporary = new List<CollectionDiscountClass>();
+
+        //    if (this.dataCon.BillingList.Count == 1)
+        //    {
+        //        if (LoginSession.TransDate.Day < 16)
+        //        {
+        //            decimal totalBillDue = 0;
+        //            decimal discount = 0;
+        //            foreach (var item in this.dataCon.BillingList)
+        //            {
+        //                totalBillDue += item.CurrentDue;
+        //            }
+
+        //            foreach (var item in this.dataCon.TempdiscountList)
+        //            {
+        //                discount = Math.Round(totalBillDue * Convert.ToDecimal(item.Formula), 2, MidpointRounding.AwayFromZero);
+        //                if (discount > 0)
+        //                {
+        //                    temporary.Add(new CollectionDiscountClass
+        //                    {
+        //                        SLC_CODE = item.SLC_CODE,
+        //                        SLT_CODE = item.SLT_CODE,
+        //                        SLE_CODE = item.SLE_CODE,
+        //                        StatusID = item.StatusID,
+        //                        Description = item.Description,
+        //                        COAID = item.COAID,
+        //                        ReferenceNo = this.dataCon.BillingList.Select(o => o.ReferenceNo).FirstOrDefault(),
+        //                        Amount = discount,
+        //                        BillMonth = this.dataCon.BillingList.Select(o => o.BillMonth).FirstOrDefault(),
+        //                    });
+        //                }
+
+        //            }
+
+        //        }
+
+        //        this.dataCon.TempdiscountList = temporary;
+
+
+        //    }
+        //}
+
         private void getDiscount()
         {
-            List<CollectionDiscountClass> temporary = new List<CollectionDiscountClass>();
-
             if (this.dataCon.BillingList.Count == 1)
             {
+
                 if (LoginSession.TransDate.Day < 16)
                 {
                     decimal totalBillDue = 0;
@@ -113,10 +156,12 @@ namespace WaterBillingProject.Pages
                         totalBillDue += item.CurrentDue;
                     }
 
-                    foreach (var item in this.dataCon.TempdiscountList)
+                    discount = Math.Round(totalBillDue * Convert.ToDecimal(0.05), 2, MidpointRounding.AwayFromZero);
+
+                    if (discount > 0)
                     {
-                        discount = Math.Round(totalBillDue * Convert.ToDecimal(item.Formula), 2, MidpointRounding.AwayFromZero);
-                        if (discount > 0)
+                        List<CollectionDiscountClass> temporary = new List<CollectionDiscountClass>();
+                        foreach (var item in this.dataCon.TempdiscountList)
                         {
                             temporary.Add(new CollectionDiscountClass
                             {
@@ -126,21 +171,37 @@ namespace WaterBillingProject.Pages
                                 StatusID = item.StatusID,
                                 Description = item.Description,
                                 COAID = item.COAID,
-                                ReferenceNo = this.dataCon.BillingList.Select(o => o.ReferenceNo).FirstOrDefault(),
-                                Amount = discount,
-                                BillMonth = this.dataCon.BillingList.Select(o => o.BillMonth).FirstOrDefault(),
+                                ReferenceNo = item.ReferenceNo,
+                                Amount = item.Amount,
+                                BillMonth = item.BillMonth,
                             });
                         }
-                        
+
+                        temporary.Add(new CollectionDiscountClass
+                        {
+                            SLC_CODE = 0,
+                            SLT_CODE = 0,
+                            SLE_CODE = 0,
+                            StatusID = 0,
+                            Description = "Up to date Discount",
+                            COAID = 401102,
+                            ReferenceNo = "",
+                            Amount = discount,
+                            BillMonth = "",
+                        });
+
+
+                        this.dataCon.TempdiscountList = temporary;
+
                     }
 
                 }
 
-                this.dataCon.TempdiscountList = temporary;
 
 
             }
         }
+
 
         private void populateCharges()
         {

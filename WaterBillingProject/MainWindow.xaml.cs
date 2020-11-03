@@ -140,6 +140,7 @@ namespace WaterBillingProject
         private void btn_Report_Click(object sender, RoutedEventArgs e)
         {
             txt_Title.Text = "REPORT";
+            MainContent.Content = new ReportPage();
         }
 
         private void btn_Settings_Click(object sender, RoutedEventArgs e)
@@ -176,6 +177,7 @@ namespace WaterBillingProject
             else if (e.Key == Key.F5)
             {
                 txt_Title.Text = "REPORT";
+                MainContent.Content = new ReportPage();
                 e.Handled = true;
             }
             else if (e.Key == Key.F6)
