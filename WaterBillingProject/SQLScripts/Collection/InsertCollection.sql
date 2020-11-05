@@ -22,6 +22,7 @@ INSERT INTO tblTransactionSummary
     ,Explanation
     ,DateTimeAdded
     ,PostedBy
+    ,ORNo
 )
 VALUES
 (
@@ -33,6 +34,7 @@ VALUES
     ,'@_Explanation'
     ,GETDATE()
     ,@_PostedBy
+    ,'@_ORNumber'
 )
 
 

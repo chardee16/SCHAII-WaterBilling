@@ -80,7 +80,7 @@ namespace WaterBillingProject.Pages
             while (true)
             {
                 this.dataCon.reportClientList = repo.GetClientList();
-
+                this.dataCon.reportTransactionList = repo.GetTransactionList("2020-11-01","2020-11-30");
                 break;
             }
         }
@@ -117,6 +117,10 @@ namespace WaterBillingProject.Pages
             DG_ClientList.SelectedIndex = 0;
         }
 
+        private void btn_Find_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(this.dataCon.DateTo);
+        }
 
         private bool FilterData(object item)
         {
@@ -200,6 +204,55 @@ namespace WaterBillingProject.Pages
             {
                 _reportClientList = value;
                 OnPropertyChanged("reportClientList");
+            }
+        }
+
+
+
+        private String _DateFrom;
+        public String DateFrom
+        {
+            get
+            {
+                return _DateFrom;
+            }
+            set
+            {
+                if (value != _DateFrom)
+                {
+                    _DateFrom = value;
+                    OnPropertyChanged("DateFrom");
+                }
+            }
+        }
+
+
+        private String _DateTo;
+        public String DateTo
+        {
+            get
+            {
+                return _DateTo;
+            }
+            set
+            {
+                if (value != _DateTo)
+                {
+                    _DateTo = value;
+                    OnPropertyChanged("DateTo");
+                }
+            }
+        }
+
+
+        List<ReportTransactionList> _reportTransactionList;
+        public List<ReportTransactionList> reportTransactionList
+        {
+            get { return _reportTransactionList; }
+            set
+            {
+                _reportTransactionList = value;
+                OnPropertyChanged("reportTransactionList");
             }
         }
 

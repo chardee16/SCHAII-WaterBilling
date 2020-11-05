@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -179,15 +180,15 @@ namespace WaterBillingProject.Pages
 
                         temporary.Add(new CollectionDiscountClass
                         {
-                            SLC_CODE = 0,
-                            SLT_CODE = 0,
-                            SLE_CODE = 0,
-                            StatusID = 0,
+                            SLC_CODE = 14,
+                            SLT_CODE = 1,
+                            SLE_CODE = 3,
+                            StatusID = 15,
                             Description = "Up to date Discount",
                             COAID = 401102,
-                            ReferenceNo = "",
+                            ReferenceNo = this.dataCon.BillingList.Select(x => x.ReferenceNo).FirstOrDefault(),
                             Amount = discount,
-                            BillMonth = "",
+                            BillMonth = this.dataCon.BillingList.Select(x => x.BillMonth).FirstOrDefault(),
                         });
 
 
@@ -375,7 +376,15 @@ namespace WaterBillingProject.Pages
             }
             else if (e.Key == Key.F11)
             {
-                SaveTransation();
+                if (String.IsNullOrEmpty(this.dataCon.ORNumber))
+                {
+                    txt_ORNumber.Focus();
+                }
+                else
+                {
+                    SaveTransation();
+                }
+                
             }
             else if(e.Key == Key.Escape)
             {
@@ -419,6 +428,7 @@ namespace WaterBillingProject.Pages
                 tranSummary.ClientID = this.dataCon.ClientID;
                 tranSummary.Explanation = "Payment of : " + this.dataCon.Fullname;
                 tranSummary.PostedBy = LoginSession.UserID;
+                tranSummary.ORNo = this.dataCon.ORNumber;
                 return tranSummary;
 
             }
@@ -554,7 +564,7 @@ namespace WaterBillingProject.Pages
                     {
                         TransactionDetailClass totalDiscountClass;
                         totalDiscountClass = new TransactionDetailClass();
-                        totalDiscountClass.TransactionCode = 3;
+                        totalDiscountClass.TransactionCode = 1;
                         totalDiscountClass.TransYear = LoginSession.TransYear;
                         totalDiscountClass.AccountCode = 401;
                         totalDiscountClass.ClientID = 0;
@@ -731,7 +741,7 @@ namespace WaterBillingProject.Pages
             this.dataCon.TotalDue = 0;
             this.dataCon.Interest = 0;
             this.dataCon.Change = 0;
-
+            this.dataCon.ORNumber = "";
 
         }
 
@@ -750,6 +760,52 @@ namespace WaterBillingProject.Pages
             TransactionList billingList = new TransactionList();
             billingList.ShowDialog();
 
+        }
+
+        private void txt_ORNumber_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
+        }
+
+        private void txt_ORNumber_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                if (Keyboard.IsKeyDown(Key.F))
+                {
+                    findClientFunction();
+                }
+            }
+            else if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
+            {
+                if (Keyboard.IsKeyDown(Key.F))
+                {
+                    TransactionList billingList = new TransactionList();
+                    billingList.ShowDialog();
+                }
+            }
+            else if (e.Key == Key.F11)
+            {
+                if (String.IsNullOrEmpty(this.dataCon.ORNumber))
+                {
+                    txt_ORNumber.Focus();
+                }
+                else
+                {
+                    SaveTransation();
+                }
+                e.Handled = true;
+
+            }
+            else if (e.Key == Key.Escape)
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to cancel your work?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    Refresh();
+                }
+            }
         }
     }//end of Collection Page
 
@@ -951,6 +1007,22 @@ namespace WaterBillingProject.Pages
             }
         }
 
+        private String _ORNumber;
+        public String ORNumber
+        {
+            get
+            {
+                return _ORNumber;
+            }
+            set
+            {
+                if (value != _ORNumber)
+                {
+                    _ORNumber = value;
+                    OnPropertyChanged("ORNumber");
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)

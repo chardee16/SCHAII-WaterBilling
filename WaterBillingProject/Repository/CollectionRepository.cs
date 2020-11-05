@@ -118,6 +118,7 @@ namespace WaterBillingProject.Repository
                 sqlFile.setParameter("_ClientID", summary.ClientID.ToString());
                 sqlFile.setParameter("_Explanation", summary.Explanation);
                 sqlFile.setParameter("_PostedBy", summary.PostedBy.ToString());
+                sqlFile.setParameter("_ORNumber", summary.ORNo);
                 sqlFile.setParameter("_TransactionDetailValue", TransactionDetailValue);
                 sqlFile.setParameter("_TransactionCheckValue", TransactionCheckValue);
 

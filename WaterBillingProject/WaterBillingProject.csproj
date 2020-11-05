@@ -101,6 +101,7 @@
     <Compile Include="Models\Collection\TransactionListClass.cs" />
     <Compile Include="Models\Collection\TransactionSummaryClass.cs" />
     <Compile Include="Models\Reports\ReportClientListClass.cs" />
+    <Compile Include="Models\Reports\ReportTransactionList.cs" />
     <Compile Include="Pages\CollectionPage.xaml.cs">
       <DependentUpon>CollectionPage.xaml</DependentUpon>
     </Compile>
@@ -245,6 +246,7 @@
     <Content Include="SQLScripts\Collection\InsertCollection.sql" />
     <Content Include="SQLScripts\Collection\UpdateBillStatus.sql" />
     <Content Include="SQLScripts\Reports\GetReportClientList.sql" />
+    <Content Include="SQLScripts\Reports\GetReportTransactionList.sql" />
     <Resource Include="Img\microsoft_excel_n.png" />
     <Resource Include="Img\PDF.png" />
     <Resource Include="Img\Printer-icon.png" />

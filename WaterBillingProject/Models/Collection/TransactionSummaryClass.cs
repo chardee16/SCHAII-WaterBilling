@@ -15,5 +15,6 @@ namespace WaterBillingProject.Models.Collection
         public Int64 ClientID { get; set; }
         public String Explanation { get; set; }
         public Int32 PostedBy { get; set; }
+        public String ORNo { get; set; }
     }
 }

@@ -35,5 +35,25 @@ namespace WaterBillingProject.Repository
 
 
 
+        public List<ReportTransactionList> GetTransactionList(String DateFrom,String DateTo)
+        {
+            List<ReportTransactionList> toReturn = new List<ReportTransactionList>();
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Reports\\GetReportTransactionList.sql";
+                sqlFile.setParameter("_DateFrom", DateFrom);
+                sqlFile.setParameter("_DateTo", DateTo);
+                return Connection.Query<ReportTransactionList>(this.sqlFile.sqlQuery).ToList();
+            }
+            catch (Exception ex)
+            {
+                return toReturn;
+            }
+
+        }
+
+
+
+
     }
 }
