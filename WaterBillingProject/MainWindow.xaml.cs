@@ -174,6 +174,7 @@ namespace WaterBillingProject
         private void btn_Settings_Click(object sender, RoutedEventArgs e)
         {
             txt_Title.Text = "SETTINGS";
+            MainContent.Content = new SettingsPage();
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -211,6 +212,7 @@ namespace WaterBillingProject
             else if (e.Key == Key.F6)
             {
                 txt_Title.Text = "SETTINGS";
+                MainContent.Content = new SettingsPage();
                 e.Handled = true;
             }
         }
