@@ -12,6 +12,5 @@ INNER JOIN tblGLControl gl
 		and gl.SLT_CODE = sl.SLT_CODE
 		and gl.SLE_CODE = sl.SLE_CODE
 		and gl.StatusID = sl.StatusID
-WHERE sl.SLC_CODE = 14
-and sl.SLE_CODE != 1
+WHERE sl.SLC_CODE = 13
 and IsAutoLoad = 1

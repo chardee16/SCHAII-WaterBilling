@@ -19,11 +19,11 @@ from (
 		td.ClientName,
 		COALESCE(SUM(td.Amt),0) * -1 as WaterBill,
 		COALESCE((
-			SELECT COALESCE(Amt,0) FROM tblTransactionDetails td1
+			SELECT COALESCE(SUM(Amt),0) FROM tblTransactionDetails td1
 			WHERE td1.TransactionCode = td.TransactionCode
 				AND td1.CTLNo = td.CTLNo
 				and td1.TransYear = td.TransYear
-				and AccountCode = 401
+				and td1.SLC_CODE = 13
 		),0) as Discount,
 		COALESCE((
 			SELECT COALESCE(SUM(Amt) * -1,0) FROM tblTransactionDetails td1

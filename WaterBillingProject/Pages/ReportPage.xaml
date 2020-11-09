@@ -4,7 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:System="clr-namespace:System;assembly=mscorlib"
       xmlns:local="clr-namespace:WaterBillingProject.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="570" d:DesignWidth="820"
@@ -24,7 +23,7 @@
                 <Grid x:Name="GridCursor" Width="150" Height="3" Background="#FF07385F" HorizontalAlignment="Left" Margin="10,30,0,0"/>
             </Grid>
 
-            <Grid x:Name="ClientGrid" Visibility="Collapsed" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+            <Grid x:Name="ClientGrid"  Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
@@ -47,19 +46,19 @@
                         <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"> TOTAL ACTIVE CLIENT</TextBlock>
-                                <TextBlock Text="{Binding Path = TotalClient,UpdateSourceTrigger=PropertyChanged}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Path = TotalClient,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
                         <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">TOTAL CONSUMPTION</TextBlock>
-                                <TextBlock Text="{Binding Path = TotalConsumption,UpdateSourceTrigger=PropertyChanged}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Path = TotalConsumption,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
                         <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">TOTAL DUES</TextBlock>
-                                <TextBlock Text="{Binding Path = TotalDues,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Path = TotalDues,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
                         
@@ -68,11 +67,11 @@
                 </StackPanel>
             </Grid>
 
-            <Grid x:Name="BillingGrid" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+            <Grid x:Name="BillingGrid" Visibility="Collapsed" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
                 <StackPanel Orientation="Vertical">
 
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold">Date From:</TextBlock>
+                        <TextBlock HorizontalAlignment="Center" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="Bold">Date From:</TextBlock>
                         <DatePicker Width="150" SelectedDate="{Binding Path=DateFrom,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedDateFormat="Short" HorizontalContentAlignment="Right" FontWeight="Bold" FontSize="13" Margin="10,0,0,0"/>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">Date To:</TextBlock>
                         <DatePicker Width="150" SelectedDate="{Binding Path=DateTo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedDateFormat="Short" HorizontalContentAlignment="Right" FontWeight="Bold" FontSize="13" Margin="10,0,0,0"/>
@@ -96,20 +95,26 @@
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"> TOTAL ACTIVE CLIENT</TextBlock>
-                                <TextBlock Text="{Binding Path = TotalClient,UpdateSourceTrigger=PropertyChanged}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">WATER BILL</TextBlock>
+                                <TextBlock Text="{Binding Path = TotalWaterBill,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
-                        <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
+                        <Grid Width="170" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">TOTAL CONSUMPTION</TextBlock>
-                                <TextBlock Text="{Binding Path = TotalConsumption,UpdateSourceTrigger=PropertyChanged}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">DISCOUNT</TextBlock>
+                                <TextBlock Text="{Binding Path = TotalDiscount,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
-                        <Grid Width="200" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
+                        <Grid Width="192" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">TOTAL DUES</TextBlock>
-                                <TextBlock Text="{Binding Path = TotalDues,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" FontSize="35" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">GARBAGE</TextBlock>
+                                <TextBlock Text="{Binding Path = TotalGarbage,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Width="192" Height="90" Margin="10,0,0,0" Background="#FFDFECFF">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center">MONTHLY DUES</TextBlock>
+                                <TextBlock Text="{Binding Path = TotalMonthlyDues,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
 

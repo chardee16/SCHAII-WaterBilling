@@ -14,6 +14,7 @@ namespace WaterBilling.Services
         public string SQLServerConnectionString = "Data Source=" + IPAddress + ";Database=WaterBillingDB;User ID=sa;Password=developer1@)@)";
 
         public string SQLDirectory = CurrentPath.Replace("\\bin\\Debug", "\\SQLScripts\\");
+        //public string SQLDirectory = CurrentPath + "\\SQLScripts\\";
 
 
     }

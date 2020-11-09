@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using System.Windows;
@@ -24,6 +25,15 @@ namespace WaterBilling.Pages
         BackgroundWorker worker = new BackgroundWorker();
         ClientMasterRepository repo = new ClientMasterRepository();
         ClientMasterDataContext dataCon;
+
+
+
+        public ObservableCollection<ClientClass> clientList;
+        ClientClass toReturn = new ClientClass();
+        private ICollectionView MyData;
+        string SearchText = string.Empty;
+        int currentRow = 0, currentColumn = 1;
+
         public ClientMasterPage()
         {
             InitializeComponent();
@@ -64,8 +74,19 @@ namespace WaterBilling.Pages
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.DataContext = this.dataCon;
+
+            
+
             //this.cmb_ClientStatus.ItemsSource = this.dataCon.clientStatusList;
             Refresh();
+
+            clientList = new ObservableCollection<ClientClass>(this.dataCon.clientList);
+            DG_ClientList.ItemsSource = clientList;
+            MyData = CollectionViewSource.GetDefaultView(clientList);
+            DG_ClientList.Focus();
+            DG_ClientList.SelectedIndex = 0;
+            txt_Search.Focus();
+
             this.Spinner.Visibility = Visibility.Hidden;
             this.Spinner.Spin = false;
         }
@@ -236,6 +257,72 @@ namespace WaterBilling.Pages
             InitializeFields(false);
         }
 
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = sender as TextBox;
+            SearchText = t.Text.ToString();
+            MyData.Filter = FilterData;
+
+            DG_ClientList.SelectedIndex = 0;
+        }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Escape:
+                    e.Handled = true;
+                    break;
+                case Key.Enter:
+                    ClientClass selected = (ClientClass)DG_ClientList.SelectedItem;
+                    this.dataCon.ClientID = selected.ClientID;
+                    this.dataCon.FirstName = selected.FirstName;
+                    this.dataCon.MiddleName = selected.MiddleName;
+                    this.dataCon.LastName = selected.LastName;
+                    this.dataCon.ClientAccountStatusID = selected.ClientAccountStatusID;
+                    this.dataCon.BlockNo = selected.BlockNo;
+                    this.dataCon.LotNo = selected.LotNo;
+                    this.dataCon.Occupants = selected.Occupants;
+                    this.dataCon.IsSenior = selected.IsSenior;
+                    this.dataCon.SeniorCount = selected.SeniorCount;
+                    InitializeFields(true);
+                    e.Handled = true;
+                    break;
+            }
+        }
+
+
+        private bool FilterData(object item)
+        {
+            var value = (ClientClass)item;
+            if (value == null || value.FullName == null)
+                return false;
+            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.FirstName.ToLower().StartsWith(SearchText.ToLower()) || value.LastName.ToLower().StartsWith(SearchText.ToLower());
+        }
+
+        private void Executed_New(object sender, ExecutedRoutedEventArgs e)
+        {
+            NewFunction();
+        }
+
+        private void Executed_Edit(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.dataCon.IsEditted = true;
+            InitializeFields(false);
+        }
+
+        private void Executed_Save(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.dataCon.IsEditted)
+            {
+                Edit();
+            }
+            else
+            {
+                Save();
+            }
+        }
 
         public class ClientMasterDataContext : INotifyPropertyChanged
         {
@@ -475,6 +562,6 @@ namespace WaterBilling.Pages
             }
         }
 
-        
+       
     }
 }

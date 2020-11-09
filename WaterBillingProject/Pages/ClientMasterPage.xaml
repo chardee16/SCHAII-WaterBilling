@@ -10,6 +10,27 @@
       d:DesignHeight="570" d:DesignWidth="820"
       Title="ClientMasterPage">
 
+    <Page.Resources>
+        <SolidColorBrush x:Key="GridLine" Color="#FFCFCFCF" />
+        <RoutedUICommand x:Key="New" Text="New" />
+        <RoutedUICommand x:Key="Edit" Text="Edit" />
+        <RoutedUICommand x:Key="Save" Text="Save" />
+    </Page.Resources>
+
+    <Page.CommandBindings>
+        <CommandBinding Command="{StaticResource New}" Executed="Executed_New"/>
+        <CommandBinding Command="{StaticResource Edit}" Executed="Executed_Edit"/>
+        <CommandBinding Command="{StaticResource Save}" Executed="Executed_Save"/>
+    </Page.CommandBindings>
+
+    <Page.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{StaticResource New}" />
+        <KeyBinding Key="E" Modifiers="Ctrl" Command="{StaticResource Edit}" />
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource Save}" />
+    </Page.InputBindings>
+    
+    
+    
     <Grid Background="#FFCFCFCF">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="410"/>
@@ -22,7 +43,7 @@
         <StackPanel Grid.Row="1" Margin="10,0,10,10" Orientation="Vertical" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" >
                 <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
-                <TextBox TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="213" BorderThickness="1,1,1,1"/>
+                <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="213" BorderThickness="1,1,1,1" TextChanged="TextBox_TextChanged" PreviewKeyDown="TextBox_PreviewKeyDown"/>
             </StackPanel>
             <DataGrid x:Name="DG_ClientList" ItemsSource="{Binding Path=clientList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="0,10,0,0" Height="223" PreviewMouseDoubleClick="DG_ClientList_PreviewMouseDoubleClick">
                 <DataGrid.Columns>

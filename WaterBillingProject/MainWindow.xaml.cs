@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using WaterBilling.Pages;
+using WaterBillingProject.Models.Login;
 using WaterBillingProject.Pages;
 using WaterBillingProject.Services;
 
@@ -14,6 +15,30 @@ namespace WaterBillingProject
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainWindow(LoginClass login)
+        {
+            InitializeComponent();
+
+            if (GetFastestNISTDate().ToString("yyyy-MM-dd") != DateTime.Now.ToString("yyyy - MM - dd"))
+            {
+                LoginSession.UserID = login.UserID;
+                LoginSession.TransYear = DateTime.Now.Year;
+                LoginSession.UserName = login.Username;
+                LoginSession.TransDate = DateTime.Now;
+
+
+                txt_Title.Text = "DASHBOARD";
+                MainContent.Content = new DashboardPage();
+            }
+            else
+            {
+                MessageBox.Show("Computer date is not correct \nThe program will close.","ERROR",MessageBoxButton.OK,MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
+
+            
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -24,13 +49,16 @@ namespace WaterBillingProject
                 LoginSession.TransYear = 2020;
                 LoginSession.UserName = "User";
                 LoginSession.TransDate = DateTime.Now;
+
+                txt_Title.Text = "DASHBOARD";
+                MainContent.Content = new DashboardPage();
             }
             else
             {
                 MessageBox.Show("Computer date is not correct");
             }
 
-            
+
         }
 
 

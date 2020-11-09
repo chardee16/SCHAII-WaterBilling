@@ -10,6 +10,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using WaterBillingProject.Models.Reports;
 using WaterBillingProject.Repository;
+using WaterBillingProject.Services;
 
 namespace WaterBillingProject.Pages
 {
@@ -22,6 +23,8 @@ namespace WaterBillingProject.Pages
         BackgroundWorker worker = new BackgroundWorker();
         ReportRepository repo = new ReportRepository();
 
+        BackgroundWorker billworker = new BackgroundWorker();
+
         public ObservableCollection<ReportClientListClass> clientList;
         private ICollectionView MyData;
         string SearchText = string.Empty;
@@ -30,6 +33,10 @@ namespace WaterBillingProject.Pages
         public ReportPage()
         {
             InitializeComponent();
+
+            this.dataCon.DateFrom = LoginSession.TransDate.ToString("MM/dd/yyyy");
+            this.dataCon.DateTo = LoginSession.TransDate.ToString("MM/dd/yyyy");
+
             InitializeWorkers();
             this.DataContext = dataCon;
 
@@ -73,6 +80,10 @@ namespace WaterBillingProject.Pages
             worker.DoWork += worker_DoWork;
             worker.RunWorkerCompleted += worker_RunWorkerCompleted;
 
+
+            billworker.DoWork += billworker_DoWork;
+            billworker.RunWorkerCompleted += billworker_RunWorkerCompleted;
+
         }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
@@ -80,16 +91,22 @@ namespace WaterBillingProject.Pages
             while (true)
             {
                 this.dataCon.reportClientList = repo.GetClientList();
-                this.dataCon.reportTransactionList = repo.GetTransactionList("2020-11-01","2020-11-30");
+                this.dataCon.reportTransactionList = repo.GetTransactionList(this.dataCon.DateFrom,this.dataCon.DateTo);
                 break;
             }
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+
             this.dataCon.TotalClient = this.dataCon.reportClientList.Count;
             this.dataCon.TotalConsumption = this.dataCon.reportClientList.Sum(x => Convert.ToInt64(x.Consumption));
             this.dataCon.TotalDues = this.dataCon.reportClientList.Sum(x => Math.Round(x.TotalDue,2,MidpointRounding.AwayFromZero));
+
+            this.dataCon.TotalWaterBill = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.WaterBill, 2, MidpointRounding.AwayFromZero));
+            this.dataCon.TotalDiscount = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.Discount, 2, MidpointRounding.AwayFromZero));
+            this.dataCon.TotalGarbage = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.GarbageCollection, 2, MidpointRounding.AwayFromZero));
+            this.dataCon.TotalMonthlyDues = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.MonthlyDues, 2, MidpointRounding.AwayFromZero));
 
 
             this.DataContext = this.dataCon;
@@ -102,6 +119,34 @@ namespace WaterBillingProject.Pages
             //this.cmb_ClientStatus.ItemsSource = this.dataCon.clientStatusList;
 
         }
+
+
+
+        private void billworker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                this.dataCon.reportTransactionList = repo.GetTransactionList(this.dataCon.DateFrom, this.dataCon.DateTo);
+                break;
+            }
+        }
+
+        private void billworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            this.DataContext = this.dataCon;
+
+            this.dataCon.TotalWaterBill = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.WaterBill, 2, MidpointRounding.AwayFromZero));
+            this.dataCon.TotalDiscount = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.Discount, 2, MidpointRounding.AwayFromZero));
+            this.dataCon.TotalGarbage = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.GarbageCollection, 2, MidpointRounding.AwayFromZero));
+            this.dataCon.TotalMonthlyDues = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.MonthlyDues, 2, MidpointRounding.AwayFromZero));
+
+            //this.cmb_ClientStatus.ItemsSource = this.dataCon.clientStatusList;
+
+        }
+
+
+
 
         private void txt_Search_PreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -119,7 +164,14 @@ namespace WaterBillingProject.Pages
 
         private void btn_Find_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(this.dataCon.DateTo);
+            try
+            {
+                billworker.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private bool FilterData(object item)
@@ -208,6 +260,75 @@ namespace WaterBillingProject.Pages
         }
 
 
+        private Decimal _TotalWaterBill;
+        public Decimal TotalWaterBill
+        {
+            get
+            {
+                return _TotalWaterBill;
+            }
+            set
+            {
+                if (value != _TotalWaterBill)
+                {
+                    _TotalWaterBill = value;
+                    OnPropertyChanged("TotalWaterBill");
+                }
+            }
+        }
+
+        private Decimal _TotalDiscount;
+        public Decimal TotalDiscount
+        {
+            get
+            {
+                return _TotalDiscount;
+            }
+            set
+            {
+                if (value != _TotalDiscount)
+                {
+                    _TotalDiscount = value;
+                    OnPropertyChanged("TotalDiscount");
+                }
+            }
+        }
+
+
+        private Decimal _TotalGarbage;
+        public Decimal TotalGarbage
+        {
+            get
+            {
+                return _TotalGarbage;
+            }
+            set
+            {
+                if (value != _TotalGarbage)
+                {
+                    _TotalGarbage = value;
+                    OnPropertyChanged("TotalGarbage");
+                }
+            }
+        }
+
+
+        private Decimal _TotalMonthlyDues;
+        public Decimal TotalMonthlyDues
+        {
+            get
+            {
+                return _TotalMonthlyDues;
+            }
+            set
+            {
+                if (value != _TotalMonthlyDues)
+                {
+                    _TotalMonthlyDues = value;
+                    OnPropertyChanged("TotalMonthlyDues");
+                }
+            }
+        }
 
         private String _DateFrom;
         public String DateFrom
