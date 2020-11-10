@@ -43,7 +43,7 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="CUBIC METER USED" FontSize="20" FontFamily="Rockwell" FontWeight="Bold" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="FOR THE YEAR" FontSize="20" FontFamily="Rockwell" FontWeight="Bold" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text=" 1000" FontSize="30" FontFamily="Rockwell" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Consumption,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontFamily="Rockwell" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
@@ -57,7 +57,7 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="PAYMENTS RECEIVED" FontSize="20" FontFamily="Rockwell" FontWeight="Bold" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="THIS YEAR" FontSize="20" FontFamily="Rockwell" FontWeight="Bold" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text=" 1000" FontSize="30" FontFamily="Rockwell" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding PaymentReceived,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontFamily="Rockwell" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
@@ -71,7 +71,7 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="CHARGES RECEIVED" FontSize="20" FontFamily="Rockwell" FontWeight="Bold" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="THIS YEAR" FontSize="20" FontFamily="Rockwell" FontWeight="Bold" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text=" 1000" FontSize="30" FontFamily="Rockwell" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ChargesReceived,UpdateSourceTrigger=PropertyChanged}" FontSize="30" FontFamily="Rockwell" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 

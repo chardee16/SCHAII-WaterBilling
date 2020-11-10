@@ -110,6 +110,7 @@
     <Compile Include="Models\Collection\TransactionListClass.cs" />
     <Compile Include="Models\Collection\TransactionSummaryClass.cs" />
     <Compile Include="Models\Dashboard\DashboardMonthlyConsumption.cs" />
+    <Compile Include="Models\Dashboard\DashboardValues.cs" />
     <Compile Include="Models\Login\LoginClass.cs" />
     <Compile Include="Models\Reports\ReportClientListClass.cs" />
     <Compile Include="Models\Reports\ReportTransactionList.cs" />
@@ -274,6 +275,7 @@
     <Content Include="SQLScripts\Collection\GetTransactions.sql" />
     <Content Include="SQLScripts\Collection\InsertCollection.sql" />
     <Content Include="SQLScripts\Collection\UpdateBillStatus.sql" />
+    <Content Include="SQLScripts\Dashboard\GetDashboardValues.sql" />
     <Content Include="SQLScripts\Dashboard\GetMonthlyUsage.sql" />
     <Content Include="SQLScripts\Login\AuthenticateUser.sql" />
     <Content Include="SQLScripts\Reports\GetReportClientList.sql" />

@@ -26,6 +26,15 @@ namespace WaterBillingProject.Repository
         }
 
 
+        public DashboardValues GetDashboardValues()
+        {
+            this.sqlFile.sqlQuery = _config.SQLDirectory + "Dashboard\\GetDashboardValues.sql";
+            sqlFile.setParameter("_Year", LoginSession.TransYear.ToString());
+            return Connection.Query<DashboardValues>(this.sqlFile.sqlQuery).FirstOrDefault();
+        }
+
+
+
 
     }
 }

@@ -80,7 +80,7 @@ namespace WaterBilling.Pages
             while (true)
             {
                 this.dataCon.MonthlyConsumptionList = repo.GetMonthlyConsumption();
-
+                this.dataCon.dashboardValues = repo.GetDashboardValues();
 
                 break;
             }
@@ -89,6 +89,9 @@ namespace WaterBilling.Pages
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             populateBarGraph();
+            this.dataCon.Consumption = this.dataCon.dashboardValues.Consumption;
+            this.dataCon.PaymentReceived = this.dataCon.dashboardValues.PaymentReceived;
+            this.dataCon.ChargesReceived = this.dataCon.dashboardValues.ChargesReceived;
         }
 
 
@@ -128,6 +131,75 @@ namespace WaterBilling.Pages
 
     public class DashboardDataContext : INotifyPropertyChanged
     {
+
+        private DashboardValues _dashboardValuest;
+        public DashboardValues dashboardValues
+        {
+            get { return _dashboardValuest; }
+            set
+            {
+                _dashboardValuest = value;
+                OnPropertyChanged("dashboardValues");
+            }
+        }
+
+
+        private Int64 _Consumption;
+        public Int64 Consumption
+        {
+            get
+            {
+                return _Consumption;
+            }
+            set
+            {
+                if (value != _Consumption)
+                {
+                    _Consumption = value;
+                    OnPropertyChanged("Consumption");
+                }
+            }
+        }
+
+
+
+        private Decimal _PaymentReceived;
+        public Decimal PaymentReceived
+        {
+            get
+            {
+                return _PaymentReceived;
+            }
+            set
+            {
+                if (value != _PaymentReceived)
+                {
+                    _PaymentReceived = value;
+                    OnPropertyChanged("PaymentReceived");
+                }
+            }
+        }
+
+
+
+        private Decimal _ChargesReceived;
+        public Decimal ChargesReceived
+        {
+            get
+            {
+                return _ChargesReceived;
+            }
+            set
+            {
+                if (value != _ChargesReceived)
+                {
+                    _ChargesReceived = value;
+                    OnPropertyChanged("ChargesReceived");
+                }
+            }
+        }
+
+
 
         private string[] _Labels;
         public string[] Labels
