@@ -187,6 +187,22 @@ namespace WaterBillingProject.Repository
         }
 
 
+        public String GetORNo()
+        {
+
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Collection\\GetMaxORNo.sql";
+                return Connection.Query<String>(this.sqlFile.sqlQuery).FirstOrDefault();
+
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+
+
+        }
 
 
 

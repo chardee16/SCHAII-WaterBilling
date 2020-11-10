@@ -123,6 +123,12 @@
     <Compile Include="Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Reports\ClientListReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientListReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\StatementOfAccount.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -254,6 +260,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ClientListReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ClientListReport.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\StatementOfAccount.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>StatementOfAccount.cs</LastGenOutput>
@@ -272,6 +282,7 @@
     <Content Include="SQLScripts\Collection\GetCollectionBillingList.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionCharges.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionDiscount.sql" />
+    <Content Include="SQLScripts\Collection\GetMaxORNo.sql" />
     <Content Include="SQLScripts\Collection\GetTransactions.sql" />
     <Content Include="SQLScripts\Collection\InsertCollection.sql" />
     <Content Include="SQLScripts\Collection\UpdateBillStatus.sql" />

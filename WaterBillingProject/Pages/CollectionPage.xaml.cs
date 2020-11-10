@@ -47,7 +47,7 @@ namespace WaterBillingProject.Pages
                 this.dataCon.tempChargesList = this.repo.GetCharges(this.dataCon.ClientID);
                 this.dataCon.BillingList = this.repo.GetBillingList(this.dataCon.ClientID);
                 this.dataCon.TempdiscountList = this.repo.GetDiscount(this.dataCon.ClientID);
-
+                this.dataCon.ORNumber = this.repo.GetORNo();
                 break;
             }
         }

@@ -555,6 +555,24 @@ namespace WaterBilling.Pages
 
 
 
+            private Int64 _PreviousReading;
+            public Int64 PreviousReading
+            {
+                get
+                {
+                    return _PreviousReading;
+                }
+                set
+                {
+                    if (value != _PreviousReading)
+                    {
+                        _PreviousReading = value;
+                        OnPropertyChanged("PreviousReading");
+                    }
+                }
+            }
+
+
             public event PropertyChangedEventHandler PropertyChanged;
             private void OnPropertyChanged(string property)
             {

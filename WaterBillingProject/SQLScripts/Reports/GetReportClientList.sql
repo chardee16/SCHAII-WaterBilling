@@ -19,3 +19,4 @@
 		and b2.BillStatus = 1
 	  ),0) as TotalUnpaidBill
 from tblClient c
+order by TotalDue desc

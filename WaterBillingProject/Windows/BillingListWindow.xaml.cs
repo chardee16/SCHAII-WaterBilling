@@ -109,6 +109,8 @@ namespace WaterBillingProject.Windows
                 this.toReturn.CurrentReading = selectedBill.CurrentReading;
                 this.toReturn.PreviousReading = selectedBill.PreviousReading;
                 this.toReturn.TR_Date = Convert.ToDateTime(selectedBill.TR_Date).ToString("yyyy-MM-dd") ;
+                this.toReturn.BillStatus = selectedBill.BillStatus;
+                this.toReturn.BillStatusDescription = selectedBill.BillStatusDescription;
                 DialogResult = true;
             }
         }

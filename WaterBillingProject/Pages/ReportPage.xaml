@@ -61,6 +61,12 @@
                                 <TextBlock Text="{Binding Path = TotalDues,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
+                        <Grid Width="150" Height="90" Margin="10,0,0,0" >
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="15" FontWeight="Bold" Margin="0,20,0,10" HorizontalAlignment="Center">Generate Report</TextBlock>
+                                <Button x:Name="btn_GenerateClientList" Content="Generate" Width="100" Foreground="Black" BorderBrush="Black" Background="#FF51AAF1" Click="btn_GenerateClientList_Click" />
+                            </StackPanel>
+                        </Grid>
                         
 
                     </StackPanel>

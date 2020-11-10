@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using WaterBilling.Pages;
 using WaterBilling.Windows;
+using WaterBillingProject.Pages;
 
 namespace WaterBillingProject
 {
@@ -17,14 +18,17 @@ namespace WaterBillingProject
     {
         public ReportDocument cryRpt;
         public String searchText = "";
-        BillingPage mw = new BillingPage();
-        public CrystalReport(BillingPage main)
+
+        public CrystalReport()
         {
             InitializeComponent();
             this.PreviewKeyDown += new KeyEventHandler(HandleKeys);
             _CrystalReport.Owner = this;
-            this.mw = main;
+            
         }
+
+
+
         private void HandleKeys(object sender, KeyEventArgs e)
         {
             // Control + F9 : Print Document

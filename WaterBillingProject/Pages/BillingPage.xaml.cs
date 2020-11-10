@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WaterBilling.Models.Billing;
 using WaterBilling.Repository;
 using WaterBilling.Windows;
@@ -45,7 +47,7 @@ namespace WaterBilling.Pages
             this.cmb_Months.ItemsSource = this.dataCon.monthList;
 
 
-            this.dataCon.BillingMonthID = DateTime.Now.Month;
+            this.dataCon.BillingMonthID = DateTime.Now.Month - 1;
             this.dataCon.Year = DateTime.Now.Year;
 
             
@@ -121,6 +123,18 @@ namespace WaterBilling.Pages
                 this.dataCon.DueWithoutCharges = dialog.billSelected.dueWithDiscount;
                 this.dataCon.TR_Date = dialog.billSelected.TR_Date;
                 this.dataCon.ReferenceNo = dialog.billSelected.ReferenceNo;
+                this.dataCon.BillStatusID = dialog.billSelected.BillStatus;
+                this.dataCon.BillStatusDescription = dialog.billSelected.BillStatusDescription.ToUpper();
+
+                if (this.dataCon.BillStatusID == 2)
+                {
+                    txt_Status.Foreground = new SolidColorBrush(Colors.Red);
+                }
+                else
+                {
+                    txt_Status.Foreground = new SolidColorBrush(Colors.Black);
+                }
+
                 try
                 {
                     billworker.RunWorkerAsync();
@@ -755,6 +769,10 @@ namespace WaterBilling.Pages
             btn_Save.IsEnabled = true;
             btn_Generate.IsEnabled = false;
 
+            this.dataCon.BillStatusDescription = "";
+            this.dataCon.BillStatusID = 0;
+            txt_Status.Foreground = new SolidColorBrush(Colors.Black);
+
             btn_Find.Focus();
         }
 
@@ -791,7 +809,7 @@ namespace WaterBilling.Pages
         {
             try
             {
-                CrystalReport crystalReport = new CrystalReport(this);
+                CrystalReport crystalReport = new CrystalReport();
                 this.report = new StatementOfAccount();
                 List<PreviousBillClass> billing = new List<PreviousBillClass>();
 
@@ -1255,6 +1273,45 @@ namespace WaterBilling.Pages
                     }
                 }
             }
+
+
+            private String _BillStatusDescription;
+            public String BillStatusDescription
+            {
+                get
+                {
+                    return _BillStatusDescription;
+                }
+                set
+                {
+                    if (value != _BillStatusDescription)
+                    {
+                        _BillStatusDescription = value;
+                        OnPropertyChanged("BillStatusDescription");
+                    }
+                }
+            }
+
+
+
+            private Int32 _BillStatusID;
+            public Int32 BillStatusID
+            {
+                get
+                {
+                    return _BillStatusID;
+                }
+                set
+                {
+                    if (value != _BillStatusID)
+                    {
+                        _BillStatusID = value;
+                        OnPropertyChanged("BillStatusID");
+                    }
+                }
+            }
+
+
 
             public event PropertyChangedEventHandler PropertyChanged;
             private void OnPropertyChanged(string property)

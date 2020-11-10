@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using WaterBillingProject.Models.Reports;
+using WaterBillingProject.Reports;
 using WaterBillingProject.Repository;
 using WaterBillingProject.Services;
 
@@ -19,6 +21,9 @@ namespace WaterBillingProject.Pages
     /// </summary>
     public partial class ReportPage : Page
     {
+
+        ReportDocument report = new ReportDocument();
+
         ReportDataContext dataCon = new ReportDataContext();
         BackgroundWorker worker = new BackgroundWorker();
         ReportRepository repo = new ReportRepository();
@@ -173,6 +178,41 @@ namespace WaterBillingProject.Pages
 
             }
         }
+
+        private void btn_GenerateClientList_Click(object sender, RoutedEventArgs e)
+        {
+            GenerateConsumerList();
+        }
+
+
+
+        private void GenerateConsumerList()
+        {
+            try
+            {
+                CrystalReport crystalReport = new CrystalReport();
+                this.report = new ClientListReport();
+
+
+                this.report.Database.Tables[0].SetDataSource(this.dataCon.reportClientList);
+             
+
+                this.report.SetParameterValue("TotalDues", this.dataCon.TotalDues);
+                
+
+                crystalReport.cryRpt = this.report;
+                crystalReport._CrystalReport.ViewerCore.ReportSource = this.report;
+                //crystalReport.Owner = this;
+                crystalReport.ShowInTaskbar = false;
+                crystalReport.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
 
         private bool FilterData(object item)
         {
