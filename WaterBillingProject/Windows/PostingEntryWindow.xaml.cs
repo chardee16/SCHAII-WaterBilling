@@ -28,7 +28,10 @@ namespace WaterBillingProject.Windows
         List<TransactionCheckClass> transactionCheck = new List<TransactionCheckClass>();
         BillUpdateClass updateBill = new BillUpdateClass();
         List<CollectionEntryClass> collectionEntry = new List<CollectionEntryClass>();
- 
+        TransactionListClass transactionList = new TransactionListClass();
+
+
+
         public PostingEntryWindow(TransactionSummaryClass summary, List<TransactionDetailClass> trdt, List<TransactionCheckClass> transcheck, BillUpdateClass updbill)
         {
             InitializeComponent();
@@ -50,9 +53,24 @@ namespace WaterBillingProject.Windows
             }
 
 
-            DG_BillList.ItemsSource = collectionEntry;
+            DG_BillList.ItemsSource = collectionEntry.OrderByDescending(x => Convert.ToDecimal(String.IsNullOrEmpty(x.Debit) ? "0":x.Debit)).ThenBy(y => y.AccountCode);
 
         }
+
+
+
+        public PostingEntryWindow(TransactionListClass transList)
+        {
+            InitializeComponent();
+            this.transactionList = transList;
+            collectionEntry = repo.GetTransaction(this.transactionList);
+            DG_BillList.ItemsSource = collectionEntry;
+        }
+
+
+
+
+
 
         private void ButtonFechar_Click(object sender, RoutedEventArgs e)
         {
@@ -82,6 +100,39 @@ namespace WaterBillingProject.Windows
 
                 }
             }
+            else if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+            {
+                if (Keyboard.IsKeyDown(Key.F12))
+                {
+                    MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to REVERSE this transaction?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                    if (messageBoxResult == MessageBoxResult.Yes)
+                    {
+                        if (repo.ReversePayment(this.transactionList))
+                        {
+                            if (repo.UpdateReverseBill(this.transactionList.ClientID))
+                            {
+                                MessageBox.Show("Transaction successfully REVERSED.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                e.Handled = true;
+                                this.Close();
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+
+
+
+
         }
+
+
+
+
+
+
     }
 }

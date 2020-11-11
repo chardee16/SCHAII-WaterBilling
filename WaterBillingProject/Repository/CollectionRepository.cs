@@ -187,6 +187,60 @@ namespace WaterBillingProject.Repository
         }
 
 
+
+        public List<CollectionEntryClass> GetTransaction(TransactionListClass transList)
+        {
+            List<CollectionEntryClass> toReturn = new List<CollectionEntryClass>();
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Collection\\GetSelectedTransaction.sql";
+                sqlFile.setParameter("_TransactionCode", transList.TransactionCode.ToString());
+                sqlFile.setParameter("_CTLNo", transList.CTLNo.ToString());
+                sqlFile.setParameter("_TransYear", transList.TransYear.ToString());
+
+                return Connection.Query<CollectionEntryClass>(this.sqlFile.sqlQuery).ToList();
+            }
+            catch (Exception ex)
+            {
+                return toReturn;
+            }
+        }
+
+        public Boolean ReversePayment(TransactionListClass transList)
+        {
+
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Collection\\ReverseTransaction.sql";
+                sqlFile.setParameter("_TransactionCode", transList.TransactionCode.ToString());
+                sqlFile.setParameter("_CTLNo", transList.CTLNo.ToString());
+                sqlFile.setParameter("_TransYear", transList.TransYear.ToString());
+
+
+                var affectedRow = Connection.Execute(sqlFile.sqlQuery);
+
+
+                if (affectedRow > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+        }
+
+
+
         public String GetORNo()
         {
 
@@ -205,7 +259,25 @@ namespace WaterBillingProject.Repository
         }
 
 
+        public Boolean UpdateReverseBill(Int64 ClientID)
+        {
 
+            try
+            {
+
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Collection\\UpdateReverseBill.sql";
+                sqlFile.setParameter("_ClientID", ClientID.ToString());
+                var affectedRow = Connection.Execute(sqlFile.sqlQuery);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+        }
 
 
     }

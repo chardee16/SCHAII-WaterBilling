@@ -284,9 +284,12 @@
     <Content Include="SQLScripts\Collection\GetCollectionCharges.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionDiscount.sql" />
     <Content Include="SQLScripts\Collection\GetMaxORNo.sql" />
+    <Content Include="SQLScripts\Collection\GetSelectedTransaction.sql" />
     <Content Include="SQLScripts\Collection\GetTransactions.sql" />
     <Content Include="SQLScripts\Collection\InsertCollection.sql" />
+    <Content Include="SQLScripts\Collection\ReverseTransaction.sql" />
     <Content Include="SQLScripts\Collection\UpdateBillStatus.sql" />
+    <Content Include="SQLScripts\Collection\UpdateReverseBill.sql" />
     <Content Include="SQLScripts\Dashboard\GetDashboardValues.sql" />
     <Content Include="SQLScripts\Dashboard\GetMonthlyUsage.sql" />
     <Content Include="SQLScripts\Login\AuthenticateUser.sql" />

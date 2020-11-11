@@ -58,6 +58,7 @@ from (
 	from tblTransactionDetails td
 	where TransactionCode = 1
 	and SLC_CODE = 14 and SLT_CODE = 1 and Amt < 0
+	and td.UPDTag = 1
 	Group By td.CTLNo,td.TransactionDate,td.ClientName,td.TransactionCode,td.TransYear
 ) td
 INNER JOIN tblTransactionSummary ts

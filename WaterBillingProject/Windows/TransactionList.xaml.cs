@@ -94,15 +94,33 @@ namespace WaterBillingProject.Windows
                     this.Close();
                     break;
                 case Key.Enter:
-                    //clientSelectedFunction();
+                    selectedTransaction();
                     e.Handled = true;
                     break;
             }
         }
 
+
+        private void selectedTransaction()
+        {
+            try
+            {
+                TransactionListClass selected = (TransactionListClass)DG_TransactionList.SelectedItem;
+                PostingEntryWindow entryWindow = new PostingEntryWindow(selected);
+                entryWindow.ShowDialog();
+                this.Close();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
         private void SelectedCell_Click(object sender, RoutedEventArgs e)
         {
-
+            //selectedTransaction();
         }
 
         private void ButtonFechar_Click(object sender, RoutedEventArgs e)
@@ -114,7 +132,7 @@ namespace WaterBillingProject.Windows
         {
             if (e.Key == Key.Enter)
             {
-                //clientSelectedFunction();
+                selectedTransaction();
                 e.Handled = true;
             }
         }
