@@ -111,6 +111,9 @@ namespace WaterBillingProject.Windows
                 this.toReturn.TR_Date = Convert.ToDateTime(selectedBill.TR_Date).ToString("yyyy-MM-dd") ;
                 this.toReturn.BillStatus = selectedBill.BillStatus;
                 this.toReturn.BillStatusDescription = selectedBill.BillStatusDescription;
+                this.toReturn.TR_CODE = selectedBill.TR_CODE;
+                this.toReturn.CTLNo = selectedBill.CTLNo;
+
                 DialogResult = true;
             }
         }

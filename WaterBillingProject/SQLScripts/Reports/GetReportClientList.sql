@@ -3,8 +3,12 @@
 	  ,'Blk ' + Cast(c.BlockNo as varchar) + ' and Lot ' + Cast(c.LotNo as varchar) as FullAddress
 	  ,COALESCE(
 	  (
-		SELECT COALESCE(SUM(b.Consumption),0) from tblBilling b
-		WHERE b.ClientID = c.ClientID
+		SELECT IIF(ISNULL( (SELECT TOP 1 COALESCE(MAX(CurrentReading),0) as PreviousReading from tblBilling
+		WHERE ClientID = c.ClientID AND BillStatus != 3), '0') = 0,
+			(SELECT PreviousReading FROM tblClient 
+			WHERE ClientID = c.ClientID),
+			ISNULL( (SELECT TOP 1 COALESCE(MAX(CurrentReading),0) as PreviousReading from tblBilling
+			WHERE ClientID = c.ClientID AND BillStatus != 3), '0')) 
 	  ),0) as Consumption
 	  ,COALESCE(
 	  (

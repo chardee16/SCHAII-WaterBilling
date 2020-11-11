@@ -279,6 +279,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="hnet.com-image.ico" />
+    <Content Include="SQLScripts\Billing\CancelBill.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionBillingList.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionCharges.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionDiscount.sql" />

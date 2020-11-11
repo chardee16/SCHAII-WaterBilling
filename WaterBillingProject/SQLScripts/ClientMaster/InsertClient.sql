@@ -9,6 +9,7 @@
     ,Occupants
     ,IsSenior
     ,SeniorCount
+    ,PreviousReading
 )
 Values
 (
@@ -20,5 +21,6 @@ Values
     @_LotNo,
     @_Occupants,
     '@_IsSenior',
-    @_SeniorCount
+    @_SeniorCount,
+    @_PreviousReading
 )

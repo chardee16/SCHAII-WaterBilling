@@ -28,6 +28,7 @@ namespace WaterBilling.Models.Billing
         public Int64 Consumption { get; set; }
         public Int64 ExcessConsumption { get; set; }
         public Decimal dueWithDiscount { get; set; }
+
         public List<ChargesClass> ChargesList { get; set; }
         public List<DiscountClass> DiscountList { get; set; }
         public TransactionSummaryClass transummary { get; set; }

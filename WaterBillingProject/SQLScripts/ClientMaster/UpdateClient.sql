@@ -7,6 +7,7 @@
     LotNo = @_LotNo,
     Occupants = @_Occupants,
     IsSenior = '@_IsSenior',
-    SeniorCount = @_SeniorCount
+    SeniorCount = @_SeniorCount,
+    PreviousReading = @_PreviousReading
 WHERE ClientID = @_ClientID
 ;

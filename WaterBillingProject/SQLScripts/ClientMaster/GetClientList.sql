@@ -10,7 +10,8 @@
 		c.SeniorCount,
 		c.FirstName + ' ' + c.MiddleName + ' ' + c.LastName as FullName,
 		'Blk ' + Cast(c.BlockNo as varchar) + ' and Lot ' + Cast(c.LotNo as varchar) as FullAddress,
-		cs.ClientStatusDesc as ClientStatusDesc
+		cs.ClientStatusDesc as ClientStatusDesc,
+		c.PreviousReading
 from tblClient c
 Inner Join tblClientStatus cs
 	ON cs.ClientStatusID = c.AccountStatusID

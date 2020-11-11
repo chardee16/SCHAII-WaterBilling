@@ -128,6 +128,8 @@ namespace WaterBilling.Pages
             client.Occupants = this.dataCon.Occupants;
             client.IsSenior = this.dataCon.IsSenior;
             client.SeniorCount = this.dataCon.SeniorCount;
+            client.PreviousReading = this.dataCon.PreviousReading;
+
 
             if (repo.InsertClient(client))
             {
@@ -163,6 +165,8 @@ namespace WaterBilling.Pages
                 client.Occupants = this.dataCon.Occupants;
                 client.IsSenior = this.dataCon.IsSenior;
                 client.SeniorCount = this.dataCon.SeniorCount;
+                client.PreviousReading = this.dataCon.PreviousReading;
+
 
                 if (repo.EditClient(client))
                 {
@@ -216,6 +220,7 @@ namespace WaterBilling.Pages
             this.dataCon.IsSenior = false;
             this.dataCon.SeniorCount = 0;
             this.dataCon.IsEditted = false;
+            this.dataCon.PreviousReading = 0;
             InitializeFields(true);
         }
 
@@ -241,6 +246,7 @@ namespace WaterBilling.Pages
                 this.dataCon.Occupants = selected.Occupants;
                 this.dataCon.IsSenior = selected.IsSenior;
                 this.dataCon.SeniorCount = selected.SeniorCount;
+                this.dataCon.PreviousReading = selected.PreviousReading;
                 InitializeFields(true);
 
             }
@@ -286,6 +292,7 @@ namespace WaterBilling.Pages
                     this.dataCon.Occupants = selected.Occupants;
                     this.dataCon.IsSenior = selected.IsSenior;
                     this.dataCon.SeniorCount = selected.SeniorCount;
+                    this.dataCon.PreviousReading = selected.PreviousReading;
                     InitializeFields(true);
                     e.Handled = true;
                     break;

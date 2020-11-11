@@ -247,6 +247,25 @@ namespace WaterBilling.Models.ClientMaster
 
 
 
+        private Int64 _PreviousReading;
+        public Int64 PreviousReading
+        {
+            get
+            {
+                return _PreviousReading;
+            }
+            set
+            {
+                if (value != _PreviousReading)
+                {
+                    _PreviousReading = value;
+                    NotifyPropertyChanged("PreviousReading");
+                }
+            }
+        }
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String info)
         {

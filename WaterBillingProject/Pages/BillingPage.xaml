@@ -13,18 +13,21 @@
         <RoutedUICommand x:Key="Find" Text="Find" />
         <RoutedUICommand x:Key="Save" Text="Save" />
         <RoutedUICommand x:Key="Cancel" Text="Cancel" />
+        <RoutedUICommand x:Key="CancelBill" Text="CancelBill" />
     </Page.Resources>
 
     <Page.CommandBindings>
         <CommandBinding Command="{StaticResource Find}" Executed="Executed_Find"/>
         <CommandBinding Command="{StaticResource Save}" Executed="Executed_Save"/>
         <CommandBinding Command="{StaticResource Cancel}" Executed="Executed_Cancel"/>
+        <CommandBinding Command="{StaticResource CancelBill}" Executed="Executed_CancelBill"/>
     </Page.CommandBindings>
 
     <Page.InputBindings>
         <KeyBinding Key="F" Modifiers="Ctrl" Command="{StaticResource Find}" />
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource Save}" />
         <KeyBinding Key="Esc" Command="{StaticResource Cancel}" />
+        <KeyBinding Key="F11" Modifiers="Shift" Command="{StaticResource CancelBill}" />
     </Page.InputBindings>
 
 

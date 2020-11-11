@@ -53,6 +53,8 @@ namespace WaterBilling.Repository
                 sqlFile.setParameter("_IsSenior", clientClass.IsSenior.ToString());
                 sqlFile.setParameter("_Occupants", clientClass.Occupants.ToString());
                 sqlFile.setParameter("_SeniorCount", clientClass.SeniorCount.ToString());
+                sqlFile.setParameter("_PreviousReading", clientClass.PreviousReading.ToString());
+
 
                 var affectedRow = Connection.Execute(sqlFile.sqlQuery);
                 if (affectedRow > 0)
@@ -87,6 +89,8 @@ namespace WaterBilling.Repository
                 sqlFile.setParameter("_IsSenior", clientClass.IsSenior.ToString());
                 sqlFile.setParameter("_Occupants", clientClass.Occupants.ToString());
                 sqlFile.setParameter("_SeniorCount", clientClass.SeniorCount.ToString());
+                sqlFile.setParameter("_PreviousReading", clientClass.PreviousReading.ToString());
+
 
                 var affectedRow = Connection.Execute(sqlFile.sqlQuery);
                 if (affectedRow > 0)

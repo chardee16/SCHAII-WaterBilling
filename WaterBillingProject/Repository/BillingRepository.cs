@@ -289,6 +289,36 @@ namespace WaterBilling.Repository
         }
 
 
+        public Boolean CancelBill(CreateBillClass billData)
+        {
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Billing\\CancelBill.sql";
+                sqlFile.setParameter("_ClientID", billData.ClientID.ToString());
+                sqlFile.setParameter("_TR_CODE", billData.TR_CODE.ToString());
+                sqlFile.setParameter("_CTLNo", billData.CTLNo.ToString());
+                sqlFile.setParameter("_BillMonth", billData.BillMonth.ToString());
+
+                var affectedRow = Connection.Execute(sqlFile.sqlQuery);
+
+
+                if (affectedRow > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+        }
 
 
     }

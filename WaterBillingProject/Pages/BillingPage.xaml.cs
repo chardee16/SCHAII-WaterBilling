@@ -65,7 +65,15 @@ namespace WaterBilling.Pages
 
         private void btn_Save_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to save the bill?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                SaveFunction();
+            }
+            else
+            {
 
+            }
         }
 
         private void btn_Find_Click(object sender, RoutedEventArgs e)
@@ -125,6 +133,9 @@ namespace WaterBilling.Pages
                 this.dataCon.ReferenceNo = dialog.billSelected.ReferenceNo;
                 this.dataCon.BillStatusID = dialog.billSelected.BillStatus;
                 this.dataCon.BillStatusDescription = dialog.billSelected.BillStatusDescription.ToUpper();
+                this.dataCon.TR_CODE = dialog.billSelected.TR_CODE;
+                this.dataCon.CTLNo = dialog.billSelected.CTLNo;
+                this.dataCon.BillMonth = dialog.billSelected.BillMonth;
 
                 if (this.dataCon.BillStatusID == 2)
                 {
@@ -445,8 +456,6 @@ namespace WaterBilling.Pages
 
             }
         }
-
-
 
 
 
@@ -771,6 +780,11 @@ namespace WaterBilling.Pages
 
             this.dataCon.BillStatusDescription = "";
             this.dataCon.BillStatusID = 0;
+            this.dataCon.TR_CODE = 0;
+            this.dataCon.CTLNo = 0;
+
+
+
             txt_Status.Foreground = new SolidColorBrush(Colors.Black);
 
             btn_Find.Focus();
@@ -883,6 +897,48 @@ namespace WaterBilling.Pages
 
             }
         }
+
+
+        private void Executed_CancelBill(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.dataCon.BillStatusID == 2)
+            {
+                MessageBox.Show("PAID bill cannot be cancel.","Information",MessageBoxButton.OK,MessageBoxImage.Information);
+            }
+            else if (this.dataCon.BillStatusID == 3)
+            {
+                MessageBox.Show("Bill already been canceled.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to cancel this bill?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    CreateBillClass CancelBillClass = new CreateBillClass();
+                    CancelBillClass.ClientID = this.dataCon.ClientID;
+                    CancelBillClass.TR_CODE = this.dataCon.TR_CODE;
+                    CancelBillClass.CTLNo = this.dataCon.CTLNo;
+                    CancelBillClass.BillMonth = this.dataCon.BillMonth;
+
+                    if(this.repo.CancelBill(CancelBillClass))
+                    {
+                        MessageBox.Show("Bill Successfully canceled.", "INFORMATION", System.Windows.MessageBoxButton.OK, MessageBoxImage.Information);
+                        Refresh();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Something went wrong. \nPlease contact administrator.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+
+                }
+                else
+                {
+
+                }
+            }
+            
+        }
+
 
         public class BillingDataContext : INotifyPropertyChanged
         {
@@ -1313,6 +1369,63 @@ namespace WaterBilling.Pages
 
 
 
+
+            private Int32 _TR_CODE;
+            public Int32 TR_CODE
+            {
+                get
+                {
+                    return _TR_CODE;
+                }
+                set
+                {
+                    if (value != _TR_CODE)
+                    {
+                        _TR_CODE = value;
+                        OnPropertyChanged("TR_CODE");
+                    }
+                }
+            }
+
+
+            private Int64 _CTLNo;
+            public Int64 CTLNo
+            {
+                get
+                {
+                    return _CTLNo;
+                }
+                set
+                {
+                    if (value != _CTLNo)
+                    {
+                        _CTLNo = value;
+                        OnPropertyChanged("CTLNo");
+                    }
+                }
+            }
+
+
+            private String _BillMonth;
+            public String BillMonth
+            {
+                get
+                {
+                    return _BillMonth;
+                }
+                set
+                {
+                    if (value != _BillMonth)
+                    {
+                        _BillMonth = value;
+                        OnPropertyChanged("BillMonth");
+                    }
+                }
+            }
+
+
+
+
             public event PropertyChangedEventHandler PropertyChanged;
             private void OnPropertyChanged(string property)
             {
@@ -1320,7 +1433,7 @@ namespace WaterBilling.Pages
             }
         }
 
-       
+        
     }
 
 }
