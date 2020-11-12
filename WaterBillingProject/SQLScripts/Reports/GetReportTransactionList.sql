@@ -9,7 +9,9 @@
 	   td.MonthlyDues,
 	   td.GarbageCollection,
 	   td.Surcharge,
-	   td.CashReceived
+	   td.CashReceived,
+	   u.Username,
+	   u.UserID
 from (
 		select
 		td.TransactionCode,
@@ -66,3 +68,5 @@ INNER JOIN tblTransactionSummary ts
 	and ts.CTLNo = td.CTLNo
 	and ts.TransYear = td.TransYear
 	and ts.TransactionDate >= '@_DateFrom' and ts.TransactionDate <= '@_DateTo'
+INNER JOIN tblUser u
+	ON u.UserID = ts.PostedBy

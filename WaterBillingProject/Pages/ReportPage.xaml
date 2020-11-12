@@ -23,7 +23,7 @@
                 <Grid x:Name="GridCursor" Width="150" Height="3" Background="#FF07385F" HorizontalAlignment="Left" Margin="10,30,0,0"/>
             </Grid>
 
-            <Grid x:Name="ClientGrid"  Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+            <Grid x:Name="ClientGrid" Visibility="Collapsed"  Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
@@ -73,7 +73,7 @@
                 </StackPanel>
             </Grid>
 
-            <Grid x:Name="BillingGrid" Visibility="Collapsed" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+            <Grid x:Name="BillingGrid" Visibility="Visible" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
                 <StackPanel Orientation="Vertical">
 
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
@@ -82,6 +82,7 @@
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">Date To:</TextBlock>
                         <DatePicker Width="150" SelectedDate="{Binding Path=DateTo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedDateFormat="Short" HorizontalContentAlignment="Right" FontWeight="Bold" FontSize="13" Margin="10,0,0,0"/>
                         <Button x:Name="btn_Find" Content="Find" materialDesign:BottomDashedLineAdorner.Thickness="5" materialDesign:ButtonAssist.CornerRadius="5" Margin="20,0,0,0" Click="btn_Find_Click"/>
+                        <Button x:Name="btn_GenerateTransList" Margin="130,0,0,0" Content="Generate" Width="100" Foreground="Black" BorderBrush="Black" Background="#FF51AAF1" Click="btn_GenerateTransList_Click" />
                     </StackPanel>
 
                     <DataGrid x:Name="DG_TransactionList" HorizontalScrollBarVisibility="Visible" ItemsSource="{Binding Path=reportTransactionList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="330">
@@ -95,6 +96,7 @@
                             <DataGridTextColumn Binding="{Binding Path=MonthlyDues,UpdateSourceTrigger=PropertyChanged}" Header="Monthly Dues" Width="120" IsReadOnly="True"/>
                             <DataGridTextColumn Binding="{Binding Path=GarbageCollection,UpdateSourceTrigger=PropertyChanged}" Header="Garbage" Width="120" IsReadOnly="True"/>
                             <DataGridTextColumn Binding="{Binding Path=CashReceived,UpdateSourceTrigger=PropertyChanged}" Header="Total" Width="120" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=UserName,UpdateSourceTrigger=PropertyChanged}" Header="Posted By" Width="120" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
 

@@ -233,6 +233,44 @@ namespace WaterBillingProject.Models.Reports
         }
 
 
+
+        private Int32 _UserID;
+        public Int32 UserID
+        {
+            get
+            {
+                return _UserID;
+            }
+            set
+            {
+                if (value != _UserID)
+                {
+                    _UserID = value;
+                    NotifyPropertyChanged("UserID");
+                }
+            }
+        }
+
+
+        private String _UserName;
+        public String UserName
+        {
+            get
+            {
+                return _UserName;
+            }
+            set
+            {
+                if (value != _UserName)
+                {
+                    _UserName = value;
+                    NotifyPropertyChanged("UserName");
+                }
+            }
+        }
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String info)
         {

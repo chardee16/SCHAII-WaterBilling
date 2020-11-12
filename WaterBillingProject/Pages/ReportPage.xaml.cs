@@ -212,7 +212,28 @@ namespace WaterBillingProject.Pages
             }
         }
 
+        private void btn_GenerateTransList_Click(object sender, RoutedEventArgs e)
+        {
+            CrystalReport crystalReport = new CrystalReport();
+            this.report = new TransactionListReport();
 
+
+            this.report.Database.Tables[0].SetDataSource(this.dataCon.reportTransactionList);
+
+
+            this.report.SetParameterValue("TotalBill", this.dataCon.TotalWaterBill);
+            this.report.SetParameterValue("TotalSurcharge", this.dataCon.reportTransactionList.Sum(x => Math.Round(x.Surcharge, 2, MidpointRounding.AwayFromZero)));
+            this.report.SetParameterValue("TotalMonthlyDues", this.dataCon.TotalMonthlyDues);
+            this.report.SetParameterValue("TotalGarbageCollection", this.dataCon.TotalGarbage);
+            this.report.SetParameterValue("TotalDiscount", this.dataCon.reportTransactionList.Sum(x => Math.Round(x.Discount, 2, MidpointRounding.AwayFromZero)));
+            this.report.SetParameterValue("TotalCashOnHand", this.dataCon.reportTransactionList.Sum(x => Math.Round(x.CashReceived, 2, MidpointRounding.AwayFromZero)));
+
+            crystalReport.cryRpt = this.report;
+            crystalReport._CrystalReport.ViewerCore.ReportSource = this.report;
+            //crystalReport.Owner = this;
+            crystalReport.ShowInTaskbar = false;
+            crystalReport.ShowDialog();
+        }
 
         private bool FilterData(object item)
         {
