@@ -67,36 +67,49 @@ namespace WaterBillingProject.Pages
 
         private void getInterest()
         {
-            if (this.dataCon.BillingList.Count >= 2)
+            if (this.dataCon.BillingList.Count == 2)
             {
-                int days = 0;
-                decimal TotalAmountDue = 0;
-
-
                 DateTime date = new DateTime();
-
-                foreach (var item in this.dataCon.BillingList)
+                if (date.Day > 16)
                 {
-                    try
-                    {
-                        date = DateTime.ParseExact(item.BillMonth, "yyyyMM", System.Globalization.CultureInfo.InvariantCulture);
-                        //MessageBox.Show(date.ToString("MM-dd-yyyy"));
-                        days += DateTime.DaysInMonth(date.Year, date.Month);
-
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    TotalAmountDue += item.CurrentDue;
+                    ComputeInterest();
                 }
-                days += DateTime.Now.Day;
-                Decimal multiple = Convert.ToDecimal(0.05);
-                decimal divideDays = Math.Round(Convert.ToDecimal(days) / Convert.ToDecimal(360), 2, MidpointRounding.AwayFromZero);
-                this.dataCon.Interest = Math.Ceiling((TotalAmountDue * multiple) * divideDays);
-
+            }
+            else if (this.dataCon.BillingList.Count > 2)
+            {
+                ComputeInterest();
             }
             
+        }
+
+        private void ComputeInterest()
+        {
+            int days = 0;
+            decimal TotalAmountDue = 0;
+
+            DateTime date = new DateTime();
+
+            foreach (var item in this.dataCon.BillingList)
+            {
+                try
+                {
+                    date = DateTime.ParseExact(item.BillMonth, "yyyyMM", System.Globalization.CultureInfo.InvariantCulture);
+                    //MessageBox.Show(date.ToString("MM-dd-yyyy"));
+                    if (date.Month != DateTime.Now.Month)
+                    {
+                        days += DateTime.DaysInMonth(date.Year, date.Month);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                TotalAmountDue += item.CurrentDue;
+            }
+            days += DateTime.Now.Day;
+            Decimal multiple = Convert.ToDecimal(0.05);
+            decimal divideDays = Math.Round(Convert.ToDecimal(days) / Convert.ToDecimal(360), 2, MidpointRounding.AwayFromZero);
+            this.dataCon.Interest = Math.Ceiling((TotalAmountDue * multiple) * divideDays);
         }
 
         //private void getDiscount()

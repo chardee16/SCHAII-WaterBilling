@@ -18,12 +18,12 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0">
                     <Button Uid="0" FontSize="12" Width="150" Content="CLIENT REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}"  Foreground="#FF10436B" Click="Button_Click" />
                     <Button Uid="1" FontSize="12" Width="150" Content="BILLING REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
-                    <Button Uid="2" FontSize="12" Width="150" Content="OTHER REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
+                    
                 </StackPanel>
                 <Grid x:Name="GridCursor" Width="150" Height="3" Background="#FF07385F" HorizontalAlignment="Left" Margin="10,30,0,0"/>
             </Grid>
 
-            <Grid x:Name="ClientGrid" Visibility="Collapsed"  Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+            <Grid x:Name="ClientGrid"  Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
@@ -73,7 +73,7 @@
                 </StackPanel>
             </Grid>
 
-            <Grid x:Name="BillingGrid" Visibility="Visible" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
+            <Grid x:Name="BillingGrid" Visibility="Collapsed" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
                 <StackPanel Orientation="Vertical">
 
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">

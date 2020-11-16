@@ -18,14 +18,74 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0">
                     <Button Uid="0" FontSize="12" Width="150" Content="USER" Height="50" Background="{x:Null}" BorderBrush="{x:Null}"  Foreground="#FF10436B" Click="Button_Click" />
                     <Button Uid="1" FontSize="12" Width="150" Content="ENVIRONMENT" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
-                    <Button Uid="2" FontSize="12" Width="150" Content="OTHER REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
+                   
                 </StackPanel>
                 <Grid x:Name="GridCursor" Width="150" Height="3" Background="#FF07385F" HorizontalAlignment="Left" Margin="10,30,0,0"/>
             </Grid>
             <Grid x:Name="UserGrid" Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
                 <StackPanel Orientation="Vertical">
-                    
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical" Margin="10,0,0,10">
+                            <TextBlock Text="USER CONFIGURATION"  FontWeight="Bold" Margin="0,0,0,20" FontSize="20"/>
+                            <TextBlock Text="USER ID" FontWeight="Bold"/>
+                            <TextBox Width="100" Text="{Binding Path = UserID,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Margin="0,10,0,10" HorizontalAlignment="Left" />
+                            <TextBlock Text="NAME" FontWeight="Bold"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                                <StackPanel Orientation="Vertical" >
+                                    <TextBox Width="150" Text="{Binding Path = FirstName,UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" />
+                                    <TextBlock Text="First Name" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="20,0,0,0">
+                                    <TextBox Width="150" Text="{Binding Path = MiddleName,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" />
+                                    <TextBlock Text="Middle Name" FontWeight="Bold"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+                                <TextBox Width="150" Text="{Binding Path = LastName,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" />
+                                <TextBlock Text="Last Name" FontWeight="Bold"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                
+                                
+                            </StackPanel>
+                            
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical"  Margin="50,20,0,0">
+                            <TextBlock Text="USERNAME"  HorizontalAlignment="Left" FontWeight="Bold" Margin="0,0,0,0"/>
+                            <TextBox Width="150" Text="{Binding Path = Username,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="PASSWORD" HorizontalAlignment="Left" FontWeight="Bold" Margin="0,20,0,0"/>
+                                    <TextBox Width="150" Text="{Binding Path = Password,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                                    
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="60,0,0,0">
+                                    <TextBlock Text=" VERIFY PASSWORD" HorizontalAlignment="Left" FontWeight="Bold" Margin="0,20,0,0"/>
+                                    <TextBox Width="150" Text="{Binding Path = VerifyPassword,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                                <CheckBox IsChecked="{Binding IsAdministrator,UpdateSourceTrigger=PropertyChanged}" />
+                                <Label Content="IS ADMINISTRATOR" FontWeight="Bold"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Right">
+                                <Button Content="NEW" Margin="0,0,20,0" Foreground="Black"/>
+                                <Button Content="EDIT" Margin="0,0,20,0" Foreground="Black"/>
+                                <Button x:Name="btn_Save" Content="SAVE" Foreground="Black" Click="btn_Save_Click"/>
+                            </StackPanel>
+                            
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="10,10,0,10">
+                        <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
+                        <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="200" Margin="3 0 0 0" Width="250" BorderThickness="1,1,1,1" TextChanged="TextBox_TextChanged" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                    </StackPanel>
+                    <DataGrid Height="200" Margin="10,0,10,0">
+                        
+                    </DataGrid>
                 </StackPanel>
+                
+                
             </Grid>
 
             <Grid x:Name="EnvironmentGrid" Visibility="Collapsed"  Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">

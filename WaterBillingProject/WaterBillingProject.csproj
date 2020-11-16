@@ -114,6 +114,7 @@
     <Compile Include="Models\Login\LoginClass.cs" />
     <Compile Include="Models\Reports\ReportClientListClass.cs" />
     <Compile Include="Models\Reports\ReportTransactionList.cs" />
+    <Compile Include="Models\Settings\UserClass.cs" />
     <Compile Include="Pages\CollectionPage.xaml.cs">
       <DependentUpon>CollectionPage.xaml</DependentUpon>
     </Compile>

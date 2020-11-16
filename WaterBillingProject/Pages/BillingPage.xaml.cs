@@ -260,10 +260,11 @@ namespace WaterBilling.Pages
                     TotalPrevious += item.TotalDue;
                 }
                 days += DateTime.Now.Day;
+                
+                TotalAmountDue = TotalPrevious + this.dataCon.CurrentDue;
                 Decimal multiple = Convert.ToDecimal(0.05);
-                TotalAmountDue = TotalPrevious + this.dataCon.DueWithoutCharges;
                 decimal divideDays = Math.Round(Convert.ToDecimal(days) / Convert.ToDecimal(360), 2, MidpointRounding.AwayFromZero);
-                this.dataCon.InterestDue = Math.Round((TotalAmountDue * multiple) * divideDays, 2, MidpointRounding.AwayFromZero); 
+                this.dataCon.InterestDue = Math.Ceiling((TotalAmountDue * multiple) * divideDays);
 
             }
 

@@ -67,6 +67,7 @@ namespace WaterBillingProject.Windows
                 else
                 {
                     MainWindow main = new MainWindow(login);
+                    this.Hide();
                     main.ShowDialog();
                     this.Close();
                 }
