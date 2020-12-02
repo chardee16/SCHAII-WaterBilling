@@ -31,11 +31,13 @@ namespace WaterBilling.Repository
                 sqlFile.setParameter("_ClientID", ClientID.ToString());
                 if (isNew)
                 {
+                    sqlFile.setParameter("_newCharges", "sl.Formula +");
                     sqlFile.setParameter("_Condition", "and Bill.BillStatus = 1");
                 }
                 else
                 {
-                    sqlFile.setParameter("_Condition", "and bill.TR_Date < '" + TR_Date + "'" );
+                    sqlFile.setParameter("_newCharges", " ");
+                    sqlFile.setParameter("_Condition", "and bill.TR_Date <= '" + TR_Date + "'" );
                 }
 
                 return Connection.Query<ChargesClass>(this.sqlFile.sqlQuery).ToList();

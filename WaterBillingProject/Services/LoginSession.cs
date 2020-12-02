@@ -18,8 +18,13 @@ namespace WaterBillingProject.Services
 
         public static DateTime TransDate;
 
+        public static Boolean IsAdmin;
 
+        public static Decimal MinimumBill;
 
+        public static Int32 MinimumConsumption;
+
+        public static Int32 ExcessPerCubic;
 
     }
 }

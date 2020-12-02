@@ -16,6 +16,7 @@ from tblBilling bill
 INNER JOIN tblBillCharges bc
 	ON bc.ClientID = bill.ClientID
 		AND bc.ReferenceNo = bill.ReferenceNo
+		AND bc.SLC_CODE = 15
 INNER JOIN tblGLControl gl
 	ON gl.AccountCode = bc.COAID
 WHERE bill.ClientID = @_ClientID

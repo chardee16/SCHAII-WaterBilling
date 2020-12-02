@@ -124,6 +124,12 @@
     <Compile Include="Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Reports\BillingStatement.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BillingStatement.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\ClientListReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -150,6 +156,7 @@
     <Compile Include="Repository\Interface\IRepository.cs" />
     <Compile Include="Repository\LoginRepository.cs" />
     <Compile Include="Repository\ReportRepository.cs" />
+    <Compile Include="Repository\SettingsRepository.cs" />
     <Compile Include="Services\Config.cs" />
     <Compile Include="Services\Encryption.cs" />
     <Compile Include="Services\LoginSession.cs" />
@@ -267,6 +274,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\BillingStatement.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BillingStatement.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\ClientListReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ClientListReport.cs</LastGenOutput>
@@ -289,6 +300,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SQLScripts\Settings\GetUserList.sql" />
+    <Content Include="SQLScripts\Settings\InsertUser.sql" />
+    <Content Include="SQLScripts\Settings\UpdatePassword.sql" />
+    <Content Include="SQLScripts\Settings\UpdateUser.sql" />
     <Resource Include="hnet.com-image.ico" />
     <Content Include="SQLScripts\Billing\CancelBill.sql" />
     <Content Include="SQLScripts\Collection\GetCollectionBillingList.sql" />
@@ -326,6 +341,7 @@
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

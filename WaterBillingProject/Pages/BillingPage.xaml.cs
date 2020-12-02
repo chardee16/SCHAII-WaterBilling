@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,11 +47,13 @@ namespace WaterBilling.Pages
             this.dataCon.monthList = repo.GetMonthList();
             this.cmb_Months.ItemsSource = this.dataCon.monthList;
 
+            DateTime thisDate = LoginSession.TransDate.AddMonths(-1);
 
-            this.dataCon.BillingMonthID = DateTime.Now.Month - 1;
-            this.dataCon.Year = DateTime.Now.Year;
+            this.dataCon.BillingMonthID = thisDate.Month;//DateTime.Now.Month - 1;
+            this.dataCon.Year = thisDate.Year;//DateTime.Now.Year;
 
-            
+
+
         }
 
         private void chk_IsSenior_Checked(object sender, RoutedEventArgs e)
@@ -192,7 +195,7 @@ namespace WaterBilling.Pages
             {
                 DG_PreviousBill.Visibility = Visibility.Collapsed;
             }
-
+           
             txt_PresentReading.Focus();
             txt_PresentReading.SelectAll();
 
@@ -224,7 +227,7 @@ namespace WaterBilling.Pages
             }
 
             TotalDueFunction();
-
+            
         }
 
 
@@ -305,6 +308,7 @@ namespace WaterBilling.Pages
             }
 
             this.dataCon.chargesList = charges;
+            DG_Charges.ItemsSource = this.dataCon.chargesList;
 
         }
 
@@ -345,13 +349,13 @@ namespace WaterBilling.Pages
         {
             this.dataCon.TotalConsumption = this.dataCon.PresentReading - this.dataCon.PreviousReading;
             //Decimal currentDue = 0;
-            if (this.dataCon.TotalConsumption <= 10)
+            if (this.dataCon.TotalConsumption <= LoginSession.MinimumConsumption)
             {
-                this.dataCon.CurrentDue = Convert.ToDecimal(200.00);
+                this.dataCon.CurrentDue = LoginSession.MinimumBill;
             }
             else
             {
-                this.dataCon.CurrentDue = Convert.ToDecimal(200.00 + ((this.dataCon.TotalConsumption - 10) * 22));
+                this.dataCon.CurrentDue = Convert.ToDecimal(LoginSession.MinimumBill + ((this.dataCon.TotalConsumption - LoginSession.MinimumConsumption) * LoginSession.ExcessPerCubic));
             }
 
 
@@ -370,7 +374,7 @@ namespace WaterBilling.Pages
                         SL_Description = item.SL_Description,
                         Formula = item.Formula,
                         AccountCode = item.AccountCode,
-                        Amount = memberDiscount,
+                        Amount = Convert.ToDecimal(Math.Floor(memberDiscount).ToString("N2")),
                     });
                 }
                 else if (item.SLT_CODE == 3)
@@ -388,7 +392,7 @@ namespace WaterBilling.Pages
                             SL_Description = item.SL_Description,
                             Formula = item.Formula,
                             AccountCode = item.AccountCode,
-                            Amount = Math.Round(discount,2,MidpointRounding.AwayFromZero),
+                            Amount = Convert.ToDecimal(Math.Floor(discount).ToString("N2")),
                         });
                     }
                 }
@@ -428,7 +432,9 @@ namespace WaterBilling.Pages
 
             
             this.dataCon.TotalDue = this.dataCon.DueWithoutCharges + totalCharges + totalPreviousBill;
-            
+            this.dataCon.TotalCurrentDue = this.dataCon.DueWithoutCharges + totalCharges;
+
+
 
         }
 
@@ -532,15 +538,16 @@ namespace WaterBilling.Pages
             List<ChargesClass> toReturn = new List<ChargesClass>();
             try
             {
-                foreach (var item in this.dataCon.chargesList)
+                foreach (var items in this.DG_Charges.ItemsSource)
                 {
+                    ChargesClass item = (ChargesClass)items;
                     toReturn.Add(new ChargesClass 
                     {
                         SLC_CODE = item.SLC_CODE,
                         SLT_CODE = item.SLT_CODE,
                         AccountCode = item.AccountCode,
                         SL_Description = item.SL_Description,
-                        Amount = Convert.ToDecimal(item.Formula),
+                        Amount = item.Amount < Convert.ToDecimal(item.Formula) ? item.Amount : Convert.ToDecimal(item.Formula),
                     });
                 }
 
@@ -641,8 +648,10 @@ namespace WaterBilling.Pages
 
 
                 TransactionDetailClass billsCharges;
-                foreach (var item in this.dataCon.tempChargesList)
+                foreach (var items in this.DG_Charges.ItemsSource)
                 {
+                    ChargesClass item = (ChargesClass)items;
+
                     billsCharges = new TransactionDetailClass();
                     billsCharges.TransactionCode = 3;
                     billsCharges.TransYear = LoginSession.TransYear;
@@ -655,14 +664,14 @@ namespace WaterBilling.Pages
                     billsCharges.SLE_CODE = item.SLE_CODE;
                     billsCharges.StatusID = item.StatusID;
                     billsCharges.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                    billsCharges.Amt = Convert.ToDecimal(item.Formula);
+                    billsCharges.Amt = item.Amount < Convert.ToDecimal(item.Formula) ? item.Amount : Convert.ToDecimal(item.Formula);
                     billsCharges.PostedBy = LoginSession.UserID;
                     billsCharges.UPDTag = 1;
                     billsCharges.ClientName = this.dataCon.Fullname;
                     billsCharges.SL_Description = item.SL_Description;
 
                     transDT.Add(billsCharges);
-                    balancingEntry += Convert.ToDecimal(item.Formula);
+                    balancingEntry += Convert.ToDecimal(item.Amount < Convert.ToDecimal(item.Formula) ? item.Amount : Convert.ToDecimal(item.Formula));
 
                 }
 
@@ -754,6 +763,7 @@ namespace WaterBilling.Pages
         {
             List<ChargesClass> refreshCharges = new List<ChargesClass>();
             this.dataCon.chargesList = refreshCharges;
+            this.DG_Charges.ItemsSource = this.dataCon.chargesList;
 
             List<DiscountClass> refreshDiscount = new List<DiscountClass>();
             this.dataCon.discountList = refreshDiscount;
@@ -817,6 +827,7 @@ namespace WaterBilling.Pages
         private void btn_Generate_Click(object sender, RoutedEventArgs e)
         {
             GenerateBillingStatement();
+            //TestGenerate();
         }
 
 
@@ -825,15 +836,8 @@ namespace WaterBilling.Pages
             try
             {
                 CrystalReport crystalReport = new CrystalReport();
-                this.report = new StatementOfAccount();
+                this.report = new BillingStatement();
                 List<PreviousBillClass> billing = new List<PreviousBillClass>();
-
-                billing.Add(new PreviousBillClass
-                {
-                    BillMonth = string.Format("{0}{1}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID)),
-                    ReferenceNo = "Current Due",
-                    TotalDue = this.dataCon.DueWithoutCharges
-                }); ;
 
                 foreach (var item in dataCon.previousBillList)
                 {
@@ -845,36 +849,101 @@ namespace WaterBilling.Pages
                     }); ;
                 }
 
+                this.report.Database.Tables[0].SetDataSource(this.dataCon.chargesList);
+                this.report.Database.Tables[1].SetDataSource(dataCon.discountList);
+                this.report.Database.Tables[2].SetDataSource(billing);
 
 
-                this.report.Database.Tables[0].SetDataSource(billing);
-                this.report.Database.Tables[1].SetDataSource(this.dataCon.chargesList);
-                this.report.Database.Tables[2].SetDataSource(dataCon.discountList);
-
-
-                this.report.SetParameterValue("Fullname", this.dataCon.Fullname);
-                this.report.SetParameterValue("FullAddress", this.dataCon.FullAddress);
-                this.report.SetParameterValue("AmountDue", string.Format("{0:n}", this.dataCon.CurrentDue));
-                this.report.SetParameterValue("DeductDate", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 5), string.Format("{0:D4}", DateTime.Now.Year)));
-                this.report.SetParameterValue("DueDate", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 16), string.Format("{0:D4}", DateTime.Now.Year)));
-                this.report.SetParameterValue("TotalDue", string.Format("{0:n}", this.dataCon.TotalDue));
+                this.report.SetParameterValue("Fullname", this.dataCon.Fullname.ToUpper());
+                this.report.SetParameterValue("FullAddress", this.dataCon.FullAddress + " Sibulan Country Homes");
                 this.report.SetParameterValue("DateFrom", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 1), string.Format("{0:D4}", DateTime.Now.Year)));
                 this.report.SetParameterValue("DateTo", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", DateTime.DaysInMonth(DateTime.Now.Year, this.dataCon.BillingMonthID)), string.Format("{0:D4}", DateTime.Now.Year)));
+                this.report.SetParameterValue("DueDate", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", LoginSession.TransDate.Month), string.Format("{0:D2}", 16), string.Format("{0:D4}", DateTime.Now.Year)));
+                this.report.SetParameterValue("TotalUsed", this.dataCon.TotalConsumption.ToString());
+                this.report.SetParameterValue("BillMonth", string.Format("{0}{1}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID)));
+                this.report.SetParameterValue("ThisDate", LoginSession.TransDate.ToString("MM-dd-yyyy"));
                 this.report.SetParameterValue("PresentReading", this.dataCon.PresentReading.ToString());
                 this.report.SetParameterValue("PreviousReading", this.dataCon.PreviousReading.ToString());
-                this.report.SetParameterValue("TotalUsed", this.dataCon.TotalConsumption.ToString());
+                this.report.SetParameterValue("AmountDue", string.Format("{0:n}", this.dataCon.CurrentDue));
+                this.report.SetParameterValue("TotalCurrentDue", string.Format("{0:n}", this.dataCon.TotalCurrentDue));
 
-                crystalReport.cryRpt = this.report;
-                crystalReport._CrystalReport.ViewerCore.ReportSource = this.report;
+                //this.report.SetParameterValue("DeductDate", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 5), string.Format("{0:D4}", DateTime.Now.Year)));
+                this.report.SetParameterValue("TotalDue", string.Format("{0:n}", this.dataCon.TotalDue));
+
+
+
+
+                PrintDocument localPrinter = new PrintDocument();
+                //crystalReport.cryRpt = this.report;
+                //crystalReport._CrystalReport.ViewerCore.ReportSource = this.report;
                 //crystalReport.Owner = this;
-                crystalReport.ShowInTaskbar = false;
-                crystalReport.ShowDialog();
+                //crystalReport.ShowInTaskbar = false;
+                //crystalReport.ShowDialog();
+
+                this.report.PrintOptions.PrinterName = localPrinter.PrinterSettings.PrinterName;
+                this.report.PrintToPrinter(1, true, 0, 0);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+
+        //private void GenerateBillingStatement()
+        //{
+        //    try
+        //    {
+        //        CrystalReport crystalReport = new CrystalReport();
+        //        this.report = new StatementOfAccount();
+        //        List<PreviousBillClass> billing = new List<PreviousBillClass>();
+
+        //        billing.Add(new PreviousBillClass
+        //        {
+        //            BillMonth = string.Format("{0}{1}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID)),
+        //            ReferenceNo = "Current Due",
+        //            TotalDue = this.dataCon.DueWithoutCharges
+        //        }); ;
+
+        //        foreach (var item in dataCon.previousBillList)
+        //        {
+        //            billing.Add(new PreviousBillClass
+        //            {
+        //                BillMonth = item.BillMonth,
+        //                ReferenceNo = item.ReferenceNo,
+        //                TotalDue = item.TotalDue
+        //            }); ;
+        //        }
+
+
+
+        //        this.report.Database.Tables[0].SetDataSource(billing);
+        //        this.report.Database.Tables[1].SetDataSource(this.dataCon.chargesList);
+        //        this.report.Database.Tables[2].SetDataSource(dataCon.discountList);
+
+
+        //        this.report.SetParameterValue("Fullname", this.dataCon.Fullname);
+        //        this.report.SetParameterValue("FullAddress", this.dataCon.FullAddress);
+        //        this.report.SetParameterValue("AmountDue", string.Format("{0:n}", this.dataCon.CurrentDue));
+        //        this.report.SetParameterValue("DeductDate", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 5), string.Format("{0:D4}", DateTime.Now.Year)));
+        //        this.report.SetParameterValue("DueDate", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 16), string.Format("{0:D4}", DateTime.Now.Year)));
+        //        this.report.SetParameterValue("TotalDue", string.Format("{0:n}", this.dataCon.TotalDue));
+        //        this.report.SetParameterValue("DateFrom", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 1), string.Format("{0:D4}", DateTime.Now.Year)));
+        //        this.report.SetParameterValue("DateTo", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", DateTime.DaysInMonth(DateTime.Now.Year, this.dataCon.BillingMonthID)), string.Format("{0:D4}", DateTime.Now.Year)));
+        //        this.report.SetParameterValue("PresentReading", this.dataCon.PresentReading.ToString());
+        //        this.report.SetParameterValue("PreviousReading", this.dataCon.PreviousReading.ToString());
+        //        this.report.SetParameterValue("TotalUsed", this.dataCon.TotalConsumption.ToString());
+
+        //        crystalReport.cryRpt = this.report;
+        //        crystalReport._CrystalReport.ViewerCore.ReportSource = this.report;
+        //        //crystalReport.Owner = this;
+        //        crystalReport.ShowInTaskbar = false;
+        //        crystalReport.ShowDialog();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
 
         private void btn_Cancel_Click(object sender, RoutedEventArgs e)
         {
@@ -1278,6 +1347,24 @@ namespace WaterBilling.Pages
             }
 
 
+            private Decimal _TotalCurrentDue;
+            public Decimal TotalCurrentDue
+            {
+                get
+                {
+                    return _TotalCurrentDue;
+                }
+                set
+                {
+                    if (value != _TotalCurrentDue)
+                    {
+                        _TotalCurrentDue = value;
+                        OnPropertyChanged("TotalCurrentDue");
+                    }
+                }
+            }
+
+
             private Decimal _InterestDue;
             public Decimal InterestDue
             {
@@ -1434,7 +1521,114 @@ namespace WaterBilling.Pages
             }
         }
 
-        
+
+        private void TotalDueRefreshFunction()
+        {
+
+            decimal totalDiscount = 0;
+            decimal totalCharges = 0;
+            decimal totalPreviousBill = 0;
+
+            foreach (var item in this.dataCon.discountList)
+            {
+                totalDiscount += item.Amount;
+            }
+
+            this.dataCon.DueWithoutCharges = this.dataCon.CurrentDue - totalDiscount;
+
+            foreach (var items in this.DG_Charges.ItemsSource)
+            {
+                ChargesClass item = (ChargesClass)items;
+                totalCharges += item.Amount;
+            }
+
+            foreach (var item in this.dataCon.previousBillList)
+            {
+                totalPreviousBill += item.TotalDue;
+            }
+
+
+            this.dataCon.TotalDue = this.dataCon.DueWithoutCharges + totalCharges + totalPreviousBill;
+            this.dataCon.TotalCurrentDue = this.dataCon.DueWithoutCharges + totalCharges;
+
+
+
+        }
+
+
+        private void txt_Amount_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            try
+            {
+                TextBox textBox = sender as TextBox;
+                if (textBox.SelectionStart != textBox.Text.Length)
+                {
+                    if (e.Text == ".")
+                    {
+                        textBox.SelectionStart = textBox.Text.Length - 2;
+                    }
+                    e.Handled = !IsTextAllowed(e.Text);
+                }
+                else if (textBox.Text.Length == 0)
+                {
+                    e.Handled = !IsTextAllowed(e.Text);
+                }
+                else
+                {
+                    e.Handled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show( ex.Message + "\n Error! Please contact administrator.", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+        }
+
+        private void txt_Amount_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+
+              TextBox textBox = sender as TextBox;
+              if (e.Key == Key.Back)
+              {
+                if (textBox.SelectionStart == textBox.Text.Length - 2)
+                {
+                    textBox.SelectionStart = textBox.Text.Length - 3;
+                }
+
+              }
+              else if (e.Key == Key.Enter)
+              {
+                    TotalDueRefreshFunction();
+              }
+            } 
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n Error! Please contact administrator.", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void txt_Amount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            decimal value1;
+            if (decimal.TryParse(((TextBox)sender).Text, out value1))
+            {
+               
+            }
+            else
+            {
+                if (((TextBox)sender).Text != "")
+                {
+                    ((TextBox)sender).Text = ((TextBox)sender).Text.Substring(0, ((TextBox)sender).Text.Length - 1);
+                }
+                else
+                {
+                    ((TextBox)sender).Text = "0";
+                }
+            }
+        }
     }
 
 }

@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WaterBillingProject.Models.Settings;
+using WaterBillingProject.Repository;
+using WaterBillingProject.Services;
 
 namespace WaterBillingProject.Pages
 {
@@ -22,11 +25,49 @@ namespace WaterBillingProject.Pages
     public partial class SettingsPage : Page
     {
         SettingsDataContext dataCon = new SettingsDataContext();
+        SettingsRepository repo = new SettingsRepository();
+        BackgroundWorker worker = new BackgroundWorker();
+
         public SettingsPage()
         {
             InitializeComponent();
+            InitializeWorkers();
             this.DataContext = dataCon;
+
+            try
+            {
+                worker.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
+
+        private void InitializeWorkers()
+        {
+            worker.DoWork += worker_DoWork;
+            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+
+        }
+
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                this.dataCon.userList = repo.GetUserList();
+                break;
+            }
+        }
+
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            Refresh();
+
+        }
+
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -65,16 +106,178 @@ namespace WaterBillingProject.Pages
 
         private void btn_Save_Click(object sender, RoutedEventArgs e)
         {
-            if (Checker())
+
+            if (this.dataCon.IsEdit)
             {
-                MessageBox.Show("proceed");
+                if (Checker())
+                {
+                    Edit();
+                }
+                else
+                {
+                    MessageBox.Show("Some data must be filled out", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
+            }
+            else if (this.dataCon.IsResetPassword)
+            {
+                if (PasswordChecker())
+                {
+                    ChangePassword();
+                }
+                else
+                {
+                    MessageBox.Show("Some data must be filled out", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
-                MessageBox.Show("Some data is missing!");
+                if (Checker())
+                {
+                    Save();
+                }
+                else
+                {
+                    MessageBox.Show("Some data must be filled out", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
+                
+                
+            
+            
         }
 
+
+        private void Save()
+        {
+            try
+            {
+                UserClass user = new UserClass();
+                user.FirstName = this.dataCon.FirstName;
+                user.MiddleName = this.dataCon.MiddleName;
+                user.LastName = this.dataCon.LastName;
+                user.Username = this.dataCon.Username;
+                user.Password = this.Password.Password;
+                user.IsAdministrator = this.dataCon.IsAdministrator;
+
+                if (this.repo.InsertUser(user))
+                {
+                    MessageBox.Show("User successfully recored.","SUCCESS",MessageBoxButton.OK,MessageBoxImage.Information);
+                    try
+                    {
+                        worker.RunWorkerAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("User failed to save.", "SUCCESS", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+
+            }
+            catch
+            {
+
+            }
+           
+        }
+
+
+        private void Edit()
+        {
+            try
+            {
+                if (this.dataCon.UserID > 0)
+                {
+                    UserClass user = new UserClass();
+                    user.UserID = this.dataCon.UserID;
+                    user.FirstName = this.dataCon.FirstName;
+                    user.MiddleName = this.dataCon.MiddleName;
+                    user.LastName = this.dataCon.LastName;
+                    user.IsAdministrator = this.dataCon.IsAdministrator;
+
+                    if (this.repo.UpdateUser(user))
+                    {
+                        MessageBox.Show("User successfully updated.", "SUCCESS", MessageBoxButton.OK, MessageBoxImage.Information);
+                        try
+                        {
+                            worker.RunWorkerAsync();
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("User failed to save.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No user selected", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
+
+
+            }
+            catch
+            {
+
+            }
+
+        }
+
+
+        private void ChangePassword()
+        {
+            try
+            {
+                UserClass user = new UserClass();
+                user.UserID = this.dataCon.UserID;
+                user.Password = this.Password.Password;
+
+
+                if (this.repo.UpdatePassword(user))
+                {
+
+                    if (this.dataCon.UserID == LoginSession.UserID)
+                    {
+                        MessageBox.Show("Password successfully changed.\nSystem will now close.", "SUCCESS", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Application.Current.Shutdown();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Password successfully changed.", "SUCCESS", MessageBoxButton.OK, MessageBoxImage.Information);
+                        try
+                        {
+                            worker.RunWorkerAsync();
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+
+                    
+                }
+                else
+                {
+                    MessageBox.Show("Password failed to change.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+
+            }
+            catch
+            {
+
+            }
+
+        }
 
         private Boolean Checker()
         {
@@ -90,11 +293,11 @@ namespace WaterBillingProject.Pages
             {
                 return false;
             }
-            else if (String.IsNullOrEmpty(this.dataCon.Password))
+            else if (String.IsNullOrEmpty(this.Password.Password))
             {
                 return false;
             }
-            else if (!this.dataCon.Password.Equals(this.dataCon.VerifyPassword))
+            else if (!this.Password.Password.Equals(this.VerifyPassword.Password))
             {
                 return false;
             }
@@ -105,13 +308,119 @@ namespace WaterBillingProject.Pages
         }
 
 
+        private Boolean PasswordChecker()
+        {
+            if (String.IsNullOrEmpty(this.Password.Password))
+            {
+                return false;
+            }
+            else if (!this.Password.Password.Equals(this.VerifyPassword.Password))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private void Refresh()
+        {
+            this.dataCon.UserID = 0;
+            this.dataCon.FirstName = "";
+            this.dataCon.MiddleName = "";
+            this.dataCon.LastName = "";
+            this.dataCon.Username = "";
+            this.dataCon.IsAdministrator = false;
+            this.Password.Password = "jkhkhcx";
+            this.VerifyPassword.Password = "sdadasd";
+            this.dataCon.IsEdit = false;
+            this.dataCon.IsResetPassword = false ;
+        }
+
+        private void btn_New_Click(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+            Disable(false);
+            txt_FName.Focus();
+        }
+
+        private void DG_UserList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                selectedUser();
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void selectedUser()
+        {
+            UserClass selected = (UserClass)DG_UserList.SelectedItem;
+            this.dataCon.UserID = selected.UserID;
+            this.dataCon.FirstName = selected.FirstName;
+            this.dataCon.MiddleName = selected.MiddleName;
+            this.dataCon.LastName = selected.LastName;
+            this.dataCon.Username = selected.Username;
+            this.Password.Password = selected.Password;
+            this.VerifyPassword.Password = selected.Password;
+
+            Disable(true);
+        }
+
+        private void Disable(Boolean IsActive)
+        {
+            txt_FName.IsReadOnly = IsActive;
+            txt_MName.IsReadOnly = IsActive;
+            txt_LName.IsReadOnly = IsActive;
+            if (this.dataCon.IsEdit)
+            {
+                txt_Username.IsReadOnly = !IsActive;
+                Password.IsEnabled = IsActive;
+                VerifyPassword.IsEnabled = IsActive;
+            }
+            else
+            {
+                txt_Username.IsReadOnly = IsActive;
+                Password.IsEnabled = !IsActive;
+                VerifyPassword.IsEnabled = !IsActive;
+            }
+            
+        }
+
+        private void btn_Edit_Click(object sender, RoutedEventArgs e)
+        {
+            this.dataCon.IsEdit = true;
+            Disable(false) ;
+        }
+
+        private void btn_ResetPass_Click(object sender, RoutedEventArgs e)
+        {
+            this.dataCon.IsResetPassword = true;
+            Password.IsEnabled = true;
+            VerifyPassword.IsEnabled = true;
+        }
     }
-
-
 
 
     public class SettingsDataContext : INotifyPropertyChanged
     {
+
+        List<UserClass> _userList;
+        public List<UserClass> userList
+        {
+            get { return _userList; }
+            set
+            {
+                _userList = value;
+                OnPropertyChanged("userList");
+            }
+        }
+
+
         private Int32 _UserID;
         public Int32 UserID
         {
@@ -238,8 +547,8 @@ namespace WaterBillingProject.Pages
             }
         }
 
-        private String _IsAdministrator;
-        public String IsAdministrator
+        private Boolean _IsAdministrator;
+        public Boolean IsAdministrator
         {
             get
             {
@@ -256,6 +565,39 @@ namespace WaterBillingProject.Pages
         }
 
 
+        private Boolean _IsEdit;
+        public Boolean IsEdit
+        {
+            get
+            {
+                return _IsEdit;
+            }
+            set
+            {
+                if (value != _IsEdit)
+                {
+                    _IsEdit = value;
+                    OnPropertyChanged("IsEdit");
+                }
+            }
+        }
+
+        private Boolean _IsResetPassword;
+        public Boolean IsResetPassword
+        {
+            get
+            {
+                return _IsResetPassword;
+            }
+            set
+            {
+                if (value != _IsResetPassword)
+                {
+                    _IsResetPassword = value;
+                    OnPropertyChanged("IsResetPassword");
+                }
+            }
+        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

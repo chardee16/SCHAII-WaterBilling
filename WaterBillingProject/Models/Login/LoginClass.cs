@@ -10,5 +10,10 @@ namespace WaterBillingProject.Models.Login
     {
         public Int32 UserID { get; set; }
         public String Username { get; set; }
+        public Boolean IsAdmin { get; set; }
+        public Decimal MinimumBill { get; set; }
+        public  Int32 MinimumConsumption { get; set; }
+        public  Int32 ExcessPerCubic { get; set; }
+
     }
 }

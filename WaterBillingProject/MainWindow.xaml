@@ -168,8 +168,8 @@
                     </Grid>
                 </Button>
 
-                <Button x:Name="btn_Settings" Margin="10" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Settings_Click">
-                    <Grid Width="150">
+                <Button x:Name="btn_Settings" Margin="10" Foreground="White" Background="#316DA2" BorderBrush="#0C1620" Click="btn_Settings_Click">
+                    <Grid Width="150" >
                         <materialDesign:PackIcon Kind="Settings" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Center" Text="SETTING" FontFamily="Champagne &amp; Limousines"/>
                     </Grid>

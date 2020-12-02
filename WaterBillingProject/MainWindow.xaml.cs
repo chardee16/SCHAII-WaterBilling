@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using WaterBilling.Pages;
 using WaterBillingProject.Models.Login;
 using WaterBillingProject.Pages;
@@ -25,10 +26,24 @@ namespace WaterBillingProject
                 LoginSession.TransYear = DateTime.Now.Year;
                 LoginSession.UserName = login.Username;
                 LoginSession.TransDate = DateTime.Now;
-
+                LoginSession.IsAdmin = login.IsAdmin;
+                LoginSession.MinimumBill = login.MinimumBill;
+                LoginSession.MinimumConsumption = login.MinimumConsumption;
+                LoginSession.ExcessPerCubic = login.ExcessPerCubic;
 
                 txt_Title.Text = "DASHBOARD";
                 MainContent.Content = new DashboardPage();
+
+
+                if (LoginSession.IsAdmin)
+                {
+                    btn_Settings.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    btn_Settings.Visibility = Visibility.Collapsed;
+                }
+
             }
             else
             {
@@ -173,8 +188,12 @@ namespace WaterBillingProject
 
         private void btn_Settings_Click(object sender, RoutedEventArgs e)
         {
-            txt_Title.Text = "SETTINGS";
-            MainContent.Content = new SettingsPage();
+            if (LoginSession.IsAdmin)
+            {
+                txt_Title.Text = "SETTINGS";
+                MainContent.Content = new SettingsPage();
+            }
+           
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -211,8 +230,12 @@ namespace WaterBillingProject
             }
             else if (e.Key == Key.F6)
             {
-                txt_Title.Text = "SETTINGS";
-                MainContent.Content = new SettingsPage();
+                if (LoginSession.IsAdmin)
+                {
+                    txt_Title.Text = "SETTINGS";
+                    MainContent.Content = new SettingsPage();
+                }
+               
                 e.Handled = true;
             }
         }

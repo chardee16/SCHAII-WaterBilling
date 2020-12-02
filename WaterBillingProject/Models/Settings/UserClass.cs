@@ -118,8 +118,8 @@ namespace WaterBillingProject.Models.Settings
             }
         }
 
-        private String _IsAdministrator;
-        public String IsAdministrator
+        private Boolean _IsAdministrator;
+        public Boolean IsAdministrator
         {
             get
             {
@@ -135,6 +135,24 @@ namespace WaterBillingProject.Models.Settings
             }
         }
 
+
+
+        private String _FullName;
+        public String FullName
+        {
+            get
+            {
+                return _FullName;
+            }
+            set
+            {
+                if (value != _FullName)
+                {
+                    _FullName = value;
+                    NotifyPropertyChanged("FullName");
+                }
+            }
+        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
