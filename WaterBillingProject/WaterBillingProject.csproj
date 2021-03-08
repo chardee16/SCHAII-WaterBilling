@@ -163,6 +163,9 @@
     <Compile Include="Services\SQLDatabase.cs" />
     <Compile Include="Services\SQLFile.cs" />
     <Compile Include="Services\User.cs" />
+    <Compile Include="Windows\AddBillingAdjustment.xaml.cs">
+      <DependentUpon>AddBillingAdjustment.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\BillingListWindow.xaml.cs">
       <DependentUpon>BillingListWindow.xaml</DependentUpon>
     </Compile>
@@ -214,6 +217,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\AddBillingAdjustment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -300,6 +307,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SQLScripts\Billing\InsertBillingAdjustment.sql" />
+    <Content Include="SQLScripts\ClientMaster\ClientCount.sql" />
     <Content Include="SQLScripts\Settings\GetUserList.sql" />
     <Content Include="SQLScripts\Settings\InsertUser.sql" />
     <Content Include="SQLScripts\Settings\UpdatePassword.sql" />

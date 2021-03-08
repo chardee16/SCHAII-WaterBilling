@@ -15,3 +15,4 @@
 from tblClient c
 Inner Join tblClientStatus cs
 	ON cs.ClientStatusID = c.AccountStatusID
+ORDER BY c.BlockNo,c.LotNo

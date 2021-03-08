@@ -108,7 +108,35 @@ namespace WaterBilling.Repository
             }
         }
 
+        public Boolean ClientCount(ClientClass client)
+        {
+            Int32 Count = 0;
+            ClientClass clientClass = client;
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "ClientMaster\\ClientCount.sql";
+                sqlFile.setParameter("_FirstName", clientClass.FirstName);
+                sqlFile.setParameter("_LastName", clientClass.LastName);
+                sqlFile.setParameter("_BlockNo", clientClass.BlockNo.ToString());
+                sqlFile.setParameter("_LotNo", clientClass.LotNo.ToString());
 
+                Count = Convert.ToInt32(Connection.Query<Int32>(this.sqlFile.sqlQuery).FirstOrDefault());
+
+                if (Count > 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
 
 

@@ -14,6 +14,7 @@
         <RoutedUICommand x:Key="Save" Text="Save" />
         <RoutedUICommand x:Key="Cancel" Text="Cancel" />
         <RoutedUICommand x:Key="CancelBill" Text="CancelBill" />
+        <RoutedUICommand x:Key="AddBillAdjustment" Text="AddBillAdjustment" />
     </Page.Resources>
 
     <Page.CommandBindings>
@@ -21,6 +22,7 @@
         <CommandBinding Command="{StaticResource Save}" Executed="Executed_Save"/>
         <CommandBinding Command="{StaticResource Cancel}" Executed="Executed_Cancel"/>
         <CommandBinding Command="{StaticResource CancelBill}" Executed="Executed_CancelBill"/>
+        <CommandBinding Command="{StaticResource AddBillAdjustment}" Executed="Executed_AddBillAdjustment"/>
     </Page.CommandBindings>
 
     <Page.InputBindings>
@@ -28,6 +30,7 @@
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource Save}" />
         <KeyBinding Key="Esc" Command="{StaticResource Cancel}" />
         <KeyBinding Key="F11" Modifiers="Shift" Command="{StaticResource CancelBill}" />
+        <KeyBinding Key="B" Modifiers="Alt" Command="{StaticResource AddBillAdjustment}" />
     </Page.InputBindings>
 
 

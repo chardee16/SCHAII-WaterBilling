@@ -1,0 +1,86 @@
+﻿<Window x:Class="WaterBillingProject.Windows.AddBillingAdjustment"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:currency="clr-namespace:CurrencyTextBoxControl;assembly=CurrencyTextbox"
+        xmlns:local="clr-namespace:WaterBillingProject.Windows"
+        mc:Ignorable="d"
+        Title="AddBillingAdjustment"  Height="500" Width="400" WindowStartupLocation="CenterScreen" PreviewKeyDown="HandleKeys" WindowStyle="None">
+    <Window.Resources>
+        <ControlTemplate x:Key="TextBoxBaseControlTemplate" TargetType="{x:Type TextBoxBase}">
+            <Border Background="{TemplateBinding Background}" 
+                x:Name="Bd" BorderBrush="Black"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                <ScrollViewer x:Name="PART_ContentHost"/>
+            </Border>
+        </ControlTemplate>
+    </Window.Resources>
+    
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#316DA2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+                    <Button x:Name="ButtonFechar" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Click="ButtonFechar_Click">
+                        <materialDesign:PackIcon Kind="Close"/>
+                    </Button>
+                </StackPanel>
+            </Grid >
+
+            <Label Content="Billing Adjustment" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="0,10,0,0"/>
+
+            <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
+                <Label Content="Client ID:" HorizontalAlignment="Left" FontSize="12" Width="100" />
+                <TextBlock Text="{Binding Path = ClientID,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Height="30" FontSize="16" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
+                <Label Content="Client Name:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
+                <TextBlock Text="{Binding Path = Fullname,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Height="30" FontSize="16" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
+                <Label Content="Bill Month:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
+                <TextBox x:Name="txt_Billmonth" Text="{Binding Path = BillMonth,UpdateSourceTrigger=PropertyChanged}" MaxLength="6" Template="{StaticResource TextBoxBaseControlTemplate}" VerticalAlignment="Center" Width="167" Height="30" BorderBrush="Black" BorderThickness="1" FontSize="16" PreviewTextInput="TextBox_PreviewTextInput" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
+                <Label Content="Total Due:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
+                <currency:CurrencyTextBox x:Name="myCurrencyTextBox" Number="{Binding TotalDue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Template="{StaticResource TextBoxBaseControlTemplate}" Height="30" StringFormat="N2" Width="167" Margin="0,0,0,0" BorderThickness="1" FontSize="16">
+                    <currency:CurrencyTextBox.Style>
+                        <Style TargetType="{x:Type currency:CurrencyTextBox}">
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="True">
+                                    <Setter Property="ToolTip" Value="Amount" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </currency:CurrencyTextBox.Style>
+                </currency:CurrencyTextBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
+                <Label Content="Remarks:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
+                <TextBox Text="{Binding Path = Remarks,UpdateSourceTrigger=PropertyChanged}" Template="{StaticResource TextBoxBaseControlTemplate}" AcceptsReturn="True" HorizontalAlignment="Left" Width="268" Height="97" BorderBrush="Black" BorderThickness="1" FontSize="16" />
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,50,0,0">
+                <Button x:Name="btn_AddBill" Width="100" Padding="0" Height="50" Margin="0,20,0,0" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Click="btn_AddBill_Click" >
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <materialDesign:PackIcon HorizontalAlignment="Center"  Kind="ContentSave"  Height="30" Width="50" Foreground="Black" />
+                        <TextBlock Text="SAVE" Foreground="Black" FontFamily="Champagne &amp; Limousines" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btn_Cancel" Width="100" Height="50" Margin="0,20,0,0" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Click="btn_Cancel_Click">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <materialDesign:PackIcon HorizontalAlignment="Center"  Kind="Cancel"  Height="30" Width="50" Foreground="Black" />
+                        <TextBlock Text="CANCEL" Foreground="Black" FontFamily="Champagne &amp; Limousines" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+
+        </StackPanel>
+    </Grid>
+</Window>

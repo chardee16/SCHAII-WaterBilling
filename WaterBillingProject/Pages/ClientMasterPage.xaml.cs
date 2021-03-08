@@ -118,35 +118,50 @@ namespace WaterBilling.Pages
 
         private void Save()
         {
-            ClientClass client = new ClientClass();
-            client.FirstName = this.dataCon.FirstName;
-            client.MiddleName = this.dataCon.MiddleName;
-            client.LastName = this.dataCon.LastName;
-            client.ClientAccountStatusID = this.dataCon.ClientAccountStatusID;
-            client.BlockNo = this.dataCon.BlockNo;
-            client.LotNo = this.dataCon.LotNo;
-            client.Occupants = this.dataCon.Occupants;
-            client.IsSenior = this.dataCon.IsSenior;
-            client.SeniorCount = this.dataCon.SeniorCount;
-            client.PreviousReading = this.dataCon.PreviousReading;
+            ClientClass clientCount = new ClientClass();
+            clientCount.FirstName = this.dataCon.FirstName;
+            clientCount.LastName = this.dataCon.LastName;
+            clientCount.BlockNo = this.dataCon.BlockNo;
+            clientCount.LotNo = this.dataCon.LotNo;
 
-
-            if (repo.InsertClient(client))
+            if (repo.ClientCount(clientCount))
             {
-                MessageBox.Show("Client successfully saved.","Success",MessageBoxButton.OK,MessageBoxImage.Information);
+                ClientClass client = new ClientClass();
+                client.FirstName = this.dataCon.FirstName;
+                client.MiddleName = this.dataCon.MiddleName;
+                client.LastName = this.dataCon.LastName;
+                client.ClientAccountStatusID = this.dataCon.ClientAccountStatusID;
+                client.BlockNo = this.dataCon.BlockNo;
+                client.LotNo = this.dataCon.LotNo;
+                client.Occupants = this.dataCon.Occupants;
+                client.IsSenior = this.dataCon.IsSenior;
+                client.SeniorCount = this.dataCon.SeniorCount;
+                client.PreviousReading = this.dataCon.PreviousReading;
+
+
+                if (repo.InsertClient(client))
+                {
+                    MessageBox.Show("Client successfully saved.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Client failed to saved.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                try
+                {
+                    worker.RunWorkerAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
             else
             {
-                MessageBox.Show("Client failed to saved.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Client already exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            try
-            {
-                worker.RunWorkerAsync();
-            }
-            catch (Exception ex)
-            {
 
-            }
+            
 
         }
 

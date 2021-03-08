@@ -176,7 +176,7 @@ namespace WaterBilling.Pages
         {
             while (true)
             {
-                this.dataCon.tempChargesList = this.repo.GetCharges(this.dataCon.ClientID,true,"");
+                this.dataCon.tempChargesList = this.repo.GetCharges(this.dataCon.ClientID,true,"","");
                 this.dataCon.previousBillList = this.repo.GetPreviousBill(this.dataCon.ClientID,true,"");
                 this.dataCon.TempdiscountList = this.repo.GetDiscount();
                 this.dataCon.PreviousReading = this.repo.GetPreviousReading(this.dataCon.ClientID);
@@ -206,7 +206,7 @@ namespace WaterBilling.Pages
         {
             while (true)
             {
-                this.dataCon.tempChargesList = this.repo.GetCharges(this.dataCon.ClientID, false, this.dataCon.TR_Date);
+                this.dataCon.tempChargesList = this.repo.GetCharges(this.dataCon.ClientID, false, this.dataCon.TR_Date,this.dataCon.ReferenceNo);
                 this.dataCon.previousBillList = this.repo.GetPreviousBill(this.dataCon.ClientID,false, this.dataCon.TR_Date);
                 this.dataCon.discountList = this.repo.GetDiscount(this.dataCon.ClientID,this.dataCon.ReferenceNo);
                 //this.dataCon.PreviousReading = this.repo.GetPreviousReading(this.dataCon.ClientID);
@@ -478,7 +478,7 @@ namespace WaterBilling.Pages
                     billing.SLT_CODE = 1;
                     billing.ClientID = this.dataCon.ClientID;
                     billing.CurrentDue = this.dataCon.CurrentDue;
-                    billing.BillMonth = string.Format("{0}{1}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID));
+                    billing.BillMonth = string.Format("{0}{1}", string.Format("{0:D4}", this.dataCon.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID));
                     billing.TR_Date = string.Format("{0}-{1}-{2}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}",DateTime.Now.Day));
                     billing.BillStatus = 1;
                     billing.TR_CODE = 3;
@@ -837,30 +837,30 @@ namespace WaterBilling.Pages
             {
                 CrystalReport crystalReport = new CrystalReport();
                 this.report = new BillingStatement();
-                List<PreviousBillClass> billing = new List<PreviousBillClass>();
+                List<PreviousBillClass> PreviousBilling = new List<PreviousBillClass>();
 
                 foreach (var item in dataCon.previousBillList)
                 {
-                    billing.Add(new PreviousBillClass
+                    PreviousBilling.Add(new PreviousBillClass
                     {
                         BillMonth = item.BillMonth,
                         ReferenceNo = item.ReferenceNo,
                         TotalDue = item.TotalDue
-                    }); ;
+                    });
                 }
 
                 this.report.Database.Tables[0].SetDataSource(this.dataCon.chargesList);
                 this.report.Database.Tables[1].SetDataSource(dataCon.discountList);
-                this.report.Database.Tables[2].SetDataSource(billing);
+                this.report.Database.Tables[2].SetDataSource(PreviousBilling);
 
 
                 this.report.SetParameterValue("Fullname", this.dataCon.Fullname.ToUpper());
                 this.report.SetParameterValue("FullAddress", this.dataCon.FullAddress + " Sibulan Country Homes");
-                this.report.SetParameterValue("DateFrom", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 1), string.Format("{0:D4}", DateTime.Now.Year)));
-                this.report.SetParameterValue("DateTo", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", DateTime.DaysInMonth(DateTime.Now.Year, this.dataCon.BillingMonthID)), string.Format("{0:D4}", DateTime.Now.Year)));
+                this.report.SetParameterValue("DateFrom", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", 1), string.Format("{0:D4}",this.dataCon.Year)));
+                this.report.SetParameterValue("DateTo", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", this.dataCon.BillingMonthID), string.Format("{0:D2}", DateTime.DaysInMonth(Convert.ToInt32(this.dataCon.Year), this.dataCon.BillingMonthID)), string.Format("{0:D4}", this.dataCon.Year)));
                 this.report.SetParameterValue("DueDate", string.Format("{0}-{1}-{2}", string.Format("{0:D2}", LoginSession.TransDate.Month), string.Format("{0:D2}", 16), string.Format("{0:D4}", DateTime.Now.Year)));
                 this.report.SetParameterValue("TotalUsed", this.dataCon.TotalConsumption.ToString());
-                this.report.SetParameterValue("BillMonth", string.Format("{0}{1}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID)));
+                this.report.SetParameterValue("BillMonth", string.Format("{0}{1}", string.Format("{0:D4}", this.dataCon.Year), string.Format("{0:D2}", this.dataCon.BillingMonthID)));
                 this.report.SetParameterValue("ThisDate", LoginSession.TransDate.ToString("MM-dd-yyyy"));
                 this.report.SetParameterValue("PresentReading", this.dataCon.PresentReading.ToString());
                 this.report.SetParameterValue("PreviousReading", this.dataCon.PreviousReading.ToString());
@@ -871,7 +871,7 @@ namespace WaterBilling.Pages
                 this.report.SetParameterValue("TotalDue", string.Format("{0:n}", this.dataCon.TotalDue));
 
 
-
+               
 
                 PrintDocument localPrinter = new PrintDocument();
                 //crystalReport.cryRpt = this.report;
@@ -1628,6 +1628,21 @@ namespace WaterBilling.Pages
                     ((TextBox)sender).Text = "0";
                 }
             }
+        }
+
+        private void Executed_AddBillAdjustment(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.dataCon.ClientID != 0)
+            {
+                AddBillingAdjustment billingAdjustment = new AddBillingAdjustment(this.dataCon.ClientID, this.dataCon.Fullname);
+                billingAdjustment.ShowDialog();
+                Refresh();
+            }
+            else
+            {
+                MessageBox.Show("Error! Please select client.", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+           
         }
     }
 

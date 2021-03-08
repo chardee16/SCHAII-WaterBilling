@@ -74,7 +74,7 @@ namespace WaterBillingProject.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Incorrect Username or Password", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show(this, "Incorrect Username or Password", "ERROR IN CATCH", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             
             

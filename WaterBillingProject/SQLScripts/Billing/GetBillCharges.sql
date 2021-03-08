@@ -10,7 +10,7 @@
 		SELECT (
 					SELECT SUM(Amt) FROM tblTransactionDetails td
 					WHERE td.SLC_CODE = c.SLC_CODE and td.SLT_CODE = c.SLT_CODE
-						and td.AccountCode = c.COAID and td.ClientID = c.ClientID
+						and td.AccountCode = c.COAID and td.ClientID = c.ClientID @_ref
 				) as Amount
 			from tblBillCharges c 
 			INNER JOIN tblBilling bill
@@ -18,7 +18,8 @@
 			WHERE c.SLC_CODE = sl.SLC_CODE
 				AND c.SLT_CODE = sl.SLT_CODE 
 				AND c.ClientID = bill.ClientID
-			Group by c.SLC_CODE,c.SLT_CODE,c.COAID,c.ClientID
+				@_withRef
+			Group by Bill.BillStatus,c.SLC_CODE,c.SLT_CODE,c.COAID,c.ClientID @_GroupBy
 		),0) as Amount
 from tblSLType sl
 INNER JOIN tblGLControl gl
