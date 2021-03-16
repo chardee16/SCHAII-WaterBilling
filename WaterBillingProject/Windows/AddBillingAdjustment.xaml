@@ -44,9 +44,11 @@
                 <Label Content="Bill Month:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
                 <TextBox x:Name="txt_Billmonth" Text="{Binding Path = BillMonth,UpdateSourceTrigger=PropertyChanged}" MaxLength="6" Template="{StaticResource TextBoxBaseControlTemplate}" VerticalAlignment="Center" Width="167" Height="30" BorderBrush="Black" BorderThickness="1" FontSize="16" PreviewTextInput="TextBox_PreviewTextInput" />
             </StackPanel>
+
+
             <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
                 <Label Content="Total Due:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
-                <currency:CurrencyTextBox x:Name="myCurrencyTextBox" Number="{Binding TotalDue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Template="{StaticResource TextBoxBaseControlTemplate}" Height="30" StringFormat="N2" Width="167" Margin="0,0,0,0" BorderThickness="1" FontSize="16">
+                <currency:CurrencyTextBox x:Name="myCurrencyTextBox" Number="{Binding TotalDue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Template="{StaticResource TextBoxBaseControlTemplate}" Height="30" StringFormat="N2" Width="230" Margin="0,0,0,0" BorderThickness="1" FontSize="16">
                     <currency:CurrencyTextBox.Style>
                         <Style TargetType="{x:Type currency:CurrencyTextBox}">
                             <Style.Triggers>
@@ -60,12 +62,44 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
+                <Label Content="Monthly Due:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
+                <currency:CurrencyTextBox x:Name="myCurrencyTextBoxMonthlyDue" Number="{Binding MonthlyDue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Template="{StaticResource TextBoxBaseControlTemplate}" Height="30" StringFormat="N2" Width="230" Margin="0,0,0,0" BorderThickness="1" FontSize="16">
+                    <currency:CurrencyTextBox.Style>
+                        <Style TargetType="{x:Type currency:CurrencyTextBox}">
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="True">
+                                    <Setter Property="ToolTip" Value="Amount" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </currency:CurrencyTextBox.Style>
+                </currency:CurrencyTextBox>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
+                <Label Content="Garbage:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
+                <currency:CurrencyTextBox x:Name="myCurrencyTextBoxGarbage" Number="{Binding GarbageDue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Template="{StaticResource TextBoxBaseControlTemplate}" Height="30" StringFormat="N2" Width="230" Margin="0,0,0,0" BorderThickness="1" FontSize="16">
+                    <currency:CurrencyTextBox.Style>
+                        <Style TargetType="{x:Type currency:CurrencyTextBox}">
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="True">
+                                    <Setter Property="ToolTip" Value="Amount" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </currency:CurrencyTextBox.Style>
+                </currency:CurrencyTextBox>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
                 <Label Content="Remarks:" HorizontalAlignment="Left" FontSize="12" Width="100"  />
                 <TextBox Text="{Binding Path = Remarks,UpdateSourceTrigger=PropertyChanged}" Template="{StaticResource TextBoxBaseControlTemplate}" AcceptsReturn="True" HorizontalAlignment="Left" Width="268" Height="97" BorderBrush="Black" BorderThickness="1" FontSize="16" />
             </StackPanel>
 
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,50,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,0">
                 <Button x:Name="btn_AddBill" Width="100" Padding="0" Height="50" Margin="0,20,0,0" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Click="btn_AddBill_Click" >
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                         <materialDesign:PackIcon HorizontalAlignment="Center"  Kind="ContentSave"  Height="30" Width="50" Foreground="Black" />

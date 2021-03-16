@@ -73,7 +73,7 @@ namespace WaterBillingProject.Windows
                     billing.ClientID = this.dataCon.ClientID;
                     billing.CurrentDue = this.dataCon.TotalDue;
                     billing.BillMonth = this.dataCon.BillMonth;
-                    billing.TR_Date = string.Format("{0}-{1}-{2}", string.Format("{0:D4}", DateTime.Now.Year), string.Format("{0:D2}", this.dataCon.BillMonth.Substring(4)), string.Format("{0:D2}", DateTime.Now.Day));
+                    billing.TR_Date = string.Format("{0}-{1}-{2}", string.Format("{0:D4}", string.Format("{0:D4}", this.dataCon.BillMonth.Substring(0,4))), string.Format("{0:D2}", this.dataCon.BillMonth.Substring(4)), string.Format("{0:D2}", DateTime.Now.Day));
                     billing.BillStatus = 1;
                     billing.TR_CODE = 4;
                     billing.Consumption = 0;
@@ -81,7 +81,7 @@ namespace WaterBillingProject.Windows
                     billing.dueWithDiscount = 0;
                     billing.CurrentReading = 0;
                     billing.PreviousReading = 0;
-                    //billing.ChargesList = getCharges();
+                    billing.ChargesList = getCharges();
                     //billing.DiscountList = getDiscount();
                     billing.transummary = SetTransactionSummary();
                     billing.transdetail = SetTransactionDetails();
@@ -173,7 +173,55 @@ namespace WaterBillingProject.Windows
 
                 transDT.Add(billsTrans);
 
-               
+
+
+                TransactionDetailClass billMonthlyDue;
+
+                billMonthlyDue = new TransactionDetailClass();
+                billMonthlyDue.TransactionCode = 4;
+                billMonthlyDue.TransYear = LoginSession.TransYear;
+                billMonthlyDue.AccountCode = 402102;
+                billMonthlyDue.ClientID = this.dataCon.ClientID;
+                billMonthlyDue.BillMonth = "";
+                billMonthlyDue.SLC_CODE = 15;
+                billMonthlyDue.SLT_CODE = 1;
+                billMonthlyDue.ReferenceNo = "";
+                billMonthlyDue.SLE_CODE = 11;
+                billMonthlyDue.StatusID = 15;
+                billMonthlyDue.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                billMonthlyDue.Amt = this.dataCon.MonthlyDue;
+                billMonthlyDue.PostedBy = LoginSession.UserID;
+                billMonthlyDue.UPDTag = 1;
+                billMonthlyDue.ClientName = this.dataCon.Fullname;
+                billMonthlyDue.SL_Description = "";
+
+                transDT.Add(billMonthlyDue);
+
+
+                TransactionDetailClass GarbageDue;
+
+                GarbageDue = new TransactionDetailClass();
+                GarbageDue.TransactionCode = 4;
+                GarbageDue.TransYear = LoginSession.TransYear;
+                GarbageDue.AccountCode = 402103;
+                GarbageDue.ClientID = this.dataCon.ClientID;
+                GarbageDue.BillMonth = "";
+                GarbageDue.SLC_CODE = 15;
+                GarbageDue.SLT_CODE = 2;
+                GarbageDue.ReferenceNo = "";
+                GarbageDue.SLE_CODE = 11;
+                GarbageDue.StatusID = 15;
+                GarbageDue.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
+                GarbageDue.Amt = this.dataCon.MonthlyDue;
+                GarbageDue.PostedBy = LoginSession.UserID;
+                GarbageDue.UPDTag = 1;
+                GarbageDue.ClientName = this.dataCon.Fullname;
+                GarbageDue.SL_Description = "";
+
+                transDT.Add(GarbageDue);
+
+
+
 
                 TransactionDetailClass TellerEntry;
                 TellerEntry = new TransactionDetailClass();
@@ -188,7 +236,7 @@ namespace WaterBillingProject.Windows
                 TellerEntry.SLE_CODE = 1;
                 TellerEntry.StatusID = 15;
                 TellerEntry.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
-                TellerEntry.Amt = this.dataCon.TotalDue * -1;
+                TellerEntry.Amt = (this.dataCon.TotalDue + this.dataCon.MonthlyDue + this.dataCon.GarbageDue) * -1;
                 TellerEntry.PostedBy = LoginSession.UserID;
                 TellerEntry.UPDTag = 1;
                 TellerEntry.ClientName = this.dataCon.Fullname;
@@ -206,6 +254,41 @@ namespace WaterBillingProject.Windows
         }
 
 
+
+
+        private List<ChargesClass> getCharges()
+        {
+            List<ChargesClass> toReturn = new List<ChargesClass>();
+            try
+            {
+                //monthly due
+                toReturn.Add(new ChargesClass
+                {
+                    SLC_CODE = 15,
+                    SLT_CODE = 1,
+                    AccountCode = 402102,
+                    SL_Description = "Monthly Dues",
+                    Amount = this.dataCon.MonthlyDue,
+                }) ;
+
+                //Garbage
+                toReturn.Add(new ChargesClass
+                {
+                    SLC_CODE = 15,
+                    SLT_CODE = 2,
+                    AccountCode = 402103,
+                    SL_Description = "Garbage Collection",
+                    Amount = this.dataCon.GarbageDue,
+                });
+
+
+                return toReturn;
+            }
+            catch (Exception ex)
+            {
+                return toReturn;
+            }
+        }
 
 
 
@@ -242,6 +325,16 @@ namespace WaterBillingProject.Windows
                         if (this.dataCon.TotalDue <= 0)
                         {
                             MessageBox.Show("Total due must have value.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return false;
+                        }
+                        else if (this.dataCon.MonthlyDue > 50)
+                        {
+                            MessageBox.Show("Monthly Due must not exceed P50.00.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return false;
+                        }
+                        else if (this.dataCon.GarbageDue > 30)
+                        {
+                            MessageBox.Show("Garbage Due must not exceed P30.00.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             return false;
                         }
                         else
@@ -344,6 +437,43 @@ namespace WaterBillingProject.Windows
                 }
             }
         }
+
+
+        private Decimal _MonthlyDue;
+        public Decimal MonthlyDue
+        {
+            get
+            {
+                return _MonthlyDue;
+            }
+            set
+            {
+                if (value != _MonthlyDue)
+                {
+                    _MonthlyDue = value;
+                    OnPropertyChanged("MonthlyDue");
+                }
+            }
+        }
+
+
+        private Decimal _GarbageDue;
+        public Decimal GarbageDue
+        {
+            get
+            {
+                return _GarbageDue;
+            }
+            set
+            {
+                if (value != _GarbageDue)
+                {
+                    _GarbageDue = value;
+                    OnPropertyChanged("GarbageDue");
+                }
+            }
+        }
+
 
 
         private String _Remarks;

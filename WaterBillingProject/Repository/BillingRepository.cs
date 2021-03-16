@@ -362,6 +362,24 @@ namespace WaterBilling.Repository
                 }
 
 
+                String ChargesValue = "";
+                counter = 0;
+
+                foreach (var item in billData.ChargesList)
+                {
+                    counter++;
+                    if (counter == billData.ChargesList.Count)
+                    {
+                        Last = ";";
+                    }
+                    else
+                    {
+                        Last = ",\n";
+                    }
+                    ChargesValue += "(" + item.SLC_CODE + "," + item.SLT_CODE + "," + item.AccountCode + ",'" + item.SL_Description + "'," + billData.ClientID + ", @ReferenceNo," + item.Amount + ")" + Last;
+                }
+
+
 
 
 
@@ -385,7 +403,7 @@ namespace WaterBilling.Repository
                 sqlFile.setParameter("_CurrentReading", billData.CurrentReading.ToString());
                 sqlFile.setParameter("_PreviousReading", billData.PreviousReading.ToString());
                 sqlFile.setParameter("_TransactionDetailValue", TransactionDetailValue);
-
+                sqlFile.setParameter("_ChargesValue", ChargesValue);
 
                 var affectedRow = Connection.Execute(sqlFile.sqlQuery);
 

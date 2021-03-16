@@ -8,7 +8,7 @@
 		c.Occupants,
 		c.IsSenior,
 		c.SeniorCount,
-		c.FirstName + ' ' + c.MiddleName + ' ' + c.LastName as FullName,
+		c.LastName + ', ' + c.FirstName + ' ' + c.MiddleName as FullName,
 		'Blk ' + Cast(c.BlockNo as varchar) + ' and Lot ' + Cast(c.LotNo as varchar) as FullAddress,
 		cs.ClientStatusDesc as ClientStatusDesc,
 		c.PreviousReading

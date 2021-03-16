@@ -161,7 +161,7 @@ namespace WaterBilling.Windows
             var value = (ClientClass)item;
             if (value == null || value.FullName == null)
                 return false;
-            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.FirstName.ToLower().StartsWith(SearchText.ToLower()) || value.LastName.ToLower().StartsWith(SearchText.ToLower());
+            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.LastName.ToLower().StartsWith(SearchText.ToLower());
         }
 
 

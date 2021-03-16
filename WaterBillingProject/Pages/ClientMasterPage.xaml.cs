@@ -29,6 +29,7 @@ namespace WaterBilling.Pages
 
 
         public ObservableCollection<ClientClass> clientList;
+
         ClientClass toReturn = new ClientClass();
         private ICollectionView MyData;
         string SearchText = string.Empty;
@@ -39,6 +40,7 @@ namespace WaterBilling.Pages
             InitializeComponent();
             InitializeWorkers();
             InitializeFields(true);
+            this.PreviewKeyDown += new KeyEventHandler(HandleKeysEvent);
             this.dataCon = new ClientMasterDataContext();
             
 
@@ -320,7 +322,7 @@ namespace WaterBilling.Pages
             var value = (ClientClass)item;
             if (value == null || value.FullName == null)
                 return false;
-            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.FirstName.ToLower().StartsWith(SearchText.ToLower()) || value.LastName.ToLower().StartsWith(SearchText.ToLower());
+            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.LastName.ToLower().StartsWith(SearchText.ToLower());
         }
 
         private void Executed_New(object sender, ExecutedRoutedEventArgs e)
@@ -345,6 +347,69 @@ namespace WaterBilling.Pages
                 Save();
             }
         }
+
+        private void SelectedCell_Click(object sender, RoutedEventArgs e)
+        {
+            DataGridCell cell = sender as DataGridCell;
+            if (cell.Column.DisplayIndex != this.currentColumn)
+            {
+                cell.IsSelected = false;
+            }
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+
+            while ((dep != null) && !(dep is DataGridRow))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            DataGridRow row = dep as DataGridRow;
+            this.currentRow = row.GetIndex();
+        }
+
+
+        private void HandleKeysEvent(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                if (currentRow > 0)
+                {
+                    try
+                    {
+                        int previousIndex = DG_ClientList.SelectedIndex - 1;
+                        if (previousIndex < 0)
+                            return; DG_ClientList.SelectedIndex = previousIndex; DG_ClientList.ScrollIntoView(DG_ClientList.Items[currentRow]);
+                    }
+                    catch (Exception ex)
+                    {
+                        e.Handled = true;
+                    }
+                }
+            }
+            else if (e.Key == Key.Down)
+            {
+                if (currentRow < DG_ClientList.Items.Count - 1)
+                {
+                    try
+                    {
+                        int nextIndex = DG_ClientList.SelectedIndex + 1;
+
+                        if (nextIndex > DG_ClientList.Items.Count - 1)
+                            return;
+
+                        DG_ClientList.SelectedIndex = nextIndex;
+                        DG_ClientList.ScrollIntoView(DG_ClientList.Items[currentRow]);
+                    }
+                    catch (Exception ex)
+                    {
+                        e.Handled = true;
+                    }
+                } // end if (this.SelectedOverride > 0)            
+            } // end else if (e.Key == Key.Down)
+           
+
+        }
+
+
 
         public class ClientMasterDataContext : INotifyPropertyChanged
         {

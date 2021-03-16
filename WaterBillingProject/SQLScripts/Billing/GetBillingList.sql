@@ -15,3 +15,4 @@ from tblBilling bill
 INNER JOIN tblBillStatus stat
 	ON stat.BillStatusID = bill.BillStatus
 WHERE ClientID = @_ClientID
+and  bill.BillStatus != 3

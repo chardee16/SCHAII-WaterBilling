@@ -64,6 +64,21 @@ Values
 
 
 
+INSERT Into tblBillCharges
+(
+	SLC_CODE
+	,SLT_CODE
+	,COAID
+	,Description
+	,ClientID
+	,ReferenceNo
+	,Amount
+)
+Values
+@_ChargesValue
+;
+
+
 
 INSERT INTO tblTransactionSummary
 (

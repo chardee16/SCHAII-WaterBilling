@@ -15,6 +15,39 @@
         <RoutedUICommand x:Key="New" Text="New" />
         <RoutedUICommand x:Key="Edit" Text="Edit" />
         <RoutedUICommand x:Key="Save" Text="Save" />
+
+       
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="GridLinesVisibility" Value="All" />
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+            <Setter Property="Background" Value="#FFEEEEEE" />
+        </Style>
+        <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="{Binding RowColor,UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+            <Setter Property="Foreground" Value="#FF3C3636"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Aqua" />
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+            <EventSetter Event="Selected" Handler="SelectedCell_Click"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Aqua" />
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </Page.Resources>
 
     <Page.CommandBindings>
@@ -43,7 +76,18 @@
         <StackPanel Grid.Row="1" Margin="10,0,10,10" Orientation="Vertical" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" >
                 <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
-                <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="213" BorderThickness="1,1,1,1" TextChanged="TextBox_TextChanged" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="213" BorderThickness="1,1,1,1" TextChanged="TextBox_TextChanged" PreviewKeyDown="TextBox_PreviewKeyDown">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Foreground" Value="Black"></Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="Background" Value="Yellow" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </StackPanel>
             <DataGrid x:Name="DG_ClientList" ItemsSource="{Binding Path=clientList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="0,10,0,0" Height="223" PreviewMouseDoubleClick="DG_ClientList_PreviewMouseDoubleClick">
                 <DataGrid.Columns>
