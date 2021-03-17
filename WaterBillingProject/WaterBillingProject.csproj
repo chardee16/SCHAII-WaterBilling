@@ -309,6 +309,7 @@
   <ItemGroup>
     <Content Include="SQLScripts\Billing\InsertBillingAdjustment.sql" />
     <Content Include="SQLScripts\ClientMaster\ClientCount.sql" />
+    <Content Include="SQLScripts\Reports\GetBillingReport.sql" />
     <Content Include="SQLScripts\Settings\GetUserList.sql" />
     <Content Include="SQLScripts\Settings\InsertUser.sql" />
     <Content Include="SQLScripts\Settings\UpdatePassword.sql" />

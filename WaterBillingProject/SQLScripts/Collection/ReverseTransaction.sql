@@ -1,7 +1,7 @@
 ﻿SELECT COALESCE(Max(CTLNo),0) + 1 as CTLNo 
 INTO #TEMPCtlNo
 FROM tblTransactionSummary 
-Where TransactionCode = 3 AND TransYear = @_TransYear;
+Where TransactionCode = 5 AND TransYear = @_TransYear;
 
 
 
@@ -13,7 +13,7 @@ SET @ControlNo = (SELECT CTLNo FROM #TEMPCtlNo)
 
 
 SELECT
-	3 as TransactionCode,
+	5 as TransactionCode,
 	td.TransYear,
 	@ControlNo as CTLNo,
 	td.TransactionDate,
@@ -32,7 +32,7 @@ and TransYear = @_TransYear
 
 
 SELECT 
-	3 as TransactionCode,
+	5 as TransactionCode,
 	td.TransYear,
 	@ControlNo as CTLNo,
 	td.AccountCode,

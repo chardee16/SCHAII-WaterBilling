@@ -308,7 +308,7 @@ namespace WaterBilling.Repository
                 sqlFile.setParameter("_BillMonth", billData.BillMonth.ToString());
 
                 var affectedRow = Connection.Execute(sqlFile.sqlQuery);
-
+                
 
                 if (affectedRow > 0)
                 {
