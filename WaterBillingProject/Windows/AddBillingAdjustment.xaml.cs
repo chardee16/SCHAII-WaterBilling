@@ -227,13 +227,13 @@ namespace WaterBillingProject.Windows
                 TellerEntry = new TransactionDetailClass();
                 TellerEntry.TransactionCode = 4;
                 TellerEntry.TransYear = LoginSession.TransYear;
-                TellerEntry.AccountCode = 402101;
+                TellerEntry.AccountCode = 100201;
                 TellerEntry.ClientID = this.dataCon.ClientID;
                 TellerEntry.BillMonth = "";
                 TellerEntry.SLC_CODE = 12;
                 TellerEntry.SLT_CODE = 1;
                 TellerEntry.ReferenceNo = "";
-                TellerEntry.SLE_CODE = 1;
+                TellerEntry.SLE_CODE = 11;
                 TellerEntry.StatusID = 15;
                 TellerEntry.TransactionDate = LoginSession.TransDate.ToString("yyyy-MM-dd");
                 TellerEntry.Amt = (this.dataCon.TotalDue + this.dataCon.MonthlyDue + this.dataCon.GarbageDue) * -1;
