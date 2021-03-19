@@ -21,16 +21,31 @@ Select
 					and discount.ReferenceNo = bill.ReferenceNo
 		)
 	  ,0) as Discount,
-	  COALESCE(bill.TotalDue,0) as NetDue
+	  COALESCE(bill.TotalDue,0) as NetDue,
+	  COALESCE(SUM(monthDue.Amount),0) as MonthlyDue
 from tblClient c
 LEFT JOIN tblBilling bill
-		ON bill.ClientID = c.ClientID and BillMonth = @paramBillMonth
+		ON bill.ClientID = c.ClientID and bill.BillMonth = @paramBillMonth
 		and BillStatus != 3
---LEFT JOIN tblTransactionDetails BillDue
---	ON BillDue.ClientID = c.ClientID
---		and BillDue.TransactionCode = bill.TR_CODE
---		and BillDue.CTLNo = bill.CTLNo
---		and BillDue.ReferenceNo = bill.ReferenceNo
---		and BillDue.AccountCode = 402101
-WHERE c.AccountStatusID = 1
+LEFT JOIN (
+	SELECT bc.ClientID,bc.Amount from
+	tblBillCharges bc
+	INNER JOIN tblBilling billing
+		ON billing.ClientID = bc.ClientID
+			and billing.ReferenceNo = bc.ReferenceNo
+			and billing.TR_Date <= '2021-01-30'
+	WHERE bc.SLC_CODE = 15
+		and bc.SLT_CODE = 1
+	) monthDue ON monthDue.ClientID = c.ClientID
+WHERE c.AccountStatusID = 1 
+GROUP BY c.BlockNo,
+	  c.LotNo,
+	  c.ClientID,
+	  c.FirstName ,
+	  c.LastName,
+	  Consumption,
+	  ExcessConsumption,
+	  CurrentDue,
+	  bill.ReferenceNo,
+	  bill.TotalDue
 order by BlockNo,LotNo
