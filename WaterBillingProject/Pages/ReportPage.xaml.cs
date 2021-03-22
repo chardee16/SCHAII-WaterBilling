@@ -30,7 +30,7 @@ namespace WaterBillingProject.Pages
 
         BackgroundWorker billworker = new BackgroundWorker();
 
-        public ObservableCollection<ReportClientListClass> clientList;
+        public ObservableCollection<BillingReportClass> billingList;
         private ICollectionView MyData;
         string SearchText = string.Empty;
         int currentRow = 0, currentColumn = 1;
@@ -95,7 +95,7 @@ namespace WaterBillingProject.Pages
         {
             while (true)
             {
-                this.dataCon.reportClientList = repo.GetClientList();
+                this.dataCon.reportBillingList = repo.GetBillingReportList();
                 this.dataCon.reportTransactionList = repo.GetTransactionList(this.dataCon.DateFrom,this.dataCon.DateTo);
                 break;
             }
@@ -104,9 +104,9 @@ namespace WaterBillingProject.Pages
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
-            this.dataCon.TotalClient = this.dataCon.reportClientList.Count;
-            this.dataCon.TotalConsumption = this.dataCon.reportClientList.Sum(x => Convert.ToInt64(x.Consumption));
-            this.dataCon.TotalDues = this.dataCon.reportClientList.Sum(x => Math.Round(x.TotalDue,2,MidpointRounding.AwayFromZero));
+            this.dataCon.TotalClient = this.dataCon.reportBillingList.Count;
+            this.dataCon.TotalConsumption = this.dataCon.reportBillingList.Sum(x => Convert.ToInt64(x.Consumption));
+            this.dataCon.TotalDues = this.dataCon.reportBillingList.Sum(x => Math.Round(x.TotalDue,2,MidpointRounding.AwayFromZero));
 
             this.dataCon.TotalWaterBill = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.WaterBill, 2, MidpointRounding.AwayFromZero));
             this.dataCon.TotalDiscount = this.dataCon.reportTransactionList.Sum(x => Math.Round(x.Discount, 2, MidpointRounding.AwayFromZero));
@@ -115,9 +115,9 @@ namespace WaterBillingProject.Pages
 
 
             this.DataContext = this.dataCon;
-            clientList = new ObservableCollection<ReportClientListClass>(this.dataCon.reportClientList);
-            DG_ClientList.ItemsSource = clientList;
-            MyData = CollectionViewSource.GetDefaultView(clientList);
+            billingList = new ObservableCollection<BillingReportClass>(this.dataCon.reportBillingList);
+            DG_ClientList.ItemsSource = billingList;
+            MyData = CollectionViewSource.GetDefaultView(billingList);
             DG_ClientList.Focus();
             DG_ClientList.SelectedIndex = 0;
             txt_Search.Focus();
@@ -237,10 +237,10 @@ namespace WaterBillingProject.Pages
 
         private bool FilterData(object item)
         {
-            var value = (ReportClientListClass)item;
+            var value = (BillingReportClass)item;
             if (value == null || value.FullName == null)
                 return false;
-            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.FullName.ToLower().StartsWith(SearchText.ToLower()) || value.FullAddress.ToLower().StartsWith(SearchText.ToLower());
+            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.FullName.ToLower().StartsWith(SearchText.ToLower()) || value.BlockNo.ToString().StartsWith(SearchText.ToLower());
         }
         
 
@@ -317,6 +317,19 @@ namespace WaterBillingProject.Pages
             {
                 _reportClientList = value;
                 OnPropertyChanged("reportClientList");
+            }
+        }
+
+
+
+        List<BillingReportClass> _reportBillingList;
+        public List<BillingReportClass> reportBillingList
+        {
+            get { return _reportBillingList; }
+            set
+            {
+                _reportBillingList = value;
+                OnPropertyChanged("reportBillingList");
             }
         }
 

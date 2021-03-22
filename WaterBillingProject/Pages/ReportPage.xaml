@@ -16,11 +16,11 @@
                     <SolidColorBrush Color="#FF9EC6FF" Opacity="0.8"/>
                 </Grid.Background>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10 0">
-                    <Button Uid="0" FontSize="12" Width="150" Content="CLIENT REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}"  Foreground="#FF10436B" Click="Button_Click" />
-                    <Button Uid="1" FontSize="12" Width="150" Content="BILLING REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
+                    <Button Uid="0" FontSize="12" Width="160" Content="BILLING REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}"  Foreground="#FF10436B" Click="Button_Click" />
+                    <Button Uid="1" FontSize="12" Width="160" Content="TRANSACTION REPORTS" Height="50" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF10436B" Click="Button_Click"/>
                     
                 </StackPanel>
-                <Grid x:Name="GridCursor" Width="150" Height="3" Background="#FF07385F" HorizontalAlignment="Left" Margin="10,30,0,0"/>
+                <Grid x:Name="GridCursor" Width="160" Height="3" Background="#FF07385F" HorizontalAlignment="Left" Margin="10,30,0,0"/>
             </Grid>
 
             <Grid x:Name="ClientGrid"  Height="490"  Margin="10,10,10,0" Background="#FFCFCFCF">
@@ -30,13 +30,69 @@
                         <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="300" BorderThickness="2"  PreviewKeyDown="txt_Search_PreviewKeyDown" TextChanged="txt_Search_TextChanged"/>
                     </StackPanel>
 
-                    <DataGrid x:Name="DG_ClientList"  ItemsSource="{Binding Path=clientList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="330">
+                    <DataGrid x:Name="DG_ClientList"  ItemsSource="{Binding Path=reportBillingList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="330">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=FullName,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="174" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=FullAddress,UpdateSourceTrigger=PropertyChanged}" Header="House" Width="154" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=Consumption,UpdateSourceTrigger=PropertyChanged}" Header="Consumption" Width="154" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=TotalDue,UpdateSourceTrigger=PropertyChanged}" Header="Total Due" Width="154" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=TotalUnpaidBill,UpdateSourceTrigger=PropertyChanged}" Header="Unpaid Bill" Width="134" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=BlockNo,UpdateSourceTrigger=PropertyChanged}"  Width="75" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate >
+                                    <DataTemplate>
+                                        <TextBlock Text="BLOCK NO" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding Path=LotNo,UpdateSourceTrigger=PropertyChanged}"  Width="70" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate >
+                                    <DataTemplate>
+                                        <TextBlock Text="LOT NO" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding Path=FullName,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="200" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=PreviousReading,UpdateSourceTrigger=PropertyChanged}"  Width="110" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate >
+                                    <DataTemplate>
+                                        <TextBlock Text="Previous Reading" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding Path=PresentReading,UpdateSourceTrigger=PropertyChanged}"  Width="110" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate >
+                                    <DataTemplate>
+                                        <TextBlock Text="Present Reading" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Binding="{Binding Path=Consumption,UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate >
+                                    <DataTemplate>
+                                        <TextBlock Text="Cu. M. Used" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Binding="{Binding Path=Minimum,UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate >
+                                    <DataTemplate>
+                                        <TextBlock Text="Minimum Cu. M." HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Binding="{Binding Path=Excess,UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.HeaderTemplate >
+                                    <DataTemplate>
+                                        <TextBlock Text="Excess Cu. M." HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Binding="{Binding Path=AmountDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Amount Due" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=Discount,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Discount" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=NetDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Net of Discount" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=MonthlyDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Monthly Dues" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=GarbageDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Garbage" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=PreviousBalance,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Prev. Balance" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=TotalDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Total Due" Width="130" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
 

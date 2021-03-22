@@ -30,7 +30,6 @@ namespace WaterBillingProject.Models.Reports
 
 
 
-
         private String _FullName;
         public String FullName
         {

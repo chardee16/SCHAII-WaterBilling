@@ -35,6 +35,24 @@ namespace WaterBillingProject.Repository
 
 
 
+        public List<BillingReportClass> GetBillingReportList()
+        {
+            List<BillingReportClass> toReturn = new List<BillingReportClass>();
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "Reports\\GetBillingReport.sql";
+
+                return Connection.Query<BillingReportClass>(this.sqlFile.sqlQuery).ToList();
+            }
+            catch (Exception ex)
+            {
+                return toReturn;
+            }
+
+        }
+
+
+
         public List<ReportTransactionList> GetTransactionList(String DateFrom,String DateTo)
         {
             List<ReportTransactionList> toReturn = new List<ReportTransactionList>();

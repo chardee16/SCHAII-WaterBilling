@@ -112,6 +112,7 @@
     <Compile Include="Models\Dashboard\DashboardMonthlyConsumption.cs" />
     <Compile Include="Models\Dashboard\DashboardValues.cs" />
     <Compile Include="Models\Login\LoginClass.cs" />
+    <Compile Include="Models\Reports\BillingReportClass.cs" />
     <Compile Include="Models\Reports\ReportClientListClass.cs" />
     <Compile Include="Models\Reports\ReportTransactionList.cs" />
     <Compile Include="Models\Settings\UserClass.cs" />
