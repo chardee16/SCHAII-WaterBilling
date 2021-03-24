@@ -191,13 +191,13 @@ namespace WaterBillingProject.Pages
             try
             {
                 CrystalReport crystalReport = new CrystalReport();
-                this.report = new ClientListReport();
+                this.report = new BillingReport();
 
 
-                this.report.Database.Tables[0].SetDataSource(this.dataCon.reportClientList);
+                this.report.Database.Tables[0].SetDataSource(this.dataCon.reportBillingList);
              
 
-                this.report.SetParameterValue("TotalDues", this.dataCon.TotalDues);
+                //this.report.SetParameterValue("TotalDues", this.dataCon.TotalDues);
                 
 
                 crystalReport.cryRpt = this.report;

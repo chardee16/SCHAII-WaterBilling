@@ -32,17 +32,17 @@
     <Grid>
 
         <Viewer:CrystalReportsViewer x:Name="_CrystalReport" ToggleSidePanel="None"  ShowExportButton="False" ShowCopyButton="False" ShowSearchTextButton="False" Margin="0"/>
-        <Button x:Name="print" Content=" " HorizontalAlignment="Left" Margin="260,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="print_Click"  Style="{StaticResource MyButton}" ToolTip="Print Document" >
+        <Button x:Name="print" Content=" " HorizontalAlignment="Left" Margin="322,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="print_Click"  Style="{StaticResource MyButton}" ToolTip="Print Document" >
             <Button.Background>
                 <ImageBrush ImageSource="Img/Printer-icon.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="exportToExcel" Content=" " HorizontalAlignment="Left" Margin="290,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="exportExcel"  Style="{StaticResource MyButton}" ToolTip="Export to Excel">
+        <Button x:Name="exportToExcel" Content=" " HorizontalAlignment="Left" Margin="352,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="exportExcel"  Style="{StaticResource MyButton}" ToolTip="Export to Excel">
             <Button.Background>
                 <ImageBrush ImageSource="Img/microsoft_excel_n.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="exportToPDF" Content=" " HorizontalAlignment="Left" Margin="318,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="exportToPDF_Click"  Style="{StaticResource MyButton}" ToolTip="Export to PDF">
+        <Button x:Name="exportToPDF" Content=" " HorizontalAlignment="Left" Margin="380,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="exportToPDF_Click"  Style="{StaticResource MyButton}" ToolTip="Export to PDF">
             <Button.Background>
                 <ImageBrush ImageSource="Img/PDF.png"/>
             </Button.Background>
