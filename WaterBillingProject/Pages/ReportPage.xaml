@@ -28,33 +28,35 @@
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
                         <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="300" BorderThickness="2"  PreviewKeyDown="txt_Search_PreviewKeyDown" TextChanged="txt_Search_TextChanged"/>
+                        <TextBlock Text="BILL MONTH" FontWeight="Bold" VerticalAlignment="Center" FontSize="15" Margin="60,0,0,0" />
+                        <TextBox x:Name="txt_searchBillMonth" Text="{Binding Path = BillMonth,UpdateSourceTrigger=PropertyChanged}" MaxLength="6" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="13 0 0 0" Width="143" BorderThickness="2"  PreviewTextInput="txt_searchBillMonth_PreviewTextInput" PreviewKeyDown="txt_searchBillMonth_PreviewKeyDown"/>
+                        <Button x:Name="tblFindBillMonth" Content="Find" Width="80" Foreground="Black" BorderBrush="Black" Background="#FF51AAF1" Margin="20,0,0,0" Click="tblFindBillMonth_Click" />
                     </StackPanel>
-
-                    <DataGrid x:Name="DG_ClientList"  ItemsSource="{Binding Path=reportBillingList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="330">
+                    <DataGrid x:Name="DG_ClientList"  ItemsSource="{Binding reportBillingList, UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="330">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=BlockNo,UpdateSourceTrigger=PropertyChanged}"  Width="75" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding BlockNo, UpdateSourceTrigger=PropertyChanged}"  Width="75" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="BLOCK NO" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Binding="{Binding Path=LotNo,UpdateSourceTrigger=PropertyChanged}"  Width="70" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding LotNo, UpdateSourceTrigger=PropertyChanged}"  Width="70" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="LOT NO" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Binding="{Binding Path=FullName,UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="200" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=PreviousReading,UpdateSourceTrigger=PropertyChanged}"  Width="110" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" Header="Client Name" Width="200" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding PreviousReading, UpdateSourceTrigger=PropertyChanged}"  Width="110" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="Previous Reading" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Binding="{Binding Path=PresentReading,UpdateSourceTrigger=PropertyChanged}"  Width="110" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding PresentReading, UpdateSourceTrigger=PropertyChanged}"  Width="110" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="Present Reading" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
@@ -62,7 +64,7 @@
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
 
-                            <DataGridTextColumn Binding="{Binding Path=Consumption,UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding Consumption, UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="Cu. M. Used" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
@@ -70,7 +72,7 @@
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
 
-                            <DataGridTextColumn Binding="{Binding Path=Minimum,UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding Minimum, UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="Minimum Cu. M." HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
@@ -78,7 +80,7 @@
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
 
-                            <DataGridTextColumn Binding="{Binding Path=Excess,UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding Excess, UpdateSourceTrigger=PropertyChanged}"  Width="100" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="Excess Cu. M." HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
@@ -86,13 +88,13 @@
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
 
-                            <DataGridTextColumn Binding="{Binding Path=AmountDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Amount Due" Width="130" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=Discount,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Discount" Width="130" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=NetDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Net of Discount" Width="130" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=MonthlyDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Monthly Dues" Width="130" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=GarbageDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Garbage" Width="130" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=PreviousBalance,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Prev. Balance" Width="130" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=TotalDue,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" Header="Total Due" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding AmountDue, StringFormat=\{0:#\,#.00;#(#\,##0.00)\}, UpdateSourceTrigger=PropertyChanged}" Header="Amount Due" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Discount, StringFormat=\{0:#\,#.00;#(#\,##0.00)\}, UpdateSourceTrigger=PropertyChanged}" Header="Discount" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding NetDue, StringFormat=\{0:#\,#.00;#(#\,##0.00)\}, UpdateSourceTrigger=PropertyChanged}" Header="Net of Discount" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding MonthlyDue, StringFormat=\{0:#\,#.00;#(#\,##0.00)\}, UpdateSourceTrigger=PropertyChanged}" Header="Monthly Dues" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding GarbageDue, StringFormat=\{0:#\,#.00;#(#\,##0.00)\}, UpdateSourceTrigger=PropertyChanged}" Header="Garbage" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding PreviousBalance, StringFormat=\{0:#\,#.00;#(#\,##0.00)\}, UpdateSourceTrigger=PropertyChanged}" Header="Prev. Balance" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding TotalDue, StringFormat=\{0:#\,#.00;#(#\,##0.00)\}, UpdateSourceTrigger=PropertyChanged}" Header="Total Due" Width="130" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
 

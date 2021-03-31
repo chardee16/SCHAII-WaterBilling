@@ -1,7 +1,7 @@
 ﻿Declare @paramBillMonth varchar(50)
 ;
 
-SET @paramBillMonth = '202101'
+SET @paramBillMonth = '@_BillMonth'
 ;
 
 

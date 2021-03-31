@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -29,6 +30,8 @@ namespace WaterBillingProject.Pages
         ReportRepository repo = new ReportRepository();
 
         BackgroundWorker billworker = new BackgroundWorker();
+        BackgroundWorker billReportWorker = new BackgroundWorker();
+
 
         public ObservableCollection<BillingReportClass> billingList;
         private ICollectionView MyData;
@@ -41,6 +44,8 @@ namespace WaterBillingProject.Pages
 
             this.dataCon.DateFrom = LoginSession.TransDate.ToString("MM/dd/yyyy");
             this.dataCon.DateTo = LoginSession.TransDate.ToString("MM/dd/yyyy");
+
+            this.dataCon.BillMonth = LoginSession.TransDate.AddMonths(-1).ToString("yyyyMM");
 
             InitializeWorkers();
             this.DataContext = dataCon;
@@ -59,7 +64,7 @@ namespace WaterBillingProject.Pages
         {
             int index = int.Parse(((Button)e.Source).Uid);
 
-            GridCursor.Margin = new Thickness(10 + (150 * index), 30, 0, 0);
+            GridCursor.Margin = new Thickness(10 + (160 * index), 30, 0, 0);
 
             switch (index)
             {
@@ -89,13 +94,16 @@ namespace WaterBillingProject.Pages
             billworker.DoWork += billworker_DoWork;
             billworker.RunWorkerCompleted += billworker_RunWorkerCompleted;
 
+            billReportWorker.DoWork += billReportWorker_DoWork;
+            billReportWorker.RunWorkerCompleted += billReportWorker_RunWorkerCompleted;
+
         }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             while (true)
             {
-                this.dataCon.reportBillingList = repo.GetBillingReportList();
+                this.dataCon.reportBillingList = repo.GetBillingReportList(this.dataCon.BillMonth);
                 this.dataCon.reportTransactionList = repo.GetTransactionList(this.dataCon.DateFrom,this.dataCon.DateTo);
                 break;
             }
@@ -150,6 +158,33 @@ namespace WaterBillingProject.Pages
 
         }
 
+
+        private void billReportWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                this.dataCon.reportBillingList = repo.GetBillingReportList(this.dataCon.BillMonth);
+                break;
+            }
+        }
+
+        private void billReportWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            this.DataContext = this.dataCon;
+
+            this.dataCon.TotalClient = this.dataCon.reportBillingList.Count;
+            this.dataCon.TotalConsumption = this.dataCon.reportBillingList.Sum(x => Convert.ToInt64(x.Consumption));
+            this.dataCon.TotalDues = this.dataCon.reportBillingList.Sum(x => Math.Round(x.TotalDue, 2, MidpointRounding.AwayFromZero));
+
+            billingList = new ObservableCollection<BillingReportClass>(this.dataCon.reportBillingList);
+            DG_ClientList.ItemsSource = billingList;
+            MyData = CollectionViewSource.GetDefaultView(billingList);
+            DG_ClientList.Focus();
+            DG_ClientList.SelectedIndex = 0;
+            txt_Search.Focus();
+
+        }
 
 
 
@@ -233,6 +268,44 @@ namespace WaterBillingProject.Pages
             //crystalReport.Owner = this;
             crystalReport.ShowInTaskbar = false;
             crystalReport.ShowDialog();
+        }
+
+        private void txt_searchBillMonth_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextAllowed(e.Text);
+        }
+
+        private static bool IsTextAllowed(string text)
+        {
+            Regex regex = new Regex("[^0-9-]+"); //regex that matches disallowed text
+            return !regex.IsMatch(text);
+        }
+
+        private void tblFindBillMonth_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                billReportWorker.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void txt_searchBillMonth_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                try
+                {
+                    billReportWorker.RunWorkerAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
         }
 
         private bool FilterData(object item)
@@ -438,6 +511,25 @@ namespace WaterBillingProject.Pages
                 }
             }
         }
+
+
+        private String _BillMonth;
+        public String BillMonth
+        {
+            get
+            {
+                return _BillMonth;
+            }
+            set
+            {
+                if (value != _BillMonth)
+                {
+                    _BillMonth = value;
+                    OnPropertyChanged("BillMonth");
+                }
+            }
+        }
+
 
 
         List<ReportTransactionList> _reportTransactionList;

@@ -35,12 +35,13 @@ namespace WaterBillingProject.Repository
 
 
 
-        public List<BillingReportClass> GetBillingReportList()
+        public List<BillingReportClass> GetBillingReportList(String BillMonth)
         {
             List<BillingReportClass> toReturn = new List<BillingReportClass>();
             try
             {
                 this.sqlFile.sqlQuery = _config.SQLDirectory + "Reports\\GetBillingReport.sql";
+                sqlFile.setParameter("_BillMonth", BillMonth);
 
                 return Connection.Query<BillingReportClass>(this.sqlFile.sqlQuery).ToList();
             }

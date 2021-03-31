@@ -98,29 +98,40 @@ namespace WaterBilling.Pages
 
         private void populateBarGraph()
         {
-            int[] chartValues = new int[12];
-            String[] labelValues = new string[12];
-            int count = 0;
-            foreach (var item in this.dataCon.MonthlyConsumptionList)
+            try
             {
-                chartValues[count] = Convert.ToInt32(item.Consumption);
-                labelValues[count] = item.MonthDescription;
-                count++;
-            }
 
-
-            dataCon.SeriesCollection = new SeriesCollection
-            {
-                new ColumnSeries
+                long[] chartValues = new long[12];
+                String[] labelValues = new string[12];
+                int count = 0;
+                foreach (var item in this.dataCon.MonthlyConsumptionList)
                 {
-                    Title = "Total Cu.M\nUsed",
-                    Values = chartValues.AsChartValues(),
-                    Fill = Brushes.IndianRed,
+                    chartValues[count] = Convert.ToInt64(item.Consumption);
+                    labelValues[count] = item.MonthDescription;
+                    count++;
                 }
-            };
 
-            this.dataCon.Labels = labelValues;
-            this.dataCon.Formatter = value => value.ToString("N");
+
+                dataCon.SeriesCollection = new SeriesCollection
+                {
+                    new ColumnSeries
+                    {
+                        Title = "Total Cu.M\nUsed",
+                        Values = chartValues.AsChartValues(),
+                        Fill = Brushes.IndianRed,
+                    }
+                };
+
+                this.dataCon.Labels = labelValues;
+                this.dataCon.Formatter = value => value.ToString("N");
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
 
