@@ -29,7 +29,7 @@ namespace WaterBillingProject.Windows
         BillUpdateClass updateBill = new BillUpdateClass();
         List<CollectionEntryClass> collectionEntry = new List<CollectionEntryClass>();
         TransactionListClass transactionList = new TransactionListClass();
-
+        Boolean isPosting = false;
 
 
         public PostingEntryWindow(TransactionSummaryClass summary, List<TransactionDetailClass> trdt, List<TransactionCheckClass> transcheck, BillUpdateClass updbill)
@@ -39,7 +39,7 @@ namespace WaterBillingProject.Windows
             this.transactionDetail = trdt;
             this.transactionCheck = transcheck;
             this.updateBill = updbill;
-
+            isPosting = true;
             foreach (var item in this.transactionDetail)
             {
                 collectionEntry.Add(new CollectionEntryClass
@@ -62,6 +62,7 @@ namespace WaterBillingProject.Windows
         public PostingEntryWindow(TransactionListClass transList)
         {
             InitializeComponent();
+            isPosting = false;
             this.transactionList = transList;
             collectionEntry = repo.GetTransaction(this.transactionList);
             DG_BillList.ItemsSource = collectionEntry;
@@ -81,39 +82,19 @@ namespace WaterBillingProject.Windows
         {
             if (e.Key == Key.F11)
             {
-                MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to post this transaction?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
-                if (messageBoxResult == MessageBoxResult.Yes)
+                if (isPosting)
                 {
-                    if (repo.PostPayment(this.tranSummary, this.transactionDetail, this.transactionCheck))
-                    {
-                        if (repo.UpdateBill(updateBill))
-                        {
-                            MessageBox.Show("Payment successfully posted.","Success",MessageBoxButton.OK,MessageBoxImage.Information);
-                            e.Handled = true;
-                            this.Close();
-                            
-                        }
-                    }
-                }
-                else
-                {
-
-                }
-            }
-            else if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
-            {
-                if (Keyboard.IsKeyDown(Key.F12))
-                {
-                    MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to REVERSE this transaction?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                    MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to post this transaction?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
                     if (messageBoxResult == MessageBoxResult.Yes)
                     {
-                        if (repo.ReversePayment(this.transactionList))
+                        if (repo.PostPayment(this.tranSummary, this.transactionDetail, this.transactionCheck))
                         {
-                            if (repo.UpdateReverseBill(this.transactionList.ClientID))
+                            if (repo.UpdateBill(updateBill))
                             {
-                                MessageBox.Show("Transaction successfully REVERSED.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                MessageBox.Show("Payment successfully posted.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                                 e.Handled = true;
                                 this.Close();
+
                             }
                         }
                     }
@@ -121,6 +102,34 @@ namespace WaterBillingProject.Windows
                     {
 
                     }
+                }
+                
+            }
+            else if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+            {
+                if (Keyboard.IsKeyDown(Key.F12))
+                {
+                    if (!isPosting)
+                    {
+                        MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to REVERSE this transaction?", "CONFIRMATION", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                        if (messageBoxResult == MessageBoxResult.Yes)
+                        {
+                            if (repo.ReversePayment(this.transactionList))
+                            {
+                                if (repo.UpdateReverseBill(this.transactionList.ClientID))
+                                {
+                                    MessageBox.Show("Transaction successfully REVERSED.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    e.Handled = true;
+                                    this.Close();
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿UPDATE tblBilling
 	SET BillStatus = 1
 WHERE ClientID = @_ClientID
+and BillStatus != 3
 AND ReferenceNo IN (
 						select ReferenceNo 
 						from tblBilling bill

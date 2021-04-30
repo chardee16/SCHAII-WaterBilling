@@ -111,7 +111,18 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <Label FontSize="20" FontWeight="Bold">Interest :</Label>
-                            <TextBlock Text="{Binding Path=Interest,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" VerticalAlignment="Center" Margin="110,0,0,0" FontSize="20" FontWeight="Bold"/>
+                            <!--<TextBlock Text="{Binding Path=Interest,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:#,#.00;#(#,##0.00)}'}" VerticalAlignment="Center" Margin="110,0,0,0" FontSize="20" FontWeight="Bold"/>-->
+                            <currency:CurrencyTextBox x:Name="txt_Interest" Number="{Binding Interest, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" StringFormat="N2" Width="240" Margin="10,0,0,0" BorderThickness="0,0,0,0" FontFamily="Arial Black" FontWeight="Bold" FontSize="20" PreviewKeyDown="myCurrencyTextBox_PreviewKeyDown" Height="25">
+                                <currency:CurrencyTextBox.Style>
+                                    <Style TargetType="{x:Type currency:CurrencyTextBox}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Validation.HasError" Value="True">
+                                                <Setter Property="ToolTip" Value="Amount" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </currency:CurrencyTextBox.Style>
+                            </currency:CurrencyTextBox>
                         </StackPanel>
                         
                         <StackPanel Orientation="Horizontal">

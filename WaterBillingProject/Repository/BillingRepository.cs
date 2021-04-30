@@ -27,10 +27,11 @@ namespace WaterBilling.Repository
             List<ChargesClass> toReturn = new List<ChargesClass>();
             try
             {
-                this.sqlFile.sqlQuery = _config.SQLDirectory + "Billing\\GetBillCharges.sql";
-                sqlFile.setParameter("_ClientID", ClientID.ToString());
+               
                 if (isNew)
                 {
+                    this.sqlFile.sqlQuery = _config.SQLDirectory + "Billing\\GetBillCharges.sql";
+                    sqlFile.setParameter("_ClientID", ClientID.ToString());
                     sqlFile.setParameter("_newCharges", "sl.Formula +");
                     sqlFile.setParameter("_Condition", "and Bill.BillStatus = 1");
                     sqlFile.setParameter("_withRef", " ");
@@ -39,11 +40,9 @@ namespace WaterBilling.Repository
                 }
                 else
                 {
-                    sqlFile.setParameter("_newCharges", " ");
-                    sqlFile.setParameter("_Condition", "and bill.TR_Date <= '" + TR_Date + "'" );
-                    sqlFile.setParameter("_withRef", "and c.ReferenceNo = '" + ReferenceNo + "'");
-                    sqlFile.setParameter("_ref", "and td.ReferenceNo = c.ReferenceNo");
-                    sqlFile.setParameter("_GroupBy", ",c.ReferenceNo");
+                    this.sqlFile.sqlQuery = _config.SQLDirectory + "Billing\\GetBillChargesPrevious.sql";
+                    sqlFile.setParameter("_ClientID", ClientID.ToString());
+                    sqlFile.setParameter("_TR_Date", TR_Date);
                 }
 
                 return Connection.Query<ChargesClass>(this.sqlFile.sqlQuery).ToList();
@@ -71,7 +70,7 @@ namespace WaterBilling.Repository
                 }
                 else
                 {
-                    sqlFile.setParameter("_Condition", "and TR_Date < '" + TR_Date + "' and BillStatus != 3");
+                    sqlFile.setParameter("_Condition", "and TR_Date < '" + TR_Date + "' and BillStatus = 1");
                 }
 
                 return Connection.Query<PreviousBillClass>(this.sqlFile.sqlQuery).ToList();

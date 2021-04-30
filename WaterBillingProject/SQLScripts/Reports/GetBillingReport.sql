@@ -32,7 +32,7 @@ Select
 			and bc.ClientID = b2.ClientID
 			and bc.ReferenceNo = b2.ReferenceNo
 		where b2.ClientID = c.ClientID
-		and b2.BillStatus != 3 
+		and b2.BillStatus = 1
 		and TR_Date <= bill.TR_Date
 	  ) as MonthlyDue,
 	  (
@@ -43,20 +43,20 @@ Select
 			and bc.ClientID = b2.ClientID
 			and bc.ReferenceNo = b2.ReferenceNo
 		where b2.ClientID = c.ClientID
-		and b2.BillStatus != 3 
+		and b2.BillStatus = 1
 		and TR_Date <= bill.TR_Date
 	  ) as GarbageDue,
 	  (
 		SELECT COALESCE(SUM(IIF(b2.TotalDue = 0,b2.CurrentDue,b2.TotalDue)),0) from tblBilling b2
 		where b2.ClientID = c.ClientID
 		and b2.TR_Date < bill.TR_Date
-		and b2.BillStatus != 3
+		and b2.BillStatus = 1
 	  ) as PreviousBalance
 INTO #Temp
 from tblClient c
 LEFT JOIN tblBilling bill
 		ON bill.ClientID = c.ClientID and bill.BillMonth = @paramBillMonth
-		and BillStatus != 3
+		and BillStatus = 1
 WHERE c.AccountStatusID = 1 --and c.ClientID = 10056
 Order by c.BlockNo,c.LotNo
 

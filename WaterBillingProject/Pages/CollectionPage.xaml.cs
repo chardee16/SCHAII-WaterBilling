@@ -69,11 +69,37 @@ namespace WaterBillingProject.Pages
         {
             if (this.dataCon.BillingList.Count == 2)
             {
+                int count = 0;
+                Boolean isComputed = false;
                 DateTime date = new DateTime();
-                if (date.Day > 16)
+                foreach (var item in this.dataCon.BillingList.OrderBy(o => Convert.ToInt64(o.BillMonth)))
                 {
-                    ComputeInterest();
+                    date = DateTime.ParseExact(item.BillMonth, "yyyyMM", System.Globalization.CultureInfo.InvariantCulture);
+                    if (date.Month != DateTime.Now.Month)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        if (count == 2)
+                        {
+                            if (DateTime.Now.Day > 16)
+                            {
+                                isComputed = true;
+                                ComputeInterest();
+                            }
+                        }
+
+                        break;
+                    }
                 }
+
+                //if (!isComputed)
+                //{
+                //    ComputeInterest();
+                //}
+
+
             }
             else if (this.dataCon.BillingList.Count > 2)
             {
