@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WaterBilling.Models.ClientMaster;
 using WaterBilling.Repository;
+using WaterBillingProject.Windows;
 
 namespace WaterBilling.Pages
 {
@@ -55,6 +56,8 @@ namespace WaterBilling.Pages
             }
 
             this.cmb_ClientStatus.ItemsSource = this.dataCon.clientStatusList;
+
+            txt_Search.Focus();
         }
 
         private void InitializeWorkers()
@@ -87,7 +90,6 @@ namespace WaterBilling.Pages
             MyData = CollectionViewSource.GetDefaultView(clientList);
             DG_ClientList.Focus();
             DG_ClientList.SelectedIndex = 0;
-            txt_Search.Focus();
 
             this.Spinner.Visibility = Visibility.Hidden;
             this.Spinner.Spin = false;
@@ -409,7 +411,57 @@ namespace WaterBilling.Pages
 
         }
 
+        private void btn_BillingHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.dataCon.ClientID != 0)
+            {
+                BillingHistoryWindow billHistory = new BillingHistoryWindow(this.dataCon.ClientID);
+                billHistory.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please select client.","Error!",MessageBoxButton.OK,MessageBoxImage.Error);
+            }
+        }
 
+        private void btn_PaymentHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.dataCon.ClientID != 0)
+            {
+                PaymentHistoryWindow billHistory = new PaymentHistoryWindow(this.dataCon.ClientID);
+                billHistory.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please select client.", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Executed_BillingHistory(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.dataCon.ClientID != 0)
+            {
+                BillingHistoryWindow billHistory = new BillingHistoryWindow(this.dataCon.ClientID);
+                billHistory.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please select client.", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Executed_PaymentHistory(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.dataCon.ClientID != 0)
+            {
+                PaymentHistoryWindow billHistory = new PaymentHistoryWindow(this.dataCon.ClientID);
+                billHistory.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please select client.", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         public class ClientMasterDataContext : INotifyPropertyChanged
         {

@@ -1,0 +1,86 @@
+﻿<Window x:Class="WaterBillingProject.Windows.BillingHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:WaterBillingProject.Windows"
+        mc:Ignorable="d"
+        Title="BillingHistoryWindow" Height="350" Width="930" WindowStartupLocation="CenterScreen"  WindowStyle="None" ResizeMode="NoResize">
+
+    <Grid Background="#FFCFCFCF">
+        <StackPanel Orientation="Vertical">
+            <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#316DA2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+                    <Button x:Name="ButtonFechar" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Click="ButtonFechar_Click">
+                        <materialDesign:PackIcon Kind="Close"/>
+                    </Button>
+                </StackPanel>
+            </Grid >
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0"  VerticalAlignment="Center" >
+                <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
+                <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="350" BorderThickness="1,1,1,1" />
+            </StackPanel>
+            <DataGrid x:Name="DG_BillList" ItemsSource="{Binding billingList, UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="10,10,9.6,10" Height="260" BorderThickness="1" BorderBrush="{x:Null}" Background="#FFFCFCFC">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding BillMonth, UpdateSourceTrigger=PropertyChanged}"  Width="95" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Bill Month" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding ReferenceNo, UpdateSourceTrigger=PropertyChanged}" Width="120" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Reference No" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding BillStatusDescription, UpdateSourceTrigger=PropertyChanged}" Width="90" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Bill Status" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding TransactionDescription, UpdateSourceTrigger=PropertyChanged}" Width="140" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Transaction" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding TR_Date, UpdateSourceTrigger=PropertyChanged}" Width="110" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Transaction Date" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Consumption, UpdateSourceTrigger=PropertyChanged}"  Width="115" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Consumption" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding CurrentReading, UpdateSourceTrigger=PropertyChanged}" Header="Current Reading" Width="110" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Current Reading" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding CurrentDue, UpdateSourceTrigger=PropertyChanged}" Width="100" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Current Due" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -100,6 +100,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CrystalReport.xaml.cs" />
+    <Compile Include="Models\ClientMaster\BillingHistoryClass.cs" />
+    <Compile Include="Models\ClientMaster\PaymentHistoryClass.cs" />
     <Compile Include="Models\Collection\BillUpdateClass.cs" />
     <Compile Include="Models\Collection\CollectionBillsClass.cs" />
     <Compile Include="Models\Collection\CollectionChargesClass.cs" />
@@ -173,6 +175,9 @@
     <Compile Include="Windows\AddBillingAdjustment.xaml.cs">
       <DependentUpon>AddBillingAdjustment.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\BillingHistoryWindow.xaml.cs">
+      <DependentUpon>BillingHistoryWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\BillingListWindow.xaml.cs">
       <DependentUpon>BillingListWindow.xaml</DependentUpon>
     </Compile>
@@ -180,6 +185,9 @@
     <Compile Include="Windows\CrystalSearch.xaml.cs" />
     <Compile Include="Windows\LoginForm.xaml.cs">
       <DependentUpon>LoginForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\PaymentHistoryWindow.xaml.cs">
+      <DependentUpon>PaymentHistoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\PostingEntryWindow.xaml.cs">
       <DependentUpon>PostingEntryWindow.xaml</DependentUpon>
@@ -231,6 +239,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\BillingHistoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\BillingListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -244,6 +256,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\LoginForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\PaymentHistoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -321,6 +337,8 @@
     <Content Include="SQLScripts\Billing\GetBillChargesPrevious.sql" />
     <Content Include="SQLScripts\Billing\InsertBillingAdjustment.sql" />
     <Content Include="SQLScripts\ClientMaster\ClientCount.sql" />
+    <Content Include="SQLScripts\ClientMaster\GetBillHistory.sql" />
+    <Content Include="SQLScripts\ClientMaster\GetPaymentHistory.sql" />
     <Content Include="SQLScripts\Reports\GetBillingReport.sql" />
     <Content Include="SQLScripts\Settings\GetUserList.sql" />
     <Content Include="SQLScripts\Settings\InsertUser.sql" />

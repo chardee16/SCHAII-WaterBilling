@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using WaterBilling.Models.ClientMaster;
 using WaterBilling.Services;
+using WaterBillingProject.Models.ClientMaster;
 
 namespace WaterBilling.Repository
 {
@@ -137,6 +138,46 @@ namespace WaterBilling.Repository
                 return false;
             }
         }
+
+
+        public List<BillingHistoryClass> GetBillingHistoryList(Int64 ClientID)
+        {
+            List<BillingHistoryClass> toReturn = new List<BillingHistoryClass>();
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "ClientMaster\\GetBillHistory.sql";
+                sqlFile.setParameter("_ClientID", ClientID.ToString());
+
+
+                return Connection.Query<BillingHistoryClass>(this.sqlFile.sqlQuery).ToList();
+            }
+            catch (Exception ex)
+            {
+                return toReturn;
+            }
+
+        }
+
+
+        public List<PaymentHistoryClass> GetPaymentHistoryList(Int64 ClientID)
+        {
+            List<PaymentHistoryClass> toReturn = new List<PaymentHistoryClass>();
+            try
+            {
+                this.sqlFile.sqlQuery = _config.SQLDirectory + "ClientMaster\\GetPaymentHistory.sql";
+                sqlFile.setParameter("_ClientID", ClientID.ToString());
+
+
+                return Connection.Query<PaymentHistoryClass>(this.sqlFile.sqlQuery).ToList();
+            }
+            catch (Exception ex)
+            {
+                return toReturn;
+            }
+
+        }
+
+
 
 
 

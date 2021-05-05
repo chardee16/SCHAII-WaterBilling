@@ -1,0 +1,50 @@
+﻿<Window x:Class="WaterBillingProject.Windows.PaymentHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:WaterBillingProject.Windows"
+        mc:Ignorable="d"
+        Title="PaymentHistoryWindow" Height="350" Width="930" WindowStartupLocation="CenterScreen"  WindowStyle="None" ResizeMode="NoResize">
+    <Grid Background="#FFCFCFCF">
+        <StackPanel Orientation="Vertical">
+            <Grid x:Name="GridBarraTitulo" Grid.ColumnSpan="2" Background="#316DA2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+                    <Button x:Name="ButtonFechar" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Click="ButtonFechar_Click">
+                        <materialDesign:PackIcon Kind="Close"/>
+                    </Button>
+                </StackPanel>
+            </Grid >
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0"  VerticalAlignment="Center" >
+                <materialDesign:PackIcon Foreground="Crimson" Kind="Magnify"  Height="25" Width="25"  VerticalAlignment="Center"/>
+                <TextBox x:Name="txt_Search" TextWrapping="Wrap"  FontSize="14" HorizontalAlignment="Stretch" MinWidth="180" Margin="3 0 0 0" Width="350" BorderThickness="1,1,1,1" />
+            </StackPanel>
+            <DataGrid x:Name="DG_TransactionList" HorizontalScrollBarVisibility="Visible" ItemsSource="{Binding Path=reportTransactionList,UpdateSourceTrigger=PropertyChanged}" CanUserSortColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"  AutoGenerateColumns="False" Margin="5,10,5,0" Height="260">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=TransactionDescription,UpdateSourceTrigger=PropertyChanged}" Header="Transaction Type" Width="155" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=TransactionDate,UpdateSourceTrigger=PropertyChanged}" Header="Date" Width="105" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=WaterBill,UpdateSourceTrigger=PropertyChanged}" Header="Water Bill" Width="90" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=Surcharge,UpdateSourceTrigger=PropertyChanged}" Header="Surcharge" Width="100" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=Discount,UpdateSourceTrigger=PropertyChanged}" Header="Discount" Width="90" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=MonthlyDues,UpdateSourceTrigger=PropertyChanged}" Width="90" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Monthly Dues" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=GarbageCollection,UpdateSourceTrigger=PropertyChanged}" Header="" Width="100" IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <TextBlock Text="Garbage Collection" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=CashReceived,UpdateSourceTrigger=PropertyChanged}" Header="Total" Width="90" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=UserName,UpdateSourceTrigger=PropertyChanged}" Header="Posted By" Width="100" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>
