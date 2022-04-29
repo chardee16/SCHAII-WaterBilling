@@ -272,22 +272,22 @@ namespace WaterBilling.Pages
             }
 
 
-            if (this.dataCon.InterestDue > 0)
-            {
-                chargeInterest = new ChargesClass
-                {
-                    SLC_CODE = 14,
-                    SLT_CODE = 2,
-                    SLE_CODE = 1,
-                    StatusID = 15,
-                    SL_Description = "Interest Due",
-                    Formula = this.dataCon.InterestDue.ToString(),
-                    AccountCode = 402104,
-                    Amount = this.dataCon.InterestDue
-                };
+            //if (this.dataCon.InterestDue > 0)
+            //{
+            //    chargeInterest = new ChargesClass
+            //    {
+            //        SLC_CODE = 14,
+            //        SLT_CODE = 2,
+            //        SLE_CODE = 1,
+            //        StatusID = 15,
+            //        SL_Description = "Interest Due",
+            //        Formula = this.dataCon.InterestDue.ToString(),
+            //        AccountCode = 402104,
+            //        Amount = this.dataCon.InterestDue
+            //    };
 
-                charges.Add(chargeInterest);
-            }
+            //    charges.Add(chargeInterest);
+            //}
 
 
             foreach (var item in this.dataCon.tempChargesList)

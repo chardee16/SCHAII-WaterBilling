@@ -1,7 +1,7 @@
 ﻿SELECT ts.TransactionCode,
 	   ts.TransYear,
 	   ts.CTLNo,
-	   ts.TransactionDate,
+	   convert(varchar(10), ts.TransactionDate, 120) as TransactionDate,
 	   ts.ClientID,
 	   td.Amt,
 	   td.UPDTag,

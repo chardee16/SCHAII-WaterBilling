@@ -29,8 +29,10 @@ namespace WaterBillingProject.Windows
         TransactionListDataContext dataCon = new TransactionListDataContext();
         CollectionRepository repo = new CollectionRepository();
         public ObservableCollection<TransactionListClass> transactionList;
+
         private ICollectionView MyData;
         string SearchText = string.Empty;
+
         int currentRow = 0, currentColumn = 1;
         public TransactionList()
         {
@@ -65,6 +67,7 @@ namespace WaterBillingProject.Windows
             while (true)
             {
                 this.dataCon.transactionList = repo.GetTransactionList(LoginSession.TransDate.ToString("yyyy-MM-dd"));
+                //this.dataCon.transactionList = repo.GetTransactionList("2021-04-30");
                 break;
             }
         }
@@ -137,9 +140,23 @@ namespace WaterBillingProject.Windows
             }
         }
 
+        private bool FilterData(object item)
+        {
+            var value = (TransactionListClass)item;
+            if (value == null || value.ClientName == null)
+                return false;
+            return Convert.ToString(value.ClientID).StartsWith(SearchText.ToLower()) || value.ClientName.ToLower().StartsWith(SearchText.ToLower());
+        }
+
+
+
         private void txt_Search_TextChanged(object sender, TextChangedEventArgs e)
         {
+            TextBox t = sender as TextBox;
+            SearchText = t.Text.ToString();
+            MyData.Filter = FilterData;
 
+            DG_TransactionList.SelectedIndex = 0;
         }
 
         private void DG_ClientList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
