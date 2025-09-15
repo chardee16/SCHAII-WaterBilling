@@ -13,4 +13,6 @@ INNER JOIN tblTransactionDetails td
 		and td.TransYear = ts.TransYear
 		and td.SLC_CODE = 11
 where ts.TransactionCode = 1
-and ts.TransactionDate = '@_trDate'
+and MONTH(TransactionDate) = MONTH('@_trDate')
+  and TransYear = YEAR('@_trDate')
+--and ts.TransactionDate = '@_trDate'

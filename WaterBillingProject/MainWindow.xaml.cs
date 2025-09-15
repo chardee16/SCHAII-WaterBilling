@@ -57,7 +57,7 @@ namespace WaterBillingProject
         public MainWindow()
         {
             InitializeComponent();
-
+             
             if (GetFastestNISTDate().ToString("yyyy-MM-dd") != DateTime.Now.ToString("yyyy - MM - dd"))
             {
                 LoginSession.UserID = 1;

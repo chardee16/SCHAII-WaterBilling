@@ -11,11 +11,11 @@ namespace WaterBilling.Services
         //public static String IPAddress = "DESKTOP-QR1I6HF\\CHARDEE";
         //public string SQLServerConnectionString = "Data Source=" + IPAddress + ";Database=WaterBillingDB;User ID=sa;Password=~dimasalanG";
 
-        public static String IPAddress = "DEVELOPER1\\DEVELOPER";
+        public static String IPAddress = "00ICT2019014\\DEVELOPER1";
         //public static String IPAddress = "10.18.10.43";
         public string SQLServerConnectionString = "Data Source=" + IPAddress + ";Database=WaterBillingDB;User ID=sa;Password=developer1@)@)";
 
-        //public static String IPAddress = "DESKTOP-SMNGR8B\\SCHHAI";
+        //public static String IPAddress = "DESKTOP-BJG7E88\\SCHHAI";
         //public static String IPAddress = "192.168.101.49";
         //public string SQLServerConnectionString = "Data Source=" + IPAddress + ";Database=WaterBillingDB;User ID=sa;Password=amac0386";
 
